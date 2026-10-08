@@ -326,8 +326,8 @@ if (missionCarousel) {
     title,
     note: memo,
   }));
-  const photoButton = missionCarousel.querySelector(".mission-photo-button");
-  const image = missionCarousel.querySelector("#mission-image");
+  const cards = [...missionCarousel.querySelectorAll(".mission-card")];
+  const carouselStage = missionCarousel.querySelector(".carousel-stage");
   const previousButton = missionCarousel.querySelector(".carousel-arrow-prev");
   const nextButton = missionCarousel.querySelector(".carousel-arrow-next");
   const dotsContainer = document.querySelector("#mission-carousel-dots");
@@ -347,21 +347,40 @@ if (missionCarousel) {
   const lightboxImage = document.querySelector("#mission-lightbox-image");
   const lightboxClose = lightbox.querySelector(".mission-lightbox-close");
   let activeIndex = 0;
-  let imageChangeTimer;
   let touchStartX = null;
+  let suppressPhotoClick = false;
+
+  function setCardSlide(card, slideIndex) {
+    const index = (slideIndex + slides.length) % slides.length;
+    const slide = slides[index];
+    const image = card.querySelector("img");
+    const button = card.querySelector(".mission-photo-button");
+    image.classList.add("is-changing");
+    image.src = slide.image;
+    image.alt = slide.alt;
+    button.setAttribute("aria-label", `View larger: ${slide.title}`);
+    card.querySelector("figcaption").textContent = slide.title;
+    card.dataset.slideIndex = String(index);
+    card.setAttribute("aria-current", String(card.dataset.cardPosition === "center"));
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => image.classList.remove("is-changing"));
+    });
+  }
+
+  function updateCarouselCards() {
+    const positions = {
+      left: activeIndex - 1,
+      center: activeIndex,
+      right: activeIndex + 1,
+    };
+    for (const card of cards) setCardSlide(card, positions[card.dataset.cardPosition]);
+  }
 
   function showSlide(slideIndex) {
     activeIndex = (slideIndex + slides.length) % slides.length;
     const slide = slides[activeIndex];
 
-    window.clearTimeout(imageChangeTimer);
-    image.classList.add("is-changing");
-    imageChangeTimer = window.setTimeout(() => {
-      image.src = slide.image;
-      image.alt = slide.alt;
-      window.requestAnimationFrame(() => image.classList.remove("is-changing"));
-    }, 120);
-    photoButton.setAttribute("aria-label", `View larger: ${slide.title}`);
+    updateCarouselCards();
     memoCount.textContent = `${String(activeIndex + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}`;
     memoTitle.textContent = slide.title;
     memoText.textContent = slide.note;
@@ -374,26 +393,34 @@ if (missionCarousel) {
     }
   }
 
-  function showLightbox() {
-    const slide = slides[activeIndex];
+  function showLightbox(slideIndex) {
+    const slide = slides[slideIndex];
     lightboxImage.src = slide.image;
     lightboxImage.alt = slide.alt;
     lightbox.showModal();
   }
 
+  for (const card of cards) {
+    card.querySelector(".mission-photo-button").addEventListener("click", () => {
+      if (suppressPhotoClick) return;
+      showLightbox(Number(card.dataset.slideIndex));
+    });
+  }
   previousButton.addEventListener("click", () => showSlide(activeIndex - 1));
   nextButton.addEventListener("click", () => showSlide(activeIndex + 1));
-  photoButton.addEventListener("click", showLightbox);
-  photoButton.addEventListener("touchstart", (event) => {
+  carouselStage.addEventListener("touchstart", (event) => {
     touchStartX = event.changedTouches[0].clientX;
   }, { passive: true });
-  photoButton.addEventListener("touchend", (event) => {
+  carouselStage.addEventListener("touchend", (event) => {
     if (touchStartX === null) return;
     const swipeDistance = event.changedTouches[0].clientX - touchStartX;
     touchStartX = null;
     if (Math.abs(swipeDistance) < 45) return;
-    event.preventDefault();
+    suppressPhotoClick = true;
     showSlide(activeIndex + (swipeDistance < 0 ? 1 : -1));
+    window.setTimeout(() => {
+      suppressPhotoClick = false;
+    }, 350);
   });
   lightboxClose.addEventListener("click", () => lightbox.close());
   lightbox.addEventListener("click", (event) => {

@@ -127,15 +127,21 @@ h1, h2, h3, p { margin-top: 0; }
 .journey-section .heading-aside, .updates-section .heading-aside, .support-copy > p:first-child { color: var(--cream-muted); }
 .journey-section .heading-aside { font: italic 15px/1.65 var(--serif); }
 .mission-carousel { position: relative; max-width: 990px; margin: 0 auto; overflow: clip; }
-.carousel-stage { position: relative; }
-.mission-feature { display: grid; min-height: clamp(300px, 52vw, 590px); margin: 0; place-items: center; overflow: hidden; border: 1px solid rgba(245, 239, 224, .3); background: #17241b; box-shadow: 0 22px 50px rgba(8, 20, 13, .28); }
-.mission-photo-button { position: relative; display: grid; width: 100%; height: 100%; min-height: inherit; padding: 0; place-items: center; overflow: hidden; border: 0; background: transparent; cursor: zoom-in; }
-.mission-photo-button img { display: block; width: 100%; height: 100%; min-height: inherit; object-fit: contain; transition: opacity .2s ease, transform .45s ease; }
-.mission-photo-button img.is-changing { opacity: .45; transform: scale(.985); }
-.mission-photo-button:focus-visible, .carousel-arrow:focus-visible, .carousel-dot:focus-visible, .mission-lightbox-close:focus-visible { outline: 3px solid #e9b28e; outline-offset: 3px; }
-.mission-enlarge-hint { position: absolute; right: 15px; bottom: 15px; padding: 8px 11px; border-radius: 2px; background: rgba(24, 38, 30, .8); color: #fff; font-size: 11px; opacity: 0; transition: opacity .2s ease; }
+.carousel-stage { position: relative; height: clamp(300px, 40vw, 470px); overflow: hidden; touch-action: pan-y; }
+.mission-card { position: absolute; top: 4%; width: 42%; height: 92%; margin: 0; overflow: hidden; border: 1px solid rgba(245, 239, 224, .48); background: #17241b; box-shadow: 0 22px 50px rgba(8, 20, 13, .3); transition: left .45s ease, opacity .35s ease; }
+.mission-card[data-card-position="left"] { left: -10%; z-index: 1; opacity: .84; }
+.mission-card[data-card-position="center"] { left: 29%; z-index: 3; opacity: 1; }
+.mission-card[data-card-position="right"] { left: 68%; z-index: 1; opacity: .84; }
+.mission-photo-button { position: relative; display: block; width: 100%; height: 100%; padding: 0; overflow: hidden; border: 0; background: transparent; cursor: zoom-in; }
+.mission-photo-button img { display: block; width: 100%; height: 100%; object-fit: cover; transition: opacity .22s ease; }
+.mission-photo-button img.is-changing { opacity: .4; }
+.mission-card figcaption { position: absolute; right: 13px; bottom: 13px; left: 13px; z-index: 1; color: #fff; font: 500 clamp(15px, 1.8vw, 21px)/1.25 var(--serif); text-shadow: 0 2px 8px rgba(0, 0, 0, .75); pointer-events: none; }
+.mission-card[data-card-position="left"] figcaption, .mission-card[data-card-position="right"] figcaption { font-size: clamp(12px, 1.35vw, 16px); }
+.mission-photo-button::after { position: absolute; inset: 45% 0 0; background: linear-gradient(transparent, rgba(12, 22, 16, .65)); content: ""; }
+.mission-enlarge-hint { position: absolute; right: 12px; top: 12px; z-index: 2; padding: 7px 9px; border-radius: 2px; background: rgba(24, 38, 30, .8); color: #fff; font-size: 10px; opacity: 0; transition: opacity .2s ease; }
 .mission-photo-button:hover .mission-enlarge-hint, .mission-photo-button:focus-visible .mission-enlarge-hint { opacity: 1; }
-.carousel-arrow { position: absolute; top: 50%; z-index: 2; display: grid; width: 52px; height: 52px; place-items: center; border: 1px solid rgba(245, 239, 224, .68); border-radius: 50%; background: var(--cream); box-shadow: 0 8px 23px rgba(8, 20, 13, .22); color: var(--green-deep); font: 22px var(--sans); cursor: pointer; transition: transform .18s ease, background .18s ease; transform: translateY(-50%); }
+.mission-photo-button:focus-visible, .carousel-arrow:focus-visible, .carousel-dot:focus-visible, .mission-lightbox-close:focus-visible { outline: 3px solid #e9b28e; outline-offset: 3px; }
+.carousel-arrow { position: absolute; top: 50%; z-index: 5; display: grid; width: 52px; height: 52px; place-items: center; border: 1px solid rgba(245, 239, 224, .68); border-radius: 50%; background: var(--cream); box-shadow: 0 8px 23px rgba(8, 20, 13, .22); color: var(--green-deep); font: 22px var(--sans); cursor: pointer; transition: transform .18s ease, background .18s ease; transform: translateY(-50%); }
 .carousel-arrow:hover { transform: translateY(-50%) scale(1.08); background: #fff; }
 .carousel-arrow:active { transform: translateY(-50%) scale(.96); }
 .carousel-arrow-prev { left: 16px; }
@@ -202,7 +208,7 @@ h1, h2, h3, p { margin-top: 0; }
 .support-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 13px 18px; }
 .support-shop-link { color: var(--cream); font-size: 11px; font-weight: 700; text-decoration: none; }
 .support-shop-link:hover { color: #f0bd9d; }
-.support-flower { position: absolute; right: -16px; bottom: -105px; color: #ebe7dc; font-size: 280px; line-height: 1; }
+.support-flower { position: absolute; right: clamp(-18px, -1vw, -8px); bottom: clamp(-90px, -8vw, -55px); color: #ebe7dc; font-size: clamp(170px, 23vw, 280px); line-height: 1; }
 .site-footer { background: #24352d; color: #d6ddd5; }
 .footer-inner { display: flex; min-height: 96px; align-items: center; justify-content: space-between; gap: 20px; font-size: 10px; }
 .footer-inner p { margin: 0; color: #b8c3b9; }
@@ -352,20 +358,33 @@ h1, h2, h3, p { margin-top: 0; }
   .main-nav .nav-give { padding: 7px 12px; }
   .hero { grid-template-columns: 1fr; gap: 40px; padding-block: 55px 67px; }
   .hero h1 { font-size: clamp(43px, 12vw, 60px); }
-  .hero-art { min-height: 340px; }
+  .hero-art { min-height: clamp(310px, 90vw, 380px); }
+  .art-note { top: clamp(35px, 12vw, 68px); left: clamp(16px, 6vw, 30px); width: min(240px, calc(100% - 42px)); padding: clamp(17px, 5vw, 22px); transform: rotate(-1.5deg); }
+  .art-note p { font-size: clamp(18px, 5vw, 21px); }
+  .art-number { right: 12px; bottom: 13px; max-width: calc(100% - 24px); font-size: 7px; letter-spacing: .12em; text-align: right; }
   .story-grid { grid-template-columns: 1fr; gap: 16px; }
   .story-grid .eyebrow { margin: 0; }
-  .story-stamp { display: none; }
+  .story-stamp { width: 82px; height: 82px; justify-self: start; margin-top: 4px; transform: rotate(5deg); }
   .story-band { padding-block: 48px; }
   .journey-section { padding-block: 60px; }
-  .mission-feature { min-height: clamp(260px, 72vw, 430px); }
+  .carousel-stage { height: clamp(285px, 72vw, 390px); }
+  .mission-card { width: 64%; }
+  .mission-card[data-card-position="left"] { left: -37%; }
+  .mission-card[data-card-position="center"] { left: 18%; }
+  .mission-card[data-card-position="right"] { left: 73%; }
   .carousel-arrow { width: 46px; height: 46px; }
+  .carousel-arrow-prev { left: 4px; }
+  .carousel-arrow-next { right: 4px; }
+  .carousel-dots { gap: 7px; padding-inline: 6px; }
+  .carousel-dot { width: 8px; height: 8px; }
   .photo-memo { gap: 12px; padding: 18px; }
   .updates-section { padding-block: 65px; }
   .section-heading { display: block; }
   .heading-aside { width: auto; max-width: 390px; margin-top: 15px; }
   .signup-card { grid-template-columns: 1fr; }
-  .signup-decoration { display: none; }
+  .signup-decoration { display: flex; min-height: 70px; align-items: center; justify-content: flex-start; gap: 14px; padding: 12px 22px; border-right: 0; border-bottom: 1px solid rgba(255,255,255,.17); }
+  .signup-decoration span:first-child { font-size: 31px; line-height: 1; }
+  .signup-decoration span:last-child { font-size: 8px; line-height: 1.4; text-align: left; }
   .signup-content { padding: 29px 22px; }
   .form-row { flex-wrap: wrap; }
   .form-row input { flex: 1 1 42%; }
@@ -393,7 +412,15 @@ h1, h2, h3, p { margin-top: 0; }
   .carousel-arrow { width: 42px; height: 42px; }
   .carousel-arrow-prev { left: 9px; }
   .carousel-arrow-next { right: 9px; }
+  .carousel-stage { height: 285px; }
+  .mission-card { width: 68%; }
+  .mission-card[data-card-position="left"] { left: -40%; }
+  .mission-card[data-card-position="center"] { left: 16%; }
+  .mission-card[data-card-position="right"] { left: 72%; }
+  .mission-card figcaption { right: 9px; bottom: 10px; left: 9px; font-size: 15px; }
+  .mission-card[data-card-position="left"] figcaption, .mission-card[data-card-position="right"] figcaption { font-size: 12px; }
   .photo-memo { grid-template-columns: 1fr; gap: 6px; }
+  .support-flower { right: -8px; bottom: -46px; font-size: clamp(120px, 38vw, 164px); }
   .shop-grid { grid-template-columns: 1fr; }
   .product-art { min-height: 245px; }
   .product-info > p { min-height: 0; }
@@ -402,7 +429,7 @@ h1, h2, h3, p { margin-top: 0; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
   .photo-card img { transition: none; }
-  .mission-photo-button img { transition: none; }
+  .mission-card, .mission-photo-button img { transition: none; }
   .payment-options.is-visible, .payment-detail { animation: none; }
   .product-card { transition: none; }
 }
