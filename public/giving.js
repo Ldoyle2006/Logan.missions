@@ -15,6 +15,17 @@ const choiceInputs = document.querySelectorAll(".giving-choice input[type='radio
 const paymentMethodButtons = document.querySelectorAll(".payment-option");
 let stripeConfigured = false;
 
+function createArrowIcon() {
+  const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  icon.classList.add("arrow-icon", "arrow-icon-up-right");
+  icon.setAttribute("viewBox", "0 0 24 24");
+  icon.setAttribute("aria-hidden", "true");
+  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path.setAttribute("d", "M7 17 17 7M8 7h9v9");
+  icon.append(path);
+  return icon;
+}
+
 function syncChoiceStyles() {
   for (const input of choiceInputs) {
     input.closest(".giving-choice").classList.toggle("is-selected", input.checked);
@@ -66,7 +77,7 @@ function showMethodDetails(method) {
     onlineGiving.href = "https://www.equipnet.org/missionaries/ldoyle";
     onlineGiving.target = "_blank";
     onlineGiving.rel = "noopener noreferrer";
-    onlineGiving.append("Continue to EquipNet ", document.createTextNode("↗"));
+    onlineGiving.append("Continue to EquipNet ", createArrowIcon());
     paymentDetail.append(onlineGiving);
   }
 
@@ -76,7 +87,7 @@ function showMethodDetails(method) {
     venmoGiving.href = "https://venmo.com/u/Logan-Doyle-25";
     venmoGiving.target = "_blank";
     venmoGiving.rel = "noopener noreferrer";
-    venmoGiving.append("Continue to Venmo ", document.createTextNode("↗"));
+    venmoGiving.append("Continue to Venmo ", createArrowIcon());
     paymentDetail.append(venmoGiving);
   }
 
@@ -86,7 +97,7 @@ function showMethodDetails(method) {
     cashAppGiving.href = "https://cash.app/$Logan12missions";
     cashAppGiving.target = "_blank";
     cashAppGiving.rel = "noopener noreferrer";
-    cashAppGiving.append("Continue to Cash App ", document.createTextNode("↗"));
+    cashAppGiving.append("Continue to Cash App ", createArrowIcon());
     paymentDetail.append(cashAppGiving);
   }
 
@@ -94,7 +105,7 @@ function showMethodDetails(method) {
     const checkout = document.createElement("a");
     checkout.className = "button button-dark giving-checkout";
     checkout.href = "/donate";
-    checkout.append("Test Stripe checkout ", document.createTextNode("↗"));
+    checkout.append("Test Stripe checkout ", createArrowIcon());
     paymentDetail.append(checkout);
   }
 }

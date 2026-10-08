@@ -35,7 +35,7 @@
               <strong>Give online</strong>
               <small>Choose an amount and payment method</small>
             </span>
-            <span class="giving-method-arrow" aria-hidden="true">↗</span>
+            <svg class="arrow-icon arrow-icon-up-right giving-method-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>
           </label>
           <label class="giving-method">
             <input type="radio" name="giving-method" value="check">
@@ -43,7 +43,7 @@
               <strong>Mail / bank transfer</strong>
               <small>Choose check by mail or a bank transfer</small>
             </span>
-            <span class="giving-method-arrow" aria-hidden="true">→</span>
+            <svg class="arrow-icon arrow-icon-right giving-method-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
           </label>
         </div>
       </fieldset>
@@ -110,7 +110,7 @@
         </div>
         <div class="giving-step-actions">
           <p class="giving-status">Your selection is just a preview for now; payment details are not submitted on this page.</p>
-          <button class="button button-dark" id="next-step" type="button">Next: choose how to give <span aria-hidden="true">→</span></button>
+          <button class="button button-dark" id="next-step" type="button">Next: choose how to give <svg class="arrow-icon arrow-icon-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></button>
         </div>
       </section>
 
@@ -123,14 +123,14 @@
               <strong>Mail a check</strong>
               <small>Get the mailing address and check instructions</small>
             </span>
-            <span class="giving-method-arrow" aria-hidden="true">→</span>
+            <svg class="arrow-icon arrow-icon-right giving-method-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
           </button>
           <button class="giving-method offline-method" type="button" data-offline-method="bank" aria-pressed="false">
             <span class="giving-method-copy">
               <strong>Bank transfer</strong>
               <small>Request secure instructions for one-time or recurring support</small>
             </span>
-            <span class="giving-method-arrow" aria-hidden="true">→</span>
+            <svg class="arrow-icon arrow-icon-right giving-method-arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
           </button>
         </div>
         <div class="offline-detail" id="offline-detail" aria-live="polite" hidden></div>
@@ -163,7 +163,7 @@
           </button>
         </div>
         <div class="payment-detail" id="payment-detail" aria-live="polite" hidden></div>
-        <button class="giving-back-button" id="change-gift" type="button">← Change amount or schedule</button>
+        <button class="giving-back-button" id="change-gift" type="button"><svg class="arrow-icon arrow-icon-left" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m7 7-7-7 7-7"/></svg> Change amount or schedule</button>
       </section>
 
       <p class="giving-thanks">Thank you for your prayers, encouragement, and generosity.</p>

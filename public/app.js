@@ -60,10 +60,13 @@ async function loadLinks() {
     const description = document.createElement("small");
     description.textContent = typeof item.description === "string" ? item.description : "";
     copy.append(title, description);
-    const arrow = document.createElement("span");
-    arrow.className = "link-card-arrow";
+    const arrow = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    arrow.classList.add("link-card-arrow", "arrow-icon", "arrow-icon-up-right");
+    arrow.setAttribute("viewBox", "0 0 24 24");
     arrow.setAttribute("aria-hidden", "true");
-    arrow.textContent = "↗";
+    const arrowPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    arrowPath.setAttribute("d", "M7 17 17 7M8 7h9v9");
+    arrow.append(arrowPath);
     anchor.append(copy, arrow);
     if (destination.protocol === "https:") {
       anchor.target = "_blank";

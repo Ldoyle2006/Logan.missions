@@ -96,6 +96,8 @@ h1, h2, h3, p { margin-top: 0; }
 .button-coral:hover { background: #bf634c; }
 .button-light { background: #f4eee1; color: var(--ink); }
 .button:disabled { cursor: wait; opacity: .65; }
+.arrow-icon { display: inline-block; width: 1em; height: 1em; flex: 0 0 auto; overflow: visible; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; vertical-align: -.16em; }
+.arrow-icon-up-right { width: .9em; height: .9em; }
 .text-link { font-size: 12px; font-weight: 700; text-decoration: none; }
 .hero .text-link { padding: 9px 15px; border: 1px solid rgba(245, 239, 224, .72); border-radius: 0; color: var(--cream); transition: border-color .18s ease, background .18s ease, color .18s ease; }
 .hero .text-link:hover { border-color: var(--cream); background: rgba(245, 239, 224, .1); color: var(--cream); }
@@ -142,7 +144,8 @@ h1, h2, h3, p { margin-top: 0; }
 .mission-enlarge-hint { position: absolute; right: 12px; top: 12px; z-index: 2; padding: 7px 9px; border-radius: 2px; background: rgba(24, 38, 30, .8); color: #fff; font-size: 10px; opacity: 0; transition: opacity .2s ease; }
 .mission-photo-button:hover .mission-enlarge-hint, .mission-photo-button:focus-visible .mission-enlarge-hint { opacity: 1; }
 .mission-photo-button:focus-visible, .carousel-arrow:focus-visible, .carousel-dot:focus-visible, .mission-lightbox-close:focus-visible { outline: 3px solid #e9b28e; outline-offset: 3px; }
-.carousel-arrow { position: absolute; top: 50%; z-index: 5; display: grid; width: 52px; height: 52px; place-items: center; border: 1px solid rgba(245, 239, 224, .68); border-radius: 50%; background: var(--cream); box-shadow: 0 8px 23px rgba(8, 20, 13, .22); color: var(--green-deep); font: 22px var(--sans); cursor: pointer; transition: transform .18s ease, background .18s ease; transform: translateY(-50%); }
+.carousel-arrow { position: absolute; top: 50%; z-index: 5; display: grid; width: 52px; height: 52px; place-items: center; border: 1px solid rgba(245, 239, 224, .68); border-radius: 50%; background: var(--cream); box-shadow: 0 8px 23px rgba(8, 20, 13, .22); color: var(--green-deep); cursor: pointer; transition: transform .18s ease, background .18s ease; transform: translateY(-50%); }
+.carousel-arrow .arrow-icon { width: 19px; height: 19px; }
 .carousel-arrow:hover { transform: translateY(-50%) scale(1.08); background: #fff; }
 .carousel-arrow:active { transform: translateY(-50%) scale(.96); }
 .carousel-arrow-prev { left: 16px; }
@@ -199,7 +202,7 @@ h1, h2, h3, p { margin-top: 0; }
 .link-card-copy { display: grid; flex: 1; gap: 3px; }
 .link-card-copy strong { font: 500 17px var(--serif); }
 .link-card-copy small { color: var(--muted); font-size: 10px; }
-.link-card-arrow { font-size: 16px; }
+.link-card-arrow { width: 16px; height: 16px; }
 .empty-links { color: var(--muted); font-size: 12px; }
 .empty-links code { color: var(--green); }
 
@@ -247,7 +250,7 @@ h1, h2, h3, p { margin-top: 0; }
 .giving-method-copy { display: grid; flex: 1; gap: 4px; }
 .giving-method-copy strong { font: 500 20px var(--serif); }
 .giving-method-copy small { color: var(--cream-muted); font-size: 11px; }
-.giving-method-arrow { font-size: 19px; }
+.giving-method-arrow { width: 19px; height: 19px; }
 .offline-method-options { margin-top: 18px; }
 .offline-method { border-color: #aab5a8; background: #f5f1e7; color: var(--green-deep); box-shadow: 0 4px 12px rgba(32, 55, 45, .08); }
 .offline-method:hover { border-color: var(--green); background: #e8eee7; }
