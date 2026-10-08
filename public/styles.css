@@ -120,7 +120,8 @@ h1, h2, h3, p { margin-top: 0; }
 .body-copy { max-width: 640px; margin: 0; color: #59675d; font-size: 14px; }
 .story-stamp { display: grid; width: 116px; height: 116px; place-content: center; justify-self: end; border: 1px solid #a8aa97; border-radius: 50%; color: var(--green); text-align: center; transform: rotate(9deg); }
 .story-stamp span { font: 600 11px/1.3 var(--sans); letter-spacing: .12em; }
-.story-stamp b { margin-top: 5px; font-size: 17px; }
+.decorative-spark { display: block; flex: 0 0 auto; fill: currentColor; }
+.story-stamp-spark { width: 18px; height: 18px; margin: 5px auto 0; }
 
 .journey-section { padding-block: 82px 78px; }
 .journey-section .section-heading { margin-bottom: 28px; }
@@ -171,7 +172,7 @@ h1, h2, h3, p { margin-top: 0; }
 .heading-aside { width: min(350px, 38%); margin: 0 0 4px; color: var(--muted); font-size: 12px; }
 .signup-card { display: grid; grid-template-columns: 245px 1fr; min-height: 273px; background: var(--green); color: #fff; }
 .signup-decoration { display: grid; align-content: center; justify-items: center; gap: 14px; border-right: 1px solid rgba(255,255,255,.17); color: #ded4b7; }
-.signup-decoration span:first-child { font-size: 38px; }
+.signup-spark { width: 38px; height: 38px; }
 .signup-decoration span:last-child { font-size: 9px; font-weight: 700; letter-spacing: .23em; line-height: 1.7; text-align: center; }
 .signup-content { align-self: center; padding: 35px 7%; }
 .signup-content h3 { margin-bottom: 4px; font: 500 30px var(--serif); }
@@ -212,7 +213,7 @@ h1, h2, h3, p { margin-top: 0; }
 .support-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 13px 18px; }
 .support-shop-link { color: var(--cream); font-size: 11px; font-weight: 700; text-decoration: none; }
 .support-shop-link:hover { color: #f0bd9d; }
-.support-flower { position: absolute; right: clamp(-18px, -1vw, -8px); bottom: clamp(-90px, -8vw, -55px); color: #ebe7dc; font-size: clamp(170px, 23vw, 280px); line-height: 1; }
+.support-flower { position: absolute; right: clamp(-18px, -1vw, -8px); bottom: clamp(-90px, -8vw, -55px); width: clamp(170px, 23vw, 280px); height: auto; color: #ebe7dc; }
 .site-footer { background: #24352d; color: #d6ddd5; }
 .footer-inner { display: flex; min-height: 96px; align-items: center; justify-content: space-between; gap: 20px; font-size: 10px; }
 .footer-inner p { margin: 0; color: #b8c3b9; }
@@ -321,7 +322,7 @@ h1, h2, h3, p { margin-top: 0; }
 .shop-intro h1 { margin: 0 0 15px; color: var(--cream); font: 500 clamp(40px, 5vw, 62px)/1.1 var(--serif); letter-spacing: -.035em; }
 .shop-intro > p:last-child { max-width: 620px; margin: 0; color: var(--cream-muted); font-size: 14px; }
 .shop-preview-notice { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 25px; padding: 14px 17px; border: 1px solid rgba(240, 189, 157, .35); background: rgba(245, 239, 224, .08); color: var(--cream-muted); }
-.shop-preview-notice > span { color: #f0bd9d; font-size: 18px; line-height: 1.2; }
+.shop-notice-spark { width: 18px; height: 18px; color: #f0bd9d; }
 .shop-preview-notice p { margin: 0; font-size: 11px; }
 .shop-preview-notice strong { color: var(--cream); }
 .shop-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
@@ -387,7 +388,7 @@ h1, h2, h3, p { margin-top: 0; }
   .heading-aside { width: auto; max-width: 390px; margin-top: 15px; }
   .signup-card { grid-template-columns: 1fr; }
   .signup-decoration { display: flex; min-height: 70px; align-items: center; justify-content: flex-start; gap: 14px; padding: 12px 22px; border-right: 0; border-bottom: 1px solid rgba(255,255,255,.17); }
-  .signup-decoration span:first-child { font-size: 31px; line-height: 1; }
+  .signup-spark { width: 31px; height: 31px; }
   .signup-decoration span:last-child { font-size: 8px; line-height: 1.4; text-align: left; }
   .signup-content { padding: 29px 22px; }
   .form-row { flex-wrap: wrap; }
@@ -424,7 +425,7 @@ h1, h2, h3, p { margin-top: 0; }
   .mission-card figcaption { right: 9px; bottom: 10px; left: 9px; font-size: 15px; }
   .mission-card[data-card-position="left"] figcaption, .mission-card[data-card-position="right"] figcaption { font-size: 12px; }
   .photo-memo { grid-template-columns: 1fr; gap: 6px; }
-  .support-flower { right: -8px; bottom: -46px; font-size: clamp(120px, 38vw, 164px); }
+  .support-flower { right: -8px; bottom: -46px; width: clamp(120px, 38vw, 164px); }
   .shop-grid { grid-template-columns: 1fr; }
   .product-art { min-height: 245px; }
   .product-info > p { min-height: 0; }
