@@ -334,6 +334,7 @@ if (missionCarousel) {
   const memoCount = document.querySelector("#photo-memo-count");
   const memoTitle = document.querySelector("#photo-memo-title");
   const memoText = document.querySelector("#photo-memo-text");
+  const memoToggle = document.querySelector("#photo-memo-toggle");
   const dots = slides.map((slide, slideIndex) => {
     const dot = document.createElement("button");
     dot.className = "carousel-dot";
@@ -384,6 +385,9 @@ if (missionCarousel) {
     memoCount.textContent = `${String(activeIndex + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}`;
     memoTitle.textContent = slide.title;
     memoText.textContent = slide.note;
+    memoText.classList.remove("is-expanded");
+    memoToggle.setAttribute("aria-expanded", "false");
+    memoToggle.textContent = "Keep reading";
     for (const [dotIndex, dot] of dots.entries()) {
       if (dotIndex === activeIndex) {
         dot.setAttribute("aria-current", "true");
@@ -408,6 +412,12 @@ if (missionCarousel) {
   }
   previousButton.addEventListener("click", () => showSlide(activeIndex - 1));
   nextButton.addEventListener("click", () => showSlide(activeIndex + 1));
+  memoToggle.addEventListener("click", () => {
+    const isExpanded = memoToggle.getAttribute("aria-expanded") !== "true";
+    memoText.classList.toggle("is-expanded", isExpanded);
+    memoToggle.setAttribute("aria-expanded", String(isExpanded));
+    memoToggle.textContent = isExpanded ? "Show less" : "Keep reading";
+  });
   carouselStage.addEventListener("touchstart", (event) => {
     touchStartX = event.changedTouches[0].clientX;
   }, { passive: true });

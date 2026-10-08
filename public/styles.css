@@ -153,7 +153,11 @@ h1, h2, h3, p { margin-top: 0; }
 .photo-memo { display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: start; max-width: 740px; margin: 20px auto 0; padding: 22px 25px; border-left: 3px solid #e9b28e; background: rgba(245, 239, 224, .09); color: var(--cream); }
 .photo-memo-count { padding-top: 4px; color: #f0bd9d; font-size: 10px; font-weight: 700; letter-spacing: .14em; white-space: nowrap; }
 .photo-memo h3 { margin: 0 0 5px; font: 500 22px/1.25 var(--serif); }
-.photo-memo p { margin: 0; color: var(--cream-muted); font-size: 12px; }
+.photo-memo p { display: -webkit-box; margin: 0; overflow: hidden; color: var(--cream-muted); font-size: 12px; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+.photo-memo p.is-expanded { display: block; overflow: visible; }
+.photo-memo-toggle { margin-top: 8px; padding: 0; border: 0; background: none; color: #f0bd9d; font: 600 11px var(--sans); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.photo-memo-toggle:hover { color: #fff; }
+.photo-memo-toggle:focus-visible { outline: 2px solid #e9b28e; outline-offset: 3px; }
 .photo-note { margin: 12px auto 0; color: var(--cream-muted); font-size: 10px; text-align: center; }
 .mission-lightbox { position: relative; width: min(96vw, 1200px); max-width: none; max-height: 94vh; padding: 18px; overflow: visible; border: 1px solid rgba(245, 239, 224, .4); background: #17241b; box-shadow: 0 22px 70px rgba(0, 0, 0, .55); }
 .mission-lightbox::backdrop { background: rgba(8, 14, 10, .88); }
