@@ -107,11 +107,12 @@ h1, h2, h3, p { margin-top: 0; }
 .hero-art { position: relative; min-height: 430px; overflow: hidden; background: #536b59; }
 .hero-art::after { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(23, 39, 31, .42)); content: ""; }
 .hero-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.art-note { position: absolute; top: 85px; left: 38px; z-index: 1; width: 240px; padding: 22px 24px 21px; background: rgba(250, 247, 239, 0.468); box-shadow: 0 16px 40px rgba(42, 50, 41, .13); transform: rotate(-3deg); }
-.note-label { color: var(--coral); font-size: 8px; font-weight: 700; letter-spacing: .17em; }
+.art-note { position: absolute; top: 85px; left: 38px; z-index: 1; width: 240px; padding: 22px 24px 21px; background: #f5efe0; box-shadow: 0 16px 40px rgba(23, 39, 31, .3); transform: rotate(-3deg); }
+.note-label { color: var(--green-deep); font-size: 8px; font-weight: 700; letter-spacing: .17em; }
 .art-note p { margin: 15px 0 11px; font: italic 21px/1.35 var(--serif); }
-.art-note .scripture-quote, .art-note .scripture-reference { color: var(--muted); }
-.note-signature { color: var(--muted); font-size: 10px; }
+.art-note .scripture-quote { color: var(--ink); }
+.art-note .scripture-reference { color: var(--green-deep); }
+.note-signature { font-size: 10px; }
 .art-number { position: absolute; right: 20px; bottom: 19px; z-index: 1; color: #fff; font-size: 8px; font-weight: 700; letter-spacing: .2em; }
 
 .story-band { padding-block: 65px; background: #ece9df; }
