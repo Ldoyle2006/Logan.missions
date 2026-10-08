@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#20372d">
+    <meta name="description" content="Choose how to support Logan Doyle's missionary journey.">
+    <title>Give | Logan Doyle Mission Updates</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/giving.js" defer></script>
+  </head>
+  <body class="giving-page-body">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <a class="wordmark" href="/" aria-label="Mission updates home">
+        <span class="wordmark-mark" aria-hidden="true">M</span>
+        <span>Logan Doyle<small>MISSION UPDATES</small></span>
+      </a>
+      <nav class="main-nav" aria-label="Main navigation"><a href="/">Home</a></nav>
+    </header>
+
+    <main id="main" class="giving-page section-wrap">
+      <section class="giving-intro" aria-labelledby="giving-title">
+        <p class="eyebrow">GO FURTHER TOGETHER</p>
+        <h1 id="giving-title">Thank you for partnering with me.</h1>
+        <p class="giving-lead">Your generosity helps make this ministry possible. Choose the way you would like to give.</p>
+      </section>
+
+      <fieldset class="giving-methods">
+        <legend>How would you like to give?</legend>
+        <div class="giving-method-options">
+          <label class="giving-method">
+            <input type="radio" name="giving-method" value="online">
+            <span class="giving-method-copy">
+              <strong>Give online</strong>
+              <small>Choose an amount and payment method</small>
+            </span>
+            <span class="giving-method-arrow" aria-hidden="true">↗</span>
+          </label>
+          <label class="giving-method">
+            <input type="radio" name="giving-method" value="check">
+            <span class="giving-method-copy">
+              <strong>Mail / bank transfer</strong>
+              <small>Choose check by mail or a bank transfer</small>
+            </span>
+            <span class="giving-method-arrow" aria-hidden="true">→</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <section class="giving-panel" id="amount-panel" aria-labelledby="amount-title" hidden>
+        <p class="eyebrow">STEP 1 · YOUR GIFT</p>
+        <h2 id="amount-title">Choose your amount and schedule.</h2>
+        <p class="giving-body">Select the gift you have in mind, then explore a way to give that works for you.</p>
+        <div class="giving-preview">
+          <fieldset class="giving-choice-group">
+            <legend class="giving-preview-label">Choose an amount</legend>
+            <div class="giving-amounts">
+              <label class="giving-choice">
+                <input type="radio" name="giving-amount" value="25" checked>
+                <span>$25</span>
+              </label>
+              <label class="giving-choice">
+                <input type="radio" name="giving-amount" value="50">
+                <span>$50</span>
+              </label>
+              <label class="giving-choice">
+                <input type="radio" name="giving-amount" value="75">
+                <span>$75</span>
+              </label>
+              <label class="giving-choice">
+                <input type="radio" name="giving-amount" value="100">
+                <span>$100</span>
+              </label>
+              <label class="giving-choice">
+                <input type="radio" name="giving-amount" value="250">
+                <span>$250</span>
+              </label>
+              <label class="giving-choice">
+                <input type="radio" name="giving-amount" value="500">
+                <span>$500</span>
+              </label>
+              <label class="giving-choice giving-choice-custom">
+                <input type="radio" name="giving-amount" value="custom">
+                <span>Other</span>
+                <span class="custom-amount-wrap">
+                  <span>$</span>
+                  <input id="custom-amount" name="customAmount" type="number" min="5" step="0.01" inputmode="decimal" placeholder="0.00" aria-label="Custom donation amount in US dollars" disabled>
+                </span>
+              </label>
+            </div>
+          </fieldset>
+          <fieldset class="giving-choice-group">
+            <legend class="giving-preview-label">Giving schedule</legend>
+            <div class="giving-schedules">
+              <label class="giving-choice">
+                <input type="radio" name="giving-schedule" value="one-time" checked>
+                <span>One-time</span>
+              </label>
+              <label class="giving-choice">
+                <input type="radio" name="giving-schedule" value="bi-weekly">
+                <span>Bi-weekly</span>
+              </label>
+              <label class="giving-choice">
+                <input type="radio" name="giving-schedule" value="monthly">
+                <span>Monthly</span>
+              </label>
+            </div>
+          </fieldset>
+        </div>
+        <div class="giving-step-actions">
+          <p class="giving-status">Your selection is just a preview for now; payment details are not submitted on this page.</p>
+          <button class="button button-dark" id="next-step" type="button">Next: choose how to give <span aria-hidden="true">→</span></button>
+        </div>
+      </section>
+
+      <section class="giving-panel" id="check-panel" aria-labelledby="check-title" hidden>
+        <p class="eyebrow">MAIL OR BANK TRANSFER</p>
+        <h2 id="check-title">Choose how to give through EquipNet.</h2>
+        <div class="giving-method-options offline-method-options">
+          <button class="giving-method offline-method" type="button" data-offline-method="check" aria-pressed="false">
+            <span class="giving-method-copy">
+              <strong>Mail a check</strong>
+              <small>Get the mailing address and check instructions</small>
+            </span>
+            <span class="giving-method-arrow" aria-hidden="true">→</span>
+          </button>
+          <button class="giving-method offline-method" type="button" data-offline-method="bank" aria-pressed="false">
+            <span class="giving-method-copy">
+              <strong>Bank transfer</strong>
+              <small>Coming soon</small>
+            </span>
+            <span class="giving-method-arrow" aria-hidden="true">→</span>
+          </button>
+        </div>
+        <div class="offline-detail" id="offline-detail" aria-live="polite" hidden></div>
+      </section>
+
+      <section class="payment-options" id="payment-options" aria-labelledby="payment-title" hidden>
+        <p class="eyebrow">STEP 2 · YOUR WAY</p>
+        <h2 id="payment-title">Choose how you’d like to give.</h2>
+        <p class="payment-summary" id="payment-summary"></p>
+        <div class="payment-option-grid">
+          <button class="payment-option" type="button" data-method="venmo" aria-pressed="false">
+            <span class="payment-option-icon" aria-hidden="true">V</span>
+            <span class="payment-option-copy"><strong>Venmo</strong><small>Give from your Venmo account</small></span>
+            <span class="payment-option-status">Give online</span>
+          </button>
+          <button class="payment-option" type="button" data-method="cashapp" aria-pressed="false">
+            <span class="payment-option-icon" aria-hidden="true">$</span>
+            <span class="payment-option-copy"><strong>Cash App</strong><small>Send a gift with Cash App</small></span>
+            <span class="payment-option-status">Give online</span>
+          </button>
+          <button class="payment-option" type="button" data-method="equipnet" aria-pressed="false">
+            <span class="payment-option-icon" aria-hidden="true">E</span>
+            <span class="payment-option-copy"><strong>EquipNet</strong><small>Give through my ministry account</small></span>
+            <span class="payment-option-status">Give online</span>
+          </button>
+          <button class="payment-option" type="button" data-method="stripe" aria-pressed="false">
+            <span class="payment-option-icon" aria-hidden="true">S</span>
+            <span class="payment-option-copy"><strong>Stripe</strong><small>Secure online card checkout</small></span>
+            <span class="payment-option-status" id="stripe-method-status">Checking…</span>
+          </button>
+        </div>
+        <div class="payment-detail" id="payment-detail" aria-live="polite" hidden></div>
+        <button class="giving-back-button" id="change-gift" type="button">← Change amount or schedule</button>
+      </section>
+
+      <p class="giving-thanks">Thank you for your prayers, encouragement, and generosity.</p>
+    </main>
+
+    <footer class="site-footer">
+      <div class="section-wrap footer-inner">
+        <a class="wordmark footer-wordmark" href="/">
+          <span class="wordmark-mark" aria-hidden="true">M</span>
+          <span>Logan Doyle<small>MISSION UPDATES</small></span>
+        </a>
+        <p>Made with gratitude, wherever the journey leads.</p>
+        <a href="/privacy.html">Privacy</a>
+      </div>
+    </footer>
+  </body>
+</html>

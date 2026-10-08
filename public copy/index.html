@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f7f4ed">
+    <meta name="description" content="Follow [Logan Doyle]'s missionary journey, receive field updates, and learn how to support the work.">
+    <title>[Logan Doyle] | Mission Updates</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <a class="wordmark" href="/" aria-label="Mission updates home">
+        <span class="wordmark-mark" aria-hidden="true">M</span>
+        <span>[Your Name]<small>MISSION UPDATES</small></span>
+      </a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="#story">My story</a>
+        <a href="#updates">Updates</a>
+        <a href="#links">Links</a>
+        <a class="nav-give" href="/donate">Give <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero section-wrap">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="eyebrow-dot"></span> A JOURNEY OF FAITH & SERVICE</p>
+          <h1>Good news.<br><em>Real people.</em><br>A story still unfolding.</h1>
+          <p class="hero-intro">Hello, my name is <strong>Logan Doyle</strong>. I am currently serving with YWAM and being equipped through serving different teams, bases, and taking training opportunities; as I learn what it means to serve the Kingdom of God.</p>
+          <div class="hero-actions">
+            <a class="button button-dark" href="#updates">Follow the journey <span aria-hidden="true">↓</span></a>
+            <a class="text-link" href="/donate">Partner with me <span aria-hidden="true">↗</span></a>
+          </div>
+          <p class="small-note">Thank you for being part of the story.</p>
+        </div>
+        <aside class="hero-art" aria-label="Mission update introduction">
+          <div class="art-sun"></div>
+          <div class="art-hill art-hill-back"></div>
+          <div class="art-hill art-hill-front"></div>
+          <div class="art-note">
+            <span class="note-label">A NOTE FROM THE FIELD</span>
+            <p>"We were delighted to share with you not only the gospel of God but our lives as well."</p>
+            <span class="note-signature"> — 1 Thessalonians 2:8</span>
+          </div>
+          <span class="art-number" aria-hidden="true">01 / THE JOURNEY</span>
+        </aside>
+      </section>
+
+      <section class="story-band" id="story">
+        <div class="section-wrap story-grid">
+          <p class="eyebrow">WHY I’M HERE</p>
+          <div>
+<h2>Bearing Jesus’ Image: Interceding for the Nations & Loving the Individual</h2>            <p class="body-copy">I believe lasting change grows through relationships. In [place], I work alongside local leaders and neighbors through [briefly describe your ministry]. Your prayers, encouragement, and generosity help make this shared work possible.</p>
+<p class="body-copy">As much as I learn from studying Scripture, I’m constantly brought back in awe to the life Jesus lived. He loved every person He encountered with intentionality and deep care. He was also a man of persistent prayer, and I believe with all my heart that there is power when we pray. Carrying that kind of prayerful, intentional love is the image I strive to bear every day.</p>          <div class="story-stamp" aria-hidden="true"><span>WITH<br>HOPE</span><b>✳</b></div>
+<p class="body-copy">That calling has taken me from Montana and Hawaii to New Zealand, Indonesia, and Thailand, where I have had opportunities to serve through youth and community programs, walk alongside young people, and create safe, Christ-centered spaces where people can gather, ask big questions, and grow together.</p>
+
+<p class="body-copy">Every nation starts with an individual, and every life is changed through the intentional love of Christ.</p>      </section>
+
+      <section class="updates-section section-wrap" id="updates">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">LETTERS FROM THE JOURNEY</p>
+            <h2>Stay close to the story.</h2>
+          </div>
+          <p class="heading-aside">A thoughtful note with prayer requests, stories, and glimpses of everyday life. No noise, just the occasional update.</p>
+        </div>
+        <div class="signup-card">
+          <div class="signup-decoration" aria-hidden="true"><span>✳</span><span>FIELD<br>NOTES</span></div>
+          <div class="signup-content">
+            <h3>Get the next update.</h3>
+            <p>Sign up to receive letters from [place] and ways to pray alongside me.</p>
+            <form id="signup-form">
+              <div class="form-row">
+                <label class="visually-hidden" for="first-name">First name (optional)</label>
+                <input id="first-name" name="firstName" type="text" autocomplete="given-name" maxlength="80" placeholder="First name (optional)">
+                <label class="visually-hidden" for="email">Email address</label>
+                <input id="email" name="email" type="email" autocomplete="email" maxlength="254" placeholder="Your email address" required>
+                <button class="button button-coral" type="submit">Sign me up <span aria-hidden="true">→</span></button>
+              </div>
+              <div class="consent-row">
+                <input id="consent" name="consent" type="checkbox" required>
+                <label for="consent">I agree to receive occasional email updates. I can unsubscribe at any time.</label>
+              </div>
+              <div class="honeypot" aria-hidden="true">
+                <label for="website">Leave this field empty</label>
+                <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+              </div>
+              <p class="form-message" id="form-message" role="status" aria-live="polite"></p>
+            </form>
+            <p class="privacy-note">Your address is used only for these updates. <a href="/privacy.html">Read the privacy note</a>.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="link-section" id="links">
+        <div class="section-wrap">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">MORE WAYS TO CONNECT</p>
+              <h2>Find your way in.</h2>
+            </div>
+            <p class="heading-aside">Helpful places to follow, learn, and get in touch.</p>
+          </div>
+          <div class="link-list" id="link-list" aria-live="polite">
+            <p class="empty-links">Add your ministry, social, and contact links in <code>public/links.json</code>.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="support-section section-wrap">
+        <div>
+          <p class="eyebrow">GO FURTHER TOGETHER</p>
+          <h2>Your partnership<br>makes room for more.</h2>
+        </div>
+        <div class="support-copy">
+          <p>Prayer and financial support help sustain this work. If you’d like to partner with me, you can give securely through Stripe’s hosted checkout. This site never handles your card or bank details.</p>
+          <a class="button button-light" href="/donate">Explore giving <span aria-hidden="true">↗</span></a>
+          <p class="form-message" id="donation-message" role="status"></p>
+        </div>
+        <span class="support-flower" aria-hidden="true">✳</span>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="section-wrap footer-inner">
+        <a class="wordmark footer-wordmark" href="/">
+          <span class="wordmark-mark" aria-hidden="true">M</span>
+          <span>[Your Name]<small>MISSION UPDATES</small></span>
+        </a>
+        <p>Made with gratitude, wherever the journey leads.</p>
+        <a href="/privacy.html">Privacy</a>
+      </div>
+    </footer>
+  </body>
+</html>

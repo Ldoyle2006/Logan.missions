@@ -1,0 +1,24 @@
+{
+  "links": [
+    {
+      "label": "Instagram",
+      "url": "https://www.instagram.com/logan_25_doyle/",
+      "description": "Follow along for moments from the journey."
+    },
+    {
+      "label": "Facebook",
+      "url": "https://facebook.com/logan.doyle.436445",
+      "description": "Connect with me and follow my updates."
+    },
+    {
+      "label": "WhatsApp community",
+      "url": "https://chat.whatsapp.com/F3g8JPI5R32EFanUW9yhQY",
+      "description": "Join the group for community updates and prayer."
+    },
+    {
+      "label": "Email me",
+      "url": "mailto:logan.missions@icloud.com",
+      "description": "Send me an email directly."
+    }
+  ]
+}
