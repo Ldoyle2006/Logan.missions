@@ -121,106 +121,265 @@ loadLinks().catch(() => {
 
 const missionCarousel = document.querySelector("#mission-carousel");
 if (missionCarousel) {
-  const slides = [
+  const missionPhotos = [
     {
-      image: "/images/field/baptism.jpg",
-      alt: "Friends gather around a young person in the water during a baptism",
-      title: "A moment of faith",
-      note: "Faith is often experienced in community, through meaningful moments shared with one another.",
+      title: "A Brutal Battle of the Slippers",
+      memo: "The New Zealand DTS guys decided to play a game called Slipper Toss. Just some good character building and competition, with brutal red marks on our backs afterward from throwing slippers as hard as we could at each other. Man, was it fun. We wanted to play it all the time!",
     },
     {
-      image: "/images/field/care-and-connection.jpg",
-      alt: "A missionary shares a caring moment with a young person",
-      title: "Care in the little moments",
-      note: "Showing up, sharing encouragement, and being present can help build trust and friendship.",
+      title: "A Collection of Phones",
+      memo: "In a small village in Thailand, I became like a brother to some of these kids. They were always on their phones, so naturally, I started collecting them. This was supposed to be a family photo, but I was holding all their phones hostage. One Logan versus eight kids doesn't go too well. Even when I visited Thailand months later, they still remembered me as the guy who took their phones.",
     },
     {
-      image: "/images/field/shared-meal.jpg",
-      alt: "Friends and teammates share food around a table",
-      title: "Room around the table",
-      note: "Sharing a meal makes space for conversation, laughter, and getting to know one another.",
+      title: "A Late Night Preparing for the Father",
+      memo: "After worship, a couple of us guy staff headed back to prepare a space to welcome the Holy Spirit. We set up different stations, including one God put on my heart: getting down on our hands and knees to wash our brothers' and sisters' feet. The next day, I had the blessing of doing exactly that. This photo reminds me of a good night of fellowship and preparing to serve.",
     },
     {
-      image: "/images/field/outdoor-gathering.jpg",
-      alt: "A small group gathers outdoors with a view of the ocean",
-      title: "Learning together",
-      note: "Time outdoors can make room to reflect, ask questions, and learn alongside one another.",
+      title: "A Logan Stack",
+      memo: "Simple as that. Both of our names are Logan, and we were stacked.",
     },
     {
-      image: "/images/field/team-service.jpg",
-      alt: "A team works together on a practical community project",
-      title: "Serving side by side",
-      note: "Practical service is one way to care for the people and places that welcome us.",
+      title: "A Mini Legend in Indo",
+      memo: "I can't remember this little boy's name, but he followed me everywhere. And the man sitting next to me, Hekskia, became one of my best friends. We couldn't speak a word of each other's languages, but somehow that didn't matter. We just became friends and loved each other so much.",
     },
     {
-      image: "/images/field/group-community.jpg",
-      alt: "A large group of friends gathers together for a photo",
-      title: "Growing in community",
-      note: "Every journey brings new friendships and people to learn from along the way.",
+      title: "A Pointless Effort to Avoid the Rain",
+      memo: "Raincoat, rainproof pants, umbrella. I thought I was prepared for Thailand's rainy weather. Within seconds, I was completely soaked. So I embraced it and started doing weather reports and a little photo shoot. My phone even got water damage, but three days later, it miraculously started working again!",
+    },
+    {
+      title: "A Simple Palette and Reminder of a Good Hobby",
+      memo: "Sometimes it's worth stopping to capture a moment of stillness. The mountains, the train, and the colors just fit together so well. No crazy editing or making things look fake. Just a raw photo of something beautiful. It reminded me why I love photography and why I want to share what I see with others.",
+    },
+    {
+      title: "A Skit Gone Well",
+      memo: "After our team performed the story of Jonah being swallowed by a whale, the kids decided they wanted to reenact it themselves. And they did an incredible job! This photo was taken as they all bowed at the end of their performance.",
+    },
+    {
+      title: "A Start to Oral Mother Tongue",
+      memo: "Somehow, I got an email inviting me to an Oral Mother Tongue Zoom call with only about 200 people from around the world. I still have no idea how I ended up on that email list, but I'm so thankful I did. It stirred something in my heart for Oral Mother Tongue, and I even got people at our base to learn about it and pray into it with me.",
+    },
+    {
+      title: "A Troublemaker in the Making",
+      memo: "This isn't my boy, but man, could I spend all day with him. He's got the best smile and is full of so much joy. I'm so thankful I got to spend not just three months, but six months hanging out with him and teaching him to be a little menace to his parents, in all the best ways.",
+    },
+    {
+      title: "A Week of Being So on Fire, Everybody Had to See",
+      memo: "One of our students yelled, 'Why is no one running? That's a soul!' as she ran across a bridge to share the gospel. That was the heart of this week. In this photo, I'm sitting with a homeless woman outside a library, surrounded by these massive buildings. It's crazy how small we are, yet God knows every hair on our heads. I couldn't walk down the street without seeing someone and thinking, they deserve to hear about a God who loves them.",
+    },
+    {
+      title: "Another Moo",
+      memo: "I just like cows.",
+    },
+    {
+      title: "Beauty in the Quiet",
+      memo: "In the middle of Thailand, I came across this beautiful swampy area. The sky, the trees, the sunlight, and the reflection on the water were incredible. It was one of those places that maybe only a few thousand people have ever seen, and I just wanted to share how beautiful God's creation is.",
+    },
+    {
+      title: "Church in the Wild",
+      memo: "While in Sumba, our team was invited to a church service, but everyone already had plans, so I volunteered to go. I couldn't understand a word, and my phone hadn't worked on the island. But during the service, it suddenly translated everything perfectly, even when I was asked to share my testimony. We rode scooters into the woods, walked through the brush, laid down a tarp, worshiped, ate coconuts, and shared lunch. The pastor had such a heart for his community. You could feel the love he carried.",
+    },
+    {
+      title: "Dancing With the Ruth Center",
+      memo: "The Ruth Center is an elderly home in Thailand, and part of their activities included dancing, stretching, and worship. This photo was taken just before the dancing began. Man, was it fun seeing everybody get up and boogie!",
+    },
+    {
+      title: "DTS in New Zealand",
+      memo: "One of the first photos of our entire DTS together. After a long, hot day of running around playing games, we finally gathered for a picture. Some of us were eating ice cream, some were sweating, but this was our DTS.",
+    },
+    {
+      title: "First Time Teaching English",
+      memo: "My handwriting might not be that good, and my English might not be that good either. But hey, I got the point across!",
+    },
+    {
+      title: "Holding Onto the Gifts God Gave Us",
+      memo: "I come back to this photo so often. I didn't realize it in the moment, but God has been so faithful in placing me in ministries that make my heart overflow with love, compassion, and joy. And that's exactly what He did here.",
+    },
+    {
+      title: "Hot Potato Powder",
+      memo: "We got to play hot potato with students from a village in Thailand. The catch? If you weren't quick enough with the potato, you ended up with baby powder thrown in your face. There were a lot of powdered faces that day!",
+    },
+    {
+      title: "I Teach English, Not Art",
+      memo: "These two kids and the lady on the far left were incredible. We spent so much time drawing each other, laughing, and building relationships. But as you can probably tell from my drawing, there's a reason I was teaching English and not art.",
+    },
+    {
+      image: "Indo team yay.jpg",
+      title: "Indo Team, Yay!",
+      memo: "The first time we got together as a team for a photo. This was the group sent to different places across Indonesia. Two other staff and some of the most amazing students I could have asked for. Man, were these guys great.",
+    },
+    {
+      image: "Just a new missionary.jpg",
+      title: "Just a New Missionary",
+      memo: "Just me being silly, but I remember feeling so young, so new, and so ready to take on the world. Looking back now, I can see how much God has equipped me through everything He's brought me through.",
+    },
+    {
+      image: "Just human.jpg",
+      title: "Just Human",
+      memo: "Some people might look at this photo and think I look different or don't fit in. But we're all just human. I'm here because these people are just as worthy of hearing the same good news I've been told. Deep down, we're not so different.",
+    },
+    {
+      image: "Moo.jpg",
+      title: "Moo",
+      memo: "What can I say? I just like cows.",
+    },
+    {
+      image: "My partner in crime.jpg",
+      title: "My Partner in Crime",
+      memo: "This is Nixon. He's been everywhere with me. I stole him from my older sister so many times when I was younger that I basically claimed him as my own. He's my cat, nobody can tell me otherwise, and I love him very much.",
+    },
+    {
+      image: "pukena.jpg",
+      title: "Pūkana",
+      memo: "Hanging out with a couple of Māori warriors at the Treaty Grounds in New Zealand after a performance. It was pretty incredible, and man, is this intimidating!",
+    },
+    {
+      image: "surfing and missions.jpg",
+      title: "Surfing and Missions",
+      memo: "Who would have thought you could surf, tell people about God, and live in community all at the same time? I never would have pictured myself here, but man, am I grateful.",
+    },
+    {
+      image: "Thai worship.jpg",
+      title: "Thai Worship",
+      memo: "Seeing kids around 10 or 11 years old worshiping God was one of the most beautiful things I've witnessed. We set up speakers near the beach and worshiped as tourists stopped to listen. We were filling that town with worship to Jesus.",
+    },
+    {
+      title: "The Best Bible Teacher in the West",
+      memo: "This is Bill. He has one arm, and the first thing he asked after finding out where I was from was whether I had any clothes from home that he could wear. I've never heard somebody teach the Bible quite like this man. If he ever teaches a School of Biblical Studies, that's where I want to go.",
+    },
+    {
+      image: "The last supper.JPEG",
+      title: "The Last Supper",
+      memo: "One of the last times our entire DTS got together to sit down, enjoy a meal, and praise God for everything He had brought us through.",
+    },
+    {
+      image: "The vail is torn.jpg",
+      title: "The Veil Is Torn",
+      memo: "This photo captures such a beautiful moment of lordship and surrender. Everyone laying things down before Jesus because of everything He's done for us. Mark Parker taught us so much that week, and I'll always be thankful for it.",
+    },
+    {
+      image: "These kid can tkeep up with me.jpg",
+      title: "These Kids Can't Keep Up With Me",
+      memo: "We were playing musical chairs, and I absolutely loved it. We played so many games together, but this was definitely one of my favorites. What can I say? I'm a little quick on my feet. These kids just can't keep up!",
+    },
+    {
+      image: "These kids Stole My Heart.jpg",
+      title: "These Kids Stole My Heart",
+      memo: "Around 30 kids would show up every afternoon at about two o'clock. They made me sweat, and they stole my heart. They reminded me how much I love kids ministry and how deeply I want them to know Jesus. These kids deserve to be loved, served, and given every opportunity to know the life God has for them.",
+    },
+    {
+      image: "Trash baggin.jpg",
+      title: "Trash Baggin'",
+      memo: "One rainy New Zealand night, we decided to grab some trash bags, turn them into ponchos, and slide down a hill. Add a little dish soap and a couple of boogie boards, and man, we were flying!",
+    },
+    {
+      image: "Trying to make sence of the Trinity.jpg",
+      title: "Trying to Make Sense of the Trinity",
+      memo: "Sitting with a beautiful view of the Hawaiian ocean, discussing one of the most difficult topics to wrap our minds around: the Trinity. Man, do I love Diakonos.",
+    },
+    {
+      image: "what the bam bam.jpg",
+      title: "What the Bam Bam?",
+      memo: "There was this amazing Jamaican song playing, and this kid started dancing along with me. While everyone else was doing their thing, he and I were just vibing together.",
+    },
+    {
+      image: "Who can loosen orians belt.jpg",
+      title: "Who Can Loosen Orion's Belt?",
+      memo: "A glimpse into the Milky Way. Taking this photo reminded me of Job, when God puts everything into perspective and asks who can loosen Orion's belt. He has all authority, all knowledge, and all power. Sometimes looking up at the stars is all it takes to remember how great He is.",
+    },
+    {
+      image: "Who is jesus.jpg",
+      title: "Who Is Jesus?",
+      memo: "An incredible day evangelizing at one of the biggest malls I've ever been to in Bangkok with two of my best friends. We had so many responses and conversations. I was just full of the joy of the Lord, and His grace was so evident that day.",
+    },
+    {
+      image: "Why I love photography.jpg",
+      title: "Why I Love Photography",
+      memo: "Photography is such a beautiful way to capture the things around us. There's so much to experiment with, especially at night. I took this photo in New Zealand as cars drove up and down the road, capturing their light trails against the night sky.",
+    },
+    {
+      image: "Wing with Billy.JPG",
+      title: "Wings With Billy",
+      memo: "Billy taught on evangelism during our mini outreach to Spokane. Between his teaching and what God was doing in my heart, I believe that experience is one of the reasons I'm as bold in my faith as I am today. God used that time to prune the right things in my heart and point me in the right direction.",
     },
   ];
-  const cards = [...missionCarousel.querySelectorAll(".mission-card")];
+  const slides = missionPhotos.filter(({ image }) => image).map(({ image, title, memo }) => ({
+    image: `/images/mission/${encodeURIComponent(image)}`,
+    alt: title,
+    title,
+    note: memo,
+  }));
+  const photoButton = missionCarousel.querySelector(".mission-photo-button");
+  const image = missionCarousel.querySelector("#mission-image");
   const previousButton = missionCarousel.querySelector(".carousel-arrow-prev");
   const nextButton = missionCarousel.querySelector(".carousel-arrow-next");
+  const dotsContainer = document.querySelector("#mission-carousel-dots");
   const memoCount = document.querySelector("#photo-memo-count");
   const memoTitle = document.querySelector("#photo-memo-title");
   const memoText = document.querySelector("#photo-memo-text");
+  const dots = slides.map((slide, slideIndex) => {
+    const dot = document.createElement("button");
+    dot.className = "carousel-dot";
+    dot.type = "button";
+    dot.setAttribute("aria-label", `Show photo ${slideIndex + 1} of ${slides.length}: ${slide.title}`);
+    dot.addEventListener("click", () => showSlide(slideIndex));
+    dotsContainer.append(dot);
+    return dot;
+  });
+  const lightbox = document.querySelector("#mission-lightbox");
+  const lightboxImage = document.querySelector("#mission-lightbox-image");
+  const lightboxClose = lightbox.querySelector(".mission-lightbox-close");
+  let activeIndex = 0;
+  let imageChangeTimer;
+  let touchStartX = null;
 
-  function wrapIndex(index) {
-    return (index + slides.length) % slides.length;
-  }
-
-  function setCardSlide(card, slideIndex) {
-    const slide = slides[slideIndex];
-    const image = card.querySelector("img");
-    image.src = slide.image;
-    image.alt = slide.alt;
-    card.querySelector("figcaption").textContent = slide.title;
-    card.dataset.slideIndex = String(slideIndex);
-  }
-
-  for (const card of cards) {
-    const slideIndex = card.dataset.cardPosition === "left" ? slides.length - 1 : card.dataset.cardPosition === "right" ? 1 : 0;
-    setCardSlide(card, slideIndex);
-  }
-
-  function updateActiveMemo() {
-    const activeCard = cards.find((card) => card.dataset.cardPosition === "center");
-    const activeIndex = Number(activeCard.dataset.slideIndex);
+  function showSlide(slideIndex) {
+    activeIndex = (slideIndex + slides.length) % slides.length;
     const slide = slides[activeIndex];
 
-    for (const card of cards) {
-      const isActive = card === activeCard;
-      card.setAttribute("aria-current", String(isActive));
-      card.setAttribute("aria-hidden", String(!isActive));
-    }
-
+    window.clearTimeout(imageChangeTimer);
+    image.classList.add("is-changing");
+    imageChangeTimer = window.setTimeout(() => {
+      image.src = slide.image;
+      image.alt = slide.alt;
+      window.requestAnimationFrame(() => image.classList.remove("is-changing"));
+    }, 120);
+    photoButton.setAttribute("aria-label", `View larger: ${slide.title}`);
     memoCount.textContent = `${String(activeIndex + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}`;
     memoTitle.textContent = slide.title;
     memoText.textContent = slide.note;
-  }
-
-  function moveCarousel(direction) {
-    const nextPosition = direction === "next"
-      ? { left: "right", center: "left", right: "center" }
-      : { left: "center", center: "right", right: "left" };
-    const activeCard = cards.find((card) => card.dataset.cardPosition === "center");
-    const offset = direction === "next" ? 1 : -1;
-    const nextCenterIndex = wrapIndex(Number(activeCard.dataset.slideIndex) + offset);
-    const nextSlideIndexes = {
-      left: wrapIndex(nextCenterIndex - 1),
-      center: nextCenterIndex,
-      right: wrapIndex(nextCenterIndex + 1),
-    };
-
-    for (const card of cards) {
-      card.dataset.cardPosition = nextPosition[card.dataset.cardPosition];
-      setCardSlide(card, nextSlideIndexes[card.dataset.cardPosition]);
+    for (const [dotIndex, dot] of dots.entries()) {
+      if (dotIndex === activeIndex) {
+        dot.setAttribute("aria-current", "true");
+      } else {
+        dot.removeAttribute("aria-current");
+      }
     }
-    updateActiveMemo();
   }
 
-  previousButton.addEventListener("click", () => moveCarousel("previous"));
-  nextButton.addEventListener("click", () => moveCarousel("next"));
-  updateActiveMemo();
+  function showLightbox() {
+    const slide = slides[activeIndex];
+    lightboxImage.src = slide.image;
+    lightboxImage.alt = slide.alt;
+    lightbox.showModal();
+  }
+
+  previousButton.addEventListener("click", () => showSlide(activeIndex - 1));
+  nextButton.addEventListener("click", () => showSlide(activeIndex + 1));
+  photoButton.addEventListener("click", showLightbox);
+  photoButton.addEventListener("touchstart", (event) => {
+    touchStartX = event.changedTouches[0].clientX;
+  }, { passive: true });
+  photoButton.addEventListener("touchend", (event) => {
+    if (touchStartX === null) return;
+    const swipeDistance = event.changedTouches[0].clientX - touchStartX;
+    touchStartX = null;
+    if (Math.abs(swipeDistance) < 45) return;
+    event.preventDefault();
+    showSlide(activeIndex + (swipeDistance < 0 ? 1 : -1));
+  });
+  lightboxClose.addEventListener("click", () => lightbox.close());
+  lightbox.addEventListener("click", (event) => {
+    if (event.target === lightbox) lightbox.close();
+  });
+  showSlide(activeIndex);
 }

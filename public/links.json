@@ -17,7 +17,7 @@
     },
     {
       "label": "Email me",
-      "url": "mailto:logan.missions@icloud.com",
+      "url": "mailto:Logan.missions@icloud.com?subject=Hello%20Logan",
       "description": "Send me an email directly."
     }
   ]

@@ -76,30 +76,29 @@
         </div>
         <div class="mission-carousel" id="mission-carousel" aria-roledescription="carousel" aria-label="Mission field photo stories">
           <div class="carousel-stage">
-            <figure class="mission-card mission-card-left" data-card-position="left">
-              <img src="/images/field/group-community.jpg" alt="A large group of friends gathers together for a photo" loading="lazy" decoding="async">
-              <figcaption>Growing in community</figcaption>
-            </figure>
-            <figure class="mission-card mission-card-center" data-card-position="center" aria-current="true">
-              <img src="/images/field/baptism.jpg" alt="Friends gather around a young person in the water during a baptism" loading="lazy" decoding="async">
-              <figcaption>A moment of faith</figcaption>
-            </figure>
-            <figure class="mission-card mission-card-right" data-card-position="right">
-              <img src="/images/field/care-and-connection.jpg" alt="A missionary shares a caring moment with a young person" loading="lazy" decoding="async">
-              <figcaption>Care in the little moments</figcaption>
+            <figure class="mission-feature">
+              <button class="mission-photo-button" type="button" aria-label="View larger: Indo Team, Yay!">
+                <img id="mission-image" src="/images/mission/Indo%20team%20yay.jpg" alt="Indo Team, Yay!" fetchpriority="high">
+                <span class="mission-enlarge-hint" aria-hidden="true">Click to view larger</span>
+              </button>
             </figure>
             <button class="carousel-arrow carousel-arrow-prev" type="button" aria-label="Show previous mission photo">←</button>
             <button class="carousel-arrow carousel-arrow-next" type="button" aria-label="Show next mission photo">→</button>
           </div>
         </div>
+        <nav class="carousel-dots" id="mission-carousel-dots" aria-label="Choose a mission photo"></nav>
         <div class="photo-memo" aria-live="polite" aria-atomic="true">
-          <span class="photo-memo-count" id="photo-memo-count">01 / 06</span>
+          <span class="photo-memo-count" id="photo-memo-count">01 / 19</span>
           <div>
-            <h3 id="photo-memo-title">A moment of faith</h3>
-            <p id="photo-memo-text">Faith is often experienced in community, through meaningful moments shared with one another.</p>
+            <h3 id="photo-memo-title">Indo Team, Yay!</h3>
+            <p id="photo-memo-text">The first time we got together as a team for a photo. This was the group sent to different places across Indonesia. Two other staff and some of the most amazing students I could have asked for. Man, were these guys great.</p>
           </div>
         </div>
-        <p class="photo-note">The notes are short drafts based on each photo. You can personalize them with the stories and meaning behind these moments.</p>
+        <p class="photo-note">Browse moments from the journey through photos and short field notes.</p>
+        <dialog class="mission-lightbox" id="mission-lightbox" aria-label="Enlarged mission photo">
+          <button class="mission-lightbox-close" type="button" aria-label="Close enlarged photo">×</button>
+          <img id="mission-lightbox-image" alt="">
+        </dialog>
       </section>
 
       <section class="updates-section section-wrap" id="updates">
