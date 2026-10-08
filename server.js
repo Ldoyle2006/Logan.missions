@@ -77,18 +77,24 @@ async function subscribe(request, response) {
     return sendJson(response, 415, { message: "Please submit the signup form normally." });
   }
 
-  const publicBaseUrl = process.env.PUBLIC_BASE_URL;
   const origin = request.headers.origin;
-  let publicUrl;
-  try {
-    publicUrl = publicBaseUrl ? new URL(publicBaseUrl) : null;
-    if (origin && (!publicUrl || new URL(origin).origin !== publicUrl.origin)) {
+  if (origin) {
+    let originUrl;
+    try {
+      originUrl = new URL(origin);
+    } catch {
       return sendJson(response, 403, { message: "This signup request could not be verified." });
     }
-  } catch {
-    return sendJson(response, 503, {
-      message: "Email signup is not set up yet. Please try again later.",
-    });
+    const requestHost = request.headers.host;
+    const forwardedProtocol = request.headers["x-forwarded-proto"]?.split(",")[0].trim().toLowerCase();
+    if (
+      !requestHost ||
+      !["http:", "https:"].includes(originUrl.protocol) ||
+      originUrl.host.toLowerCase() !== requestHost.toLowerCase() ||
+      (forwardedProtocol && `${forwardedProtocol}:` !== originUrl.protocol)
+    ) {
+      return sendJson(response, 403, { message: "This signup request could not be verified." });
+    }
   }
 
   if (isRateLimited(request.socket.remoteAddress || "unknown")) {
@@ -118,22 +124,15 @@ async function subscribe(request, response) {
 
   const apiKey = process.env.BREVO_API_KEY;
   const listId = Number(process.env.BREVO_LIST_ID);
-  const templateId = Number(process.env.BREVO_DOUBLE_OPT_IN_TEMPLATE_ID);
-  if (!apiKey || !Number.isInteger(listId) || listId < 1 || !Number.isInteger(templateId) || templateId < 1) {
+  if (!apiKey || !Number.isInteger(listId) || listId < 1) {
     return sendJson(response, 503, {
       message: "Email signup is not set up yet. Please try again later.",
     });
   }
-  if (!publicUrl || !["http:", "https:"].includes(publicUrl.protocol)) {
-    return sendJson(response, 503, {
-      message: "Email signup is not set up yet. Please try again later.",
-    });
-  }
-
   const attributes = firstName ? { FIRSTNAME: firstName } : {};
   let providerResponse;
   try {
-    providerResponse = await fetch("https://api.brevo.com/v3/contacts/doubleOptinConfirmation", {
+    providerResponse = await fetch("https://api.brevo.com/v3/contacts", {
       method: "POST",
       headers: {
         "api-key": apiKey,
@@ -143,28 +142,41 @@ async function subscribe(request, response) {
       body: JSON.stringify({
         email,
         attributes,
-        includeListIds: [listId],
-        templateId,
-        redirectionUrl: new URL("/?subscription=confirmed", publicUrl).toString(),
+        listIds: [listId],
+        updateEnabled: true,
       }),
       signal: AbortSignal.timeout(10000),
     });
   } catch (error) {
     console.error("Brevo signup request failed:", error.message);
     return sendJson(response, 502, {
-      message: "We could not send the confirmation email right now. Please try again later.",
+      message: "Signup could not be completed. Please try again later.",
     });
   }
 
   if (!providerResponse.ok) {
+    const errorBody = await providerResponse.text();
+    let errorCode;
+    try {
+      errorCode = JSON.parse(errorBody).code;
+    } catch {
+      errorCode = "";
+    }
+    if (providerResponse.status === 409 || errorCode === "duplicate_parameter") {
+      return sendJson(response, 200, {
+        message: "This email is already on the update list. Thank you!",
+      });
+    }
     console.error("Brevo signup request returned HTTP", providerResponse.status);
     return sendJson(response, 502, {
-      message: "We could not send the confirmation email right now. Please try again later.",
+      message: "Signup could not be completed. Please try again later.",
     });
   }
 
   return sendJson(response, 200, {
-    message: "Please check your inbox for a confirmation email to finish signing up.",
+    message: providerResponse.status === 204
+      ? "Your email was already on the update list. Thank you!"
+      : "You’re on the update list. Thank you for signing up.",
   });
 }
 
@@ -226,7 +238,10 @@ async function handleRequest(request, response) {
     });
   }
 
-  if (requestUrl.pathname === "/api/subscribe" && request.method === "POST") {
+  if (
+    (requestUrl.pathname === "/api/newsletter" || requestUrl.pathname === "/api/subscribe") &&
+    request.method === "POST"
+  ) {
     return subscribe(request, response);
   }
 

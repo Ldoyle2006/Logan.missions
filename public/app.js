@@ -79,7 +79,7 @@ async function loadLinks() {
 
 signupForm.addEventListener("submit", async (event) => {
   event.preventDefault();
-  setMessage(formMessage, "Sending your confirmation request…");
+  setMessage(formMessage, "Adding you to the update list…");
   const button = signupForm.querySelector('button[type="submit"]');
   button.disabled = true;
 
@@ -92,7 +92,7 @@ signupForm.addEventListener("submit", async (event) => {
   };
 
   try {
-    const response = await fetch("/api/subscribe", {
+    const response = await fetch("/api/newsletter", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -110,12 +110,6 @@ signupForm.addEventListener("submit", async (event) => {
     button.disabled = false;
   }
 });
-
-const params = new URLSearchParams(window.location.search);
-if (params.get("subscription") === "confirmed") {
-  setMessage(formMessage, "Thanks for confirming! You’re on the update list.");
-  document.querySelector("#updates").scrollIntoView({ behavior: "smooth" });
-}
 
 loadDonationStatus().catch(() => {
   setMessage(donationMessage, "Donation checkout is temporarily unavailable.", true);

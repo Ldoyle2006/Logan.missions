@@ -46,14 +46,12 @@ Create a Stripe Payment Link in your Stripe dashboard, then set `STRIPE_PAYMENT_
 ## Brevo newsletter signup
 
 1. Create a Brevo contact list for these updates.
-2. Create and verify a double-opt-in email template in Brevo. The template should clearly identify you or your organization and explain why the recipient is receiving the confirmation request.
-3. Create an API key with the minimum access needed for contacts and transactional email.
-4. Set `BREVO_API_KEY`, `BREVO_LIST_ID`, and `BREVO_DOUBLE_OPT_IN_TEMPLATE_ID` in `.env`.
-5. Set `PUBLIC_BASE_URL` to the exact public site origin (for local preview, `http://localhost:3000`; in production, use your HTTPS domain).
-6. Confirm the full sign-up and unsubscribe flow before inviting people to subscribe.
+2. Create an API key with the minimum access needed to create and update contacts.
+3. Set `BREVO_API_KEY` and `BREVO_LIST_ID` in `.env` or your hosting provider's environment settings. Set `BREVO_LIST_ID` to `4` for the example contact list.
+4. Confirm the full sign-up and unsubscribe flow before inviting people to subscribe.
 
-The server sends the signup request to Brevo's double-opt-in endpoint. Subscribers are added to the configured list only after they confirm. Use Brevo to send updates and include its unsubscribe mechanism in each newsletter. Never put the API key in browser code or commit `.env`.
+The server adds subscribers directly to the configured Brevo contact list using the Contacts API; no confirmation email is sent. Use Brevo to send updates and include its unsubscribe mechanism in each newsletter. Never put the API key in browser code or commit `.env`.
 
 ## Production
 
-Deploy the Node server behind a hosting provider that supports Node.js 20+ and HTTPS. Configure the environment variables in the host's secret/environment settings rather than uploading `.env`. Set `PUBLIC_BASE_URL` to the canonical HTTPS origin. The included in-memory signup rate limit is suitable only for a small starter deployment; use a shared rate limiter if running multiple server instances.
+Deploy the Node server behind a hosting provider that supports Node.js 20+ and HTTPS. Configure the environment variables in the host's secret/environment settings rather than uploading `.env`. Set `PUBLIC_BASE_URL` to the canonical HTTPS origin to enable HSTS; it is not required for newsletter signup. The included in-memory signup rate limit is suitable only for a small starter deployment; use a shared rate limiter if running multiple server instances.
