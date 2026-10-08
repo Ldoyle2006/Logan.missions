@@ -153,8 +153,15 @@ for (const button of offlineMethodButtons) {
 
     const bankInstructions = document.createElement("p");
     bankInstructions.className = "payment-detail-message";
-    bankInstructions.textContent = "Bank transfer giving is coming soon. Secure instructions will be added here once this option is ready.";
-    offlineDetail.append(bankInstructions);
+    bankInstructions.textContent = "Would you prefer to give directly through your bank? Request my secure transfer instructions for one-time or recurring support.";
+    const privacyNote = document.createElement("p");
+    privacyNote.className = "payment-detail-message";
+    privacyNote.textContent = "Banking details are shared privately and are not displayed publicly.";
+    const requestDetails = document.createElement("a");
+    requestDetails.className = "button button-coral giving-checkout";
+    requestDetails.href = `mailto:Logan.missions@icloud.com?subject=${encodeURIComponent("Request Bank Transfer Details")}&body=${encodeURIComponent("Hi Logan,\n\nCould you please send me your secure bank transfer instructions for one-time or recurring mission support?\n\nThank you!")}`;
+    requestDetails.textContent = "Request Bank Transfer Details";
+    offlineDetail.append(bankInstructions, privacyNote, requestDetails);
   });
 }
 
