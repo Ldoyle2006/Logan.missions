@@ -7,6 +7,7 @@
     <meta name="description" content="Choose how to support Logan Doyle's missionary journey.">
     <title>Give | Logan Doyle Mission Updates</title>
     <link rel="stylesheet" href="/styles.css">
+    <script src="https://js.stripe.com/v3/" defer></script>
     <script src="/giving.js" defer></script>
   </head>
   <body class="giving-page-body">
@@ -70,20 +71,8 @@
                 <span>$50</span>
               </label>
               <label class="giving-choice">
-                <input type="radio" name="giving-amount" value="75">
-                <span>$75</span>
-              </label>
-              <label class="giving-choice">
                 <input type="radio" name="giving-amount" value="100">
                 <span>$100</span>
-              </label>
-              <label class="giving-choice">
-                <input type="radio" name="giving-amount" value="250">
-                <span>$250</span>
-              </label>
-              <label class="giving-choice">
-                <input type="radio" name="giving-amount" value="500">
-                <span>$500</span>
               </label>
               <label class="giving-choice giving-choice-custom">
                 <input type="radio" name="giving-amount" value="custom">
@@ -114,8 +103,8 @@
           </fieldset>
         </div>
         <div class="giving-step-actions">
-          <p class="giving-status">Your selection is just a preview for now; payment details are not submitted on this page.</p>
-          <button class="button button-dark" id="next-step" type="button">Next: choose how to give <svg class="arrow-icon arrow-icon-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></button>
+          <p class="giving-status">Choose a payment method to continue. Card details are collected securely by Stripe and are never sent to this website.</p>
+          <button class="button button-dark" id="next-step" type="button">Choose payment method <svg class="arrow-icon arrow-icon-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></button>
         </div>
       </section>
 
@@ -163,7 +152,7 @@
           </button>
           <button class="payment-option" type="button" data-method="stripe" aria-pressed="false">
             <span class="payment-option-icon" aria-hidden="true">S</span>
-            <span class="payment-option-copy"><strong>Stripe</strong><small>Secure online card checkout</small></span>
+            <span class="payment-option-copy"><strong>Card / bank</strong><small>Secure on-page payment form</small></span>
             <span class="payment-option-status" id="stripe-method-status">Checking…</span>
           </button>
         </div>

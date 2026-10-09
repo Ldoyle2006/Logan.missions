@@ -315,6 +315,18 @@ h1, h2, h3, p { margin-top: 0; }
 .payment-detail[hidden] { display: none; }
 .payment-detail-message { margin: 0 0 10px; color: var(--cream-muted); font-size: 13px; }
 .checkout-error { color: #ffd1c5; }
+.stripe-donation-form { display: grid; gap: 14px; max-width: 620px; margin-top: 16px; }
+.stripe-email-label { display: grid; gap: 7px; color: var(--cream); font-size: 12px; font-weight: 700; }
+.stripe-email-input { width: 100%; min-height: 44px; padding: 10px 12px; border: 1px solid rgba(245, 239, 224, .38); border-radius: 4px; background: rgba(245, 239, 224, .08); color: var(--cream); font: 14px var(--sans); }
+.stripe-email-input::placeholder { color: var(--cream-muted); }
+.stripe-email-input:focus-visible { outline-color: #e9b28e; }
+.stripe-email-input:read-only { opacity: .8; }
+.stripe-payment-element { padding: 14px; border: 1px solid rgba(245, 239, 224, .2); border-radius: 4px; background: rgba(245, 239, 224, .035); }
+.stripe-payment-status, .stripe-payment-error { min-height: 1.4em; margin: 0; font-size: 12px; }
+.stripe-payment-status { color: var(--cream-muted); }
+.stripe-payment-error { color: #ffd1c5; }
+.stripe-submit { justify-self: start; }
+.stripe-submit:disabled { cursor: wait; opacity: .7; }
 .payment-detail .mailing-address { margin: 12px 0; border-color: #e9b28e; color: var(--cream-muted); }
 .payment-detail .mailing-address strong { color: var(--cream); }
 .payment-detail .giving-checkout { margin-top: 6px; }

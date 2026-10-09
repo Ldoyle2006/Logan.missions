@@ -1,6 +1,6 @@
 # Mission update website starter
 
-A lightweight Node.js website for missionary updates, a configurable link hub, Brevo newsletter signups, and Stripe-hosted donations. The site does not store payment details or newsletter subscriber records itself.
+A lightweight Node.js website for missionary updates, a configurable link hub, Brevo newsletter signups, and Stripe Elements donations. The site does not store payment details or newsletter subscriber records itself.
 
 ## Run locally
 
@@ -9,12 +9,12 @@ A lightweight Node.js website for missionary updates, a configurable link hub, B
 3. From the project folder, run `npm start`.
 4. Open `http://localhost:3000`.
 
-The site runs without provider settings so you can edit and preview its content. Newsletter signup and donation checkout remain unavailable until their provider configuration is complete.
+The site runs without provider settings so you can edit and preview its content. Newsletter signup and the embedded test-mode donation form remain unavailable until their provider configuration is complete.
 
 ## Customize the site
 
 - Edit `public/index.html` to add your name, mission, location, and story.
-- The Give buttons open `public/giving.html`, where supporters can choose an amount, schedule, and giving method, or mail a check. Update the check instructions there if your EquipNet details change. Stripe checkout creates a secure session for the selected gift amount and schedule.
+- The Give buttons open `public/giving.html`, where supporters can choose an amount, schedule, and giving method, or mail a check. Update the check instructions there if your EquipNet details change. Stripe Elements securely collects payment details on the page for the selected gift amount and schedule.
 - The Shop link opens `public/shop.html`, a merchandise concept preview. Product illustrations and prices are placeholders, and purchases are not enabled.
 - Edit `public/links.json` to show multiple links. Example:
 
@@ -41,9 +41,16 @@ The site runs without provider settings so you can edit and preview its content.
 
 ## Stripe donations
 
-Set `STRIPE_SECRET_KEY` in `.env` or your hosting provider's server-side environment settings, and set `PUBLIC_BASE_URL` to the canonical site URL. The server creates Stripe Checkout Sessions using the selected one-time, bi-weekly, or monthly amount. Supporters enter their email and payment details on Stripe; the site never handles or stores card details. Keep the secret key server-side and never add it to browser code or commit it. Test with a Stripe test-mode secret key before switching to a live key. Confirm any donation receipts, tax language, and fundraising disclosures with your organization.
+The Give page uses Stripe Elements to securely collect payment details in the page. The Node server creates one-time PaymentIntents and monthly or every-two-weeks Billing subscriptions. Configure all of the following in `.env` for local test mode or in Render's server environment:
 
-`STRIPE_PAYMENT_LINK_URL` remains supported by the legacy `/donate` redirect, but the amount and schedule selector uses `STRIPE_SECRET_KEY` to create an amount-specific checkout session.
+- `STRIPE_SECRET_KEY` — a test-mode secret key (`sk_test_...`).
+- `STRIPE_PUBLISHABLE_KEY` — the matching test-mode publishable key (`pk_test_...`). This key is returned to the browser only by `/api/config`.
+- `STRIPE_WEBHOOK_SECRET` — the signing secret for a test-mode webhook endpoint.
+- `PUBLIC_BASE_URL` — the canonical site origin, such as `https://logan-missions.onrender.com`.
+
+Live-mode secret and publishable keys are rejected by the integration. Stripe test mode must be fully verified before any separate approval to enable live payments. Configure a Stripe webhook at `https://your-site.example/api/stripe-webhook` for `payment_intent.succeeded`, `invoice.paid`, `invoice.payment_failed`, and `customer.subscription.created`, `customer.subscription.updated`, and `customer.subscription.deleted`; put its test-mode signing secret in `STRIPE_WEBHOOK_SECRET`. The webhook signature is verified against the raw request body, and payment/subscription confirmations are recorded in the Node service logs. The website never receives card numbers. Test payment and recurring billing flows with Stripe's test cards before considering a live-mode launch. Confirm any donation receipts, tax language, and fundraising disclosures with your organization.
+
+`STRIPE_PAYMENT_LINK_URL` is retained only for the legacy `/donate` route, which accepts a Stripe test-mode link. The embedded amount and schedule flow does not use Payment Links.
 
 ## Brevo newsletter signup
 

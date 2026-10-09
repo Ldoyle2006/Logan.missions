@@ -8,5 +8,8 @@
   },
   "scripts": {
     "start": "node server.js"
+  },
+  "dependencies": {
+    "stripe": "^23.0.0"
   }
 }

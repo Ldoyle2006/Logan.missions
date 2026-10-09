@@ -2,6 +2,7 @@ import { createServer } from "node:http";
 import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import Stripe from "stripe";
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const publicDirectory = path.join(root, "public");
@@ -9,8 +10,12 @@ const rateLimitWindowMs = 15 * 60 * 1000;
 const rateLimitMax = 5;
 const subscribeRequests = new Map();
 const checkoutRequests = new Map();
+let stripe = null;
 
 await loadEnvironmentFile();
+if (process.env.STRIPE_SECRET_KEY?.startsWith("sk_test_")) {
+  stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+}
 const port = Number(process.env.PORT || 3000);
 
 function sendJson(response, statusCode, payload) {
@@ -24,7 +29,7 @@ function sendJson(response, statusCode, payload) {
 function setSecurityHeaders(response) {
   response.setHeader(
     "Content-Security-Policy",
-    "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; form-action 'self'; base-uri 'self'; frame-ancestors 'none'",
+    "default-src 'self'; script-src 'self' https://js.stripe.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://api.stripe.com https://m.stripe.network https://r.stripe.com; frame-src https://js.stripe.com https://hooks.stripe.com; form-action 'self'; base-uri 'self'; frame-ancestors 'none'",
   );
   response.setHeader("X-Content-Type-Options", "nosniff");
   response.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
@@ -71,6 +76,21 @@ async function readJsonBody(request) {
     error.statusCode = 400;
     throw error;
   }
+}
+
+async function readRawBody(request, maxBytes = 1024 * 1024) {
+  const chunks = [];
+  let size = 0;
+  for await (const chunk of request) {
+    size += chunk.length;
+    if (size > maxBytes) {
+      const error = new Error("Request body is too large.");
+      error.statusCode = 413;
+      throw error;
+    }
+    chunks.push(chunk);
+  }
+  return Buffer.concat(chunks);
 }
 
 async function subscribe(request, response) {
@@ -214,15 +234,31 @@ function hasSameOrigin(request) {
   }
 }
 
-async function createCheckoutSession(request, response) {
+function stripeTestConfiguration() {
+  const secretKey = process.env.STRIPE_SECRET_KEY || "";
+  const publishableKey = process.env.STRIPE_PUBLISHABLE_KEY || "";
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || "";
+  if (
+    !stripe ||
+    !secretKey.startsWith("sk_test_") ||
+    !publishableKey.startsWith("pk_test_") ||
+    !webhookSecret.startsWith("whsec_") ||
+    !publicSiteOrigin()
+  ) {
+    return null;
+  }
+  return { publishableKey };
+}
+
+async function createDonationIntent(request, response) {
   if (!request.headers["content-type"]?.toLowerCase().startsWith("application/json")) {
-    return sendJson(response, 415, { message: "Please try checkout again." });
+    return sendJson(response, 415, { message: "Please try your donation again." });
   }
   if (!hasSameOrigin(request)) {
-    return sendJson(response, 403, { message: "This checkout request could not be verified." });
+    return sendJson(response, 403, { message: "This donation request could not be verified." });
   }
   if (isRateLimited(checkoutRequests, request.socket.remoteAddress || "unknown", 10)) {
-    return sendJson(response, 429, { message: "Too many checkout attempts. Please try again later." });
+    return sendJson(response, 429, { message: "Too many donation attempts. Please try again later." });
   }
 
   const body = await readJsonBody(request);
@@ -230,96 +266,156 @@ async function createCheckoutSession(request, response) {
     return sendJson(response, 400, { message: "Please choose a valid gift amount and schedule." });
   }
 
-  const amount = body.amount;
-  const amountInCents = typeof amount === "number" ? Math.round(amount * 100) : 0;
+  const amountInCents = typeof body.amount === "number" ? Math.round(body.amount * 100) : 0;
   const schedule = body.schedule;
+  const email = typeof body.email === "string" ? body.email.trim() : "";
+  const requestId = typeof body.requestId === "string" ? body.requestId : "";
   if (
-    typeof amount !== "number" ||
-    !Number.isFinite(amount) ||
-    amount < 5 ||
-    amount > 999999.99 ||
+    typeof body.amount !== "number" ||
+    !Number.isFinite(body.amount) ||
+    body.amount < 5 ||
+    body.amount > 999999.99 ||
     !Number.isSafeInteger(amountInCents) ||
-    Math.abs(amount * 100 - amountInCents) > 0.000001 ||
-    !["one-time", "bi-weekly", "monthly"].includes(schedule)
+    Math.abs(body.amount * 100 - amountInCents) > 0.000001 ||
+    !["one-time", "bi-weekly", "monthly"].includes(schedule) ||
+    email.length > 254 ||
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
+    !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(requestId)
   ) {
-    return sendJson(response, 400, { message: "Choose a valid gift of at least $5 and select a giving schedule." });
+    return sendJson(response, 400, { message: "Enter a valid email and gift amount of at least $5." });
   }
 
-  const apiKey = process.env.STRIPE_SECRET_KEY;
-  const siteOrigin = publicSiteOrigin();
-  if (!apiKey || !siteOrigin) {
-    return sendJson(response, 503, {
-      message: "Secure donation checkout is not configured yet. Please try again later.",
-    });
+  const configuration = stripeTestConfiguration();
+  if (!configuration) {
+    return sendJson(response, 503, { message: "Test-mode payment collection is not configured yet." });
   }
 
-  const sessionParameters = new URLSearchParams({
-    mode: schedule === "one-time" ? "payment" : "subscription",
-    "line_items[0][price_data][currency]": "usd",
-    "line_items[0][price_data][unit_amount]": String(amountInCents),
-    "line_items[0][price_data][product_data][name]": "Mission support for Logan Doyle",
-    "success_url": `${siteOrigin}/giving.html?donation=success&session_id={CHECKOUT_SESSION_ID}`,
-    "cancel_url": `${siteOrigin}/giving.html?donation=cancelled`,
-  });
+  const description = schedule === "one-time"
+    ? "One-time mission support for Logan Doyle"
+    : `${schedule === "monthly" ? "Monthly" : "Every-two-weeks"} mission support for Logan Doyle`;
+  const metadata = {
+    donation_schedule: schedule,
+    integration: "elements_test",
+  };
 
-  if (schedule === "one-time") {
-    sessionParameters.set("customer_creation", "always");
-  } else {
-    sessionParameters.set("line_items[0][price_data][recurring][interval]", schedule === "monthly" ? "month" : "week");
-    if (schedule === "bi-weekly") {
-      sessionParameters.set("line_items[0][price_data][recurring][interval_count]", "2");
-    }
-  }
-
-  let providerResponse;
   try {
-    providerResponse = await fetch("https://api.stripe.com/v1/checkout/sessions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: sessionParameters,
-      signal: AbortSignal.timeout(15000),
+    if (schedule === "one-time") {
+      const intent = await stripe.paymentIntents.create({
+        amount: amountInCents,
+        currency: "usd",
+        receipt_email: email,
+        description,
+        metadata,
+        automatic_payment_methods: { enabled: true },
+      }, { idempotencyKey: `donation-intent-${requestId}` });
+      if (!intent.client_secret) {
+        throw new Error("Stripe did not return a payment client secret.");
+      }
+      return sendJson(response, 200, {
+        clientSecret: intent.client_secret,
+        publishableKey: configuration.publishableKey,
+      });
+    }
+
+    const customer = await stripe.customers.create({
+      email,
+      metadata: { integration: "elements_test" },
+    }, { idempotencyKey: `donation-customer-${requestId}` });
+    const subscription = await stripe.subscriptions.create({
+      customer: customer.id,
+      items: [{
+        price_data: {
+          currency: "usd",
+          product_data: { name: "Mission support for Logan Doyle" },
+          unit_amount: amountInCents,
+          recurring: schedule === "monthly"
+            ? { interval: "month" }
+            : { interval: "week", interval_count: 2 },
+        },
+      }],
+      collection_method: "charge_automatically",
+      payment_behavior: "default_incomplete",
+      payment_settings: { save_default_payment_method: "on_subscription" },
+      metadata,
+      expand: ["latest_invoice.confirmation_secret"],
+    }, { idempotencyKey: `donation-subscription-${requestId}` });
+    const latestInvoice = subscription.latest_invoice;
+    const clientSecret = latestInvoice &&
+      typeof latestInvoice === "object" &&
+      latestInvoice.confirmation_secret?.client_secret;
+    if (typeof clientSecret !== "string") {
+      throw new Error("Stripe did not return the subscription invoice client secret.");
+    }
+    return sendJson(response, 200, {
+      clientSecret,
+      publishableKey: configuration.publishableKey,
     });
   } catch (error) {
-    console.error("Stripe checkout request failed:", error.message);
+    console.error("Stripe Elements intent creation failed:", error.message);
     return sendJson(response, 502, {
-      message: "Secure checkout could not be started. Please try again.",
+      message: "Secure payment could not be prepared. Please try again.",
     });
   }
+}
 
-  let session;
+function logStripeEvent(event) {
+  const object = event.data.object;
+  if (event.type === "payment_intent.succeeded") {
+    console.info("Stripe test payment confirmed", {
+      eventId: event.id,
+      paymentIntentId: object.id,
+      amount: object.amount,
+      currency: object.currency,
+    });
+  } else if (event.type === "invoice.paid" || event.type === "invoice.payment_failed") {
+    const subscriptionId = typeof object.subscription === "string"
+      ? object.subscription
+      : object.parent?.subscription_details?.subscription || null;
+    console.info(event.type === "invoice.paid" ? "Stripe test subscription payment confirmed" : "Stripe test subscription payment failed", {
+      eventId: event.id,
+      invoiceId: object.id,
+      subscriptionId,
+      amount: object.amount_paid ?? object.amount_due,
+    });
+  } else if (
+    event.type === "customer.subscription.created" ||
+    event.type === "customer.subscription.updated" ||
+    event.type === "customer.subscription.deleted"
+  ) {
+    console.info("Stripe test subscription changed", {
+      eventId: event.id,
+      subscriptionId: object.id,
+      status: object.status,
+      currentPeriodEnd: object.current_period_end,
+    });
+  }
+}
+
+async function receiveStripeWebhook(request, response) {
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || "";
+  if (!stripe || !webhookSecret.startsWith("whsec_")) {
+    return sendJson(response, 503, { message: "Stripe webhooks are not configured." });
+  }
+  const signature = request.headers["stripe-signature"];
+  if (typeof signature !== "string") {
+    return sendJson(response, 400, { message: "Missing Stripe signature." });
+  }
+
+  let event;
   try {
-    session = await providerResponse.json();
-  } catch {
-    console.error("Stripe checkout returned an unreadable response.");
-    return sendJson(response, 502, {
-      message: "Secure checkout could not be started. Please try again.",
-    });
+    const rawBody = await readRawBody(request);
+    event = stripe.webhooks.constructEvent(rawBody, signature, webhookSecret);
+  } catch (error) {
+    console.warn("Stripe webhook verification failed:", error.message);
+    return sendJson(response, error.statusCode || 400, { message: "Invalid Stripe webhook." });
+  }
+  if (event.livemode) {
+    console.warn("Rejected a live-mode Stripe event from the test-only webhook.");
+    return sendJson(response, 400, { message: "Live-mode events are not accepted." });
   }
 
-  if (!providerResponse.ok) {
-    console.error("Stripe checkout request returned HTTP", providerResponse.status);
-    return sendJson(response, 502, {
-      message: "Secure checkout could not be started. Please try again.",
-    });
-  }
-
-  let checkoutUrl;
-  try {
-    checkoutUrl = new URL(session.url);
-  } catch {
-    checkoutUrl = null;
-  }
-  if (!checkoutUrl || checkoutUrl.protocol !== "https:") {
-    console.error("Stripe checkout response did not include a secure session URL.");
-    return sendJson(response, 502, {
-      message: "Secure checkout could not be started. Please try again.",
-    });
-  }
-
-  return sendJson(response, 200, { url: checkoutUrl.toString() });
+  logStripeEvent(event);
+  return sendJson(response, 200, { received: true });
 }
 
 function contentTypeFor(filePath) {
@@ -376,13 +472,19 @@ async function handleRequest(request, response) {
   const requestUrl = new URL(request.url || "/", "http://localhost");
 
   if (requestUrl.pathname === "/api/config" && request.method === "GET") {
+    const configuration = stripeTestConfiguration();
     return sendJson(response, 200, {
-      donationsConfigured: Boolean(process.env.STRIPE_SECRET_KEY && publicSiteOrigin()),
+      donationsConfigured: Boolean(configuration),
+      stripePublishableKey: configuration?.publishableKey || null,
     });
   }
 
-  if (requestUrl.pathname === "/api/create-checkout-session" && request.method === "POST") {
-    return createCheckoutSession(request, response);
+  if (requestUrl.pathname === "/api/create-donation-intent" && request.method === "POST") {
+    return createDonationIntent(request, response);
+  }
+
+  if (requestUrl.pathname === "/api/stripe-webhook" && request.method === "POST") {
+    return receiveStripeWebhook(request, response);
   }
 
   if (
@@ -408,9 +510,13 @@ async function handleRequest(request, response) {
       response.end("The donation link is not configured correctly.");
       return;
     }
-    if (paymentUrl.protocol !== "https:") {
+    if (
+      paymentUrl.protocol !== "https:" ||
+      paymentUrl.hostname !== "buy.stripe.com" ||
+      !paymentUrl.pathname.startsWith("/test_")
+    ) {
       response.writeHead(503, { "Content-Type": "text/plain; charset=utf-8" });
-      response.end("The donation link must use HTTPS.");
+      response.end("Only a Stripe test-mode donation link is available.");
       return;
     }
     response.writeHead(303, { Location: paymentUrl.toString(), "Cache-Control": "no-store" });
