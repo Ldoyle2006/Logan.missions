@@ -132,7 +132,8 @@ h1, h2, h3, p { margin-top: 0; }
 .journey-section .heading-aside { font: italic 15px/1.65 var(--serif); }
 .mission-carousel { position: relative; max-width: 990px; margin: 0 auto; overflow: clip; }
 .carousel-stage { position: relative; height: clamp(300px, 40vw, 470px); overflow: hidden; touch-action: pan-y; }
-.mission-card { position: absolute; top: 4%; width: 42%; height: 92%; margin: 0; overflow: hidden; border: 1px solid rgba(245, 239, 224, .48); background: #17241b; box-shadow: 0 22px 50px rgba(8, 20, 13, .3); transition: left .45s ease, opacity .35s ease, transform .45s ease; }
+.mission-card { position: absolute; top: 4%; width: 42%; height: 92%; margin: 0; overflow: hidden; border: 1px solid rgba(245, 239, 224, .48); background: #17241b; box-shadow: 0 22px 50px rgba(8, 20, 13, .3); transition: left .4s cubic-bezier(.22, .61, .36, 1), opacity .3s ease, transform .4s cubic-bezier(.22, .61, .36, 1); }
+.mission-card.is-leaving, .mission-card.is-entering { opacity: 0; }
 .mission-card[data-card-position="left"] { left: 4%; z-index: 1; opacity: .84; transform: scale(.78) rotate(-8deg); }
 .mission-card[data-card-position="center"] { left: 29%; z-index: 3; opacity: 1; }
 .mission-card[data-card-position="right"] { left: 54%; z-index: 1; opacity: .84; transform: scale(.78) rotate(8deg); }

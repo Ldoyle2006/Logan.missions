@@ -353,22 +353,21 @@ if (missionCarousel) {
   let activeIndex = 0;
   let touchStartX = null;
   let suppressPhotoClick = false;
+  let isAnimating = false;
+  let queuedSlideIndex = null;
+  let carouselInitialized = false;
 
   function setCardSlide(card, slideIndex) {
     const index = (slideIndex + slides.length) % slides.length;
     const slide = slides[index];
     const image = card.querySelector("img");
     const button = card.querySelector(".mission-photo-button");
-    image.classList.add("is-changing");
     image.src = slide.image;
     image.alt = slide.alt;
     button.setAttribute("aria-label", `View larger: ${slide.title}`);
     card.querySelector("figcaption").textContent = slide.title;
     card.dataset.slideIndex = String(index);
     card.setAttribute("aria-current", String(card.dataset.cardPosition === "center"));
-    window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(() => image.classList.remove("is-changing"));
-    });
   }
 
   function updateCarouselCards() {
@@ -381,10 +380,80 @@ if (missionCarousel) {
   }
 
   function showSlide(slideIndex) {
-    activeIndex = (slideIndex + slides.length) % slides.length;
-    const slide = slides[activeIndex];
-
+    const targetIndex = (slideIndex + slides.length) % slides.length;
+    if (isAnimating) {
+      queuedSlideIndex = targetIndex;
+      return;
+    }
+    if (targetIndex === activeIndex && carouselInitialized) return;
+    const shouldFade = targetIndex !== activeIndex;
+    activeIndex = targetIndex;
+    if (shouldFade) {
+      for (const card of cards) card.classList.add("is-entering");
+    }
     updateCarouselCards();
+    updateMemo();
+    carouselInitialized = true;
+    if (shouldFade) {
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
+          for (const card of cards) card.classList.remove("is-entering");
+        });
+      });
+    }
+  }
+
+  function moveSlide(direction) {
+    const destination = (activeIndex + direction + slides.length) % slides.length;
+    if (isAnimating) {
+      queuedSlideIndex = destination;
+      return;
+    }
+
+    const exitingPosition = direction > 0 ? "left" : "right";
+    const exitingCard = cards.find((card) => card.dataset.cardPosition === exitingPosition);
+    const movingCard = cards.find((card) => card.dataset.cardPosition === "center");
+    const arrivingCard = cards.find((card) => card.dataset.cardPosition === (direction > 0 ? "right" : "left"));
+
+    isAnimating = true;
+    exitingCard.classList.add("is-leaving");
+    movingCard.dataset.cardPosition = direction > 0 ? "left" : "right";
+    arrivingCard.dataset.cardPosition = "center";
+    movingCard.setAttribute("aria-current", "false");
+    arrivingCard.setAttribute("aria-current", "true");
+    activeIndex = destination;
+    updateMemo();
+
+    const finishMovement = () => {
+      const latestEnteringPosition = direction > 0 ? "right" : "left";
+      exitingCard.dataset.cardPosition = latestEnteringPosition;
+      setCardSlide(exitingCard, activeIndex + (direction > 0 ? 1 : -1));
+      exitingCard.classList.remove("is-leaving");
+      exitingCard.classList.add("is-entering");
+      updateCarouselCards();
+
+      window.requestAnimationFrame(() => {
+        exitingCard.classList.remove("is-entering");
+      });
+
+      isAnimating = false;
+      if (queuedSlideIndex !== null) {
+        const queuedIndex = queuedSlideIndex;
+        queuedSlideIndex = null;
+        if (queuedIndex !== activeIndex) {
+          const forwardDistance = (queuedIndex - activeIndex + slides.length) % slides.length;
+          moveSlide(forwardDistance <= slides.length / 2 ? 1 : -1);
+          queuedSlideIndex = queuedIndex;
+        }
+      }
+    };
+
+    const motionDuration = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 420;
+    window.setTimeout(finishMovement, motionDuration);
+  }
+
+  function updateMemo() {
+    const slide = slides[activeIndex];
     memoCount.textContent = `${String(activeIndex + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}`;
     memoTitle.textContent = slide.title;
     memoText.textContent = slide.note;
@@ -413,8 +482,8 @@ if (missionCarousel) {
       showLightbox(Number(card.dataset.slideIndex));
     });
   }
-  previousButton.addEventListener("click", () => showSlide(activeIndex - 1));
-  nextButton.addEventListener("click", () => showSlide(activeIndex + 1));
+  previousButton.addEventListener("click", () => moveSlide(-1));
+  nextButton.addEventListener("click", () => moveSlide(1));
   memoToggle.addEventListener("click", () => {
     const isExpanded = memoToggle.getAttribute("aria-expanded") !== "true";
     memoText.classList.toggle("is-expanded", isExpanded);
@@ -430,7 +499,7 @@ if (missionCarousel) {
     touchStartX = null;
     if (Math.abs(swipeDistance) < 45) return;
     suppressPhotoClick = true;
-    showSlide(activeIndex + (swipeDistance < 0 ? 1 : -1));
+    moveSlide(swipeDistance < 0 ? 1 : -1);
     window.setTimeout(() => {
       suppressPhotoClick = false;
     }, 350);
