@@ -21,17 +21,84 @@
         </svg>
         <span>Logan Doyle<small>MISSION UPDATES</small></span>
       </a>
-      <nav class="main-nav" aria-label="Main navigation"><a href="/">Home</a></nav>
+      <nav class="main-nav" aria-label="Main navigation"><a href="/">Home</a><a href="/#vision">My Vision</a></nav>
     </header>
 
     <main id="main" class="giving-page section-wrap">
+      <section class="giving-vision" aria-labelledby="giving-vision-title">
+        <p class="eyebrow">MY VISION</p>
+        <h1 id="giving-vision-title">To see a generation know the love of the Father, encounter Jesus, and discover that they are known, loved, and created for a purpose.</h1>
+        <p>I want to live the love of Jesus through missions, discipleship, teaching, and genuine relationships—especially with young people who feel forgotten or have not had the opportunity to hear the gospel.</p>
+      </section>
+
       <section class="giving-intro" aria-labelledby="giving-title">
         <p class="eyebrow">GO FURTHER TOGETHER</p>
-        <h1 id="giving-title">Thank you for partnering with me.</h1>
-        <p class="giving-lead">Your generosity helps make this ministry possible. Choose the way you would like to give.</p>
+        <h2 id="giving-title">Become a Ministry Partner</h2>
+        <p class="giving-lead">Your generosity helps me continue sharing the gospel, discipling others, preparing through biblical education, and serving communities around the world.</p>
       </section>
       <p class="giving-return-message" id="checkout-return-message" role="status" aria-live="polite" hidden></p>
 
+      <section class="monthly-goal" aria-labelledby="monthly-goal-title">
+        <div>
+          <p class="eyebrow">MONTHLY SUPPORT GOAL</p>
+          <h2 id="monthly-goal-title">$2,000 <span>per month</span></h2>
+          <p>This is the monthly support goal I am working toward—not a report of current giving.</p>
+        </div>
+        <a class="button button-coral" href="#secure-donation">Help build steady support <svg class="arrow-icon arrow-icon-down" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14m7-7-7 7-7-7"/></svg></a>
+      </section>
+
+      <section class="partnership-budget" aria-labelledby="budget-title">
+        <div class="partnership-explanation">
+          <p class="eyebrow">WHY I'M RAISING SUPPORT</p>
+          <h2>Building a foundation for long-term missions.</h2>
+          <p>When you partner with me financially, you're not just helping cover a trip or a single outreach. You're helping build a foundation for long-term missions.</p>
+          <p>Monthly support helps cover practical needs like rent, food, and transportation, while also allowing me to keep growing through discipleship, Diakonos classes, biblical education, and leadership training.</p>
+          <p>Part of my support will also be set aside for future schooling and ministry opportunities, so I can continue preparing for wherever God leads me next. My heart is to be faithful with what God has entrusted to me and transparent with the people who choose to partner with me.</p>
+        </div>
+        <div class="budget-card">
+          <p class="eyebrow">PROPOSED MONTHLY BUDGET</p>
+          <h2 id="budget-title">Where your partnership goes</h2>
+          <p class="budget-disclaimer">These are illustrative estimates, not confirmed expenses. I will update this proposal when the figures are verified.</p>
+          <ul class="budget-list">
+            <li style="--budget-share: 37.5%"><span>Housing &amp; rent</span><strong>$750</strong><span class="budget-bar" aria-hidden="true"></span></li>
+            <li style="--budget-share: 20%"><span>Food &amp; essentials</span><strong>$400</strong><span class="budget-bar" aria-hidden="true"></span></li>
+            <li style="--budget-share: 17.5%"><span>Future Bible school savings</span><strong>$350</strong><span class="budget-bar" aria-hidden="true"></span></li>
+            <li style="--budget-share: 10%"><span>Diakonos &amp; ministry training</span><strong>$200</strong><span class="budget-bar" aria-hidden="true"></span></li>
+            <li style="--budget-share: 7.5%"><span>Transportation &amp; communication</span><strong>$150</strong><span class="budget-bar" aria-hidden="true"></span></li>
+            <li style="--budget-share: 7.5%"><span>Ministry &amp; outreach savings</span><strong>$150</strong><span class="budget-bar" aria-hidden="true"></span></li>
+          </ul>
+          <p class="budget-total"><span>Proposed total</span><strong>$2,000 / month</strong></p>
+        </div>
+      </section>
+
+      <section class="mission-impact" aria-labelledby="impact-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">STORIES AND IMPACT FROM MISSIONS</p>
+            <h2 id="impact-title">A few moments that stay with me.</h2>
+          </div>
+          <p class="heading-aside">These photographs are reminders of the people, relationships, and everyday moments behind this calling.</p>
+        </div>
+        <div class="impact-photo-grid">
+          <figure>
+            <img src="/images/mission/First%20time%20teaching%20english.web.jpg" alt="Logan's first time teaching English" loading="lazy" decoding="async">
+            <figcaption>Learning and serving side by side.</figcaption>
+          </figure>
+          <figure>
+            <img src="/images/mission/These%20kids%20Stole%20My%20Heart.web.jpg" alt="Young people Logan met during outreach" loading="lazy" decoding="async">
+            <figcaption>Every young person is known and loved by God.</figcaption>
+          </figure>
+          <figure>
+            <img src="/images/mission/A%20late%20night%20Preparing%20for%20a%20Father.web.jpg" alt="Preparing for ministry late into the evening" loading="lazy" decoding="async">
+            <figcaption>Preparation is part of showing up faithfully.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="secure-donation" id="secure-donation" aria-labelledby="secure-donation-title">
+        <p class="eyebrow">SECURE DONATION FORM</p>
+        <h2 id="secure-donation-title">Choose a gift that works for you.</h2>
+        <p class="secure-donation-intro">All donations are processed securely by Stripe. Card details go directly to Stripe and are never stored on this website.</p>
       <fieldset class="giving-methods">
         <legend>How would you like to give?</legend>
         <div class="giving-method-options">
@@ -63,16 +130,20 @@
             <legend class="giving-preview-label">Choose an amount</legend>
             <div class="giving-amounts">
               <label class="giving-choice">
-                <input type="radio" name="giving-amount" value="25" checked>
+                <input type="radio" name="giving-amount" value="25">
                 <span>$25</span>
               </label>
               <label class="giving-choice">
-                <input type="radio" name="giving-amount" value="50">
-                <span>$50</span>
+                <input type="radio" name="giving-amount" value="50" checked>
+                <span>$50 <small class="suggested-amount">suggested</small></span>
               </label>
               <label class="giving-choice">
                 <input type="radio" name="giving-amount" value="100">
                 <span>$100</span>
+              </label>
+              <label class="giving-choice">
+                <input type="radio" name="giving-amount" value="200">
+                <span>$200</span>
               </label>
               <label class="giving-choice giving-choice-custom">
                 <input type="radio" name="giving-amount" value="custom">
@@ -85,21 +156,22 @@
             </div>
           </fieldset>
           <fieldset class="giving-choice-group">
-            <legend class="giving-preview-label">Giving schedule</legend>
+            <legend class="giving-preview-label">Giving schedule — monthly support is especially helpful</legend>
             <div class="giving-schedules">
               <label class="giving-choice">
-                <input type="radio" name="giving-schedule" value="one-time" checked>
-                <span>One-time</span>
+                <input type="radio" name="giving-schedule" value="monthly" checked>
+                <span>Monthly</span>
               </label>
               <label class="giving-choice">
                 <input type="radio" name="giving-schedule" value="bi-weekly">
-                <span>Bi-weekly</span>
+                <span>Every two weeks</span>
               </label>
               <label class="giving-choice">
-                <input type="radio" name="giving-schedule" value="monthly">
-                <span>Monthly</span>
+                <input type="radio" name="giving-schedule" value="one-time">
+                <span>One-time</span>
               </label>
             </div>
+            <p class="billing-terms">Monthly gifts are charged once each month. Every-two-weeks gifts are charged every 14 days (26 times per year). Recurring gifts continue until canceled. To cancel or change a recurring gift, contact <a href="mailto:Logan.missions@icloud.com?subject=Recurring%20gift%20help">Logan by email</a>.</p>
           </fieldset>
         </div>
         <div class="giving-step-actions">
@@ -161,6 +233,7 @@
       </section>
 
       <p class="giving-thanks">Thank you for your prayers, encouragement, and generosity.</p>
+      </section>
     </main>
 
     <footer class="site-footer">

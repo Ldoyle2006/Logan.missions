@@ -41,14 +41,23 @@ The site runs without provider settings so you can edit and preview its content.
 
 ## Stripe donations
 
-The Give page uses Stripe Elements to securely collect payment details in the page. The Node server creates one-time PaymentIntents and monthly or every-two-weeks Billing subscriptions. Configure all of the following in `.env` for local test mode or in Render's server environment:
+The Give page uses Stripe Elements to collect payment details on the site. The server creates one-time PaymentIntents and monthly or every-14-days Stripe Billing subscriptions. Monthly is the suggested selection; donors may choose another amount and frequency. Recurring terms are shown before checkout.
 
-- `STRIPE_SECRET_KEY` — a test-mode secret key (`sk_test_...`).
-- `STRIPE_PUBLISHABLE_KEY` — the matching test-mode publishable key (`pk_test_...`). This key is returned to the browser only by `/api/config`.
-- `STRIPE_WEBHOOK_SECRET` — the signing secret for a test-mode webhook endpoint.
-- `PUBLIC_BASE_URL` — the canonical site origin, such as `https://logan-missions.onrender.com`.
+For test mode, configure these variables in `.env` or Render:
 
-Live-mode secret and publishable keys are rejected by the integration. Stripe test mode must be fully verified before any separate approval to enable live payments. Configure a Stripe webhook at `https://your-site.example/api/stripe-webhook` for `payment_intent.succeeded`, `invoice.paid`, `invoice.payment_failed`, and `customer.subscription.created`, `customer.subscription.updated`, and `customer.subscription.deleted`; put its test-mode signing secret in `STRIPE_WEBHOOK_SECRET`. The webhook signature is verified against the raw request body, and payment/subscription confirmations are recorded in the Node service logs. The website never receives card numbers. Test payment and recurring billing flows with Stripe's test cards before considering a live-mode launch. Confirm any donation receipts, tax language, and fundraising disclosures with your organization.
+- `STRIPE_MODE=test`.
+- `STRIPE_SECRET_KEY` — the test secret key (`sk_test_...`).
+- `STRIPE_PUBLISHABLE_KEY` — its matching test publishable key (`pk_test_...`). The server returns this public key to the browser via `/api/config`.
+- `STRIPE_WEBHOOK_SECRET` — the signing secret (`whsec_...`) for the test webhook endpoint.
+- `PUBLIC_BASE_URL` — the canonical HTTPS site origin, such as `https://logan-missions.onrender.com`.
+
+Live mode is supported in code, but is disabled unless `STRIPE_MODE=live`, matching live keys are configured, and `STRIPE_LIVE_MODE_APPROVED=true`. Do not set those live-mode values until Logan has explicitly approved activating live donations. Never put secret or webhook keys in browser code.
+
+Create a Stripe webhook for the matching mode at `https://logan-missions.onrender.com/api/stripe-webhook`. Subscribe it to `payment_intent.succeeded`, `payment_intent.payment_failed`, `invoice.paid`, `invoice.payment_failed`, `invoice.payment_action_required`, `customer.subscription.created`, `customer.subscription.updated`, and `customer.subscription.deleted`. Keep the test and live webhook signing secrets separate; set only the secret for the configured mode in `STRIPE_WEBHOOK_SECRET`. The server verifies signatures against the raw request body and rejects events from the wrong mode.
+
+Recurring subscriptions start in `incomplete` status, and the Payment Element confirms the initial invoice. The server uses a reusable Stripe Product for inline recurring Prices (the current Stripe API requires a Product ID; passing `product_data` directly to subscription Price data fails). The two-week schedule is a weekly Price with `interval_count: 2`. Webhook events report paid/failed invoices and subscription changes. Duplicate event IDs are suppressed in process memory; this starter has no persistent database, so webhook processing is intentionally limited to idempotent logging, not durable donation records. Do not treat an incomplete subscription as paid.
+
+Run `npm test` for recurring subscription request and interval checks. This test suite does not replace end-to-end test-mode card, 3DS, failed-payment, cancellation, and Stripe Test Clock testing. Confirm those flows with Stripe test methods before any live launch. Confirm donation receipts, tax language, and fundraising disclosures with your organization.
 
 `STRIPE_PAYMENT_LINK_URL` is retained only for the legacy `/donate` route, which accepts a Stripe test-mode link. The embedded amount and schedule flow does not use Payment Links.
 

@@ -47,13 +47,16 @@ function selectedGift() {
     style: "currency",
     currency: "USD",
   }).format(amount);
-  const scheduleLabel = {
-    "one-time": "one-time",
-    "bi-weekly": "bi-weekly",
-    monthly: "monthly",
-  }[schedule];
+  const scheduleLabel = schedule === "one-time"
+    ? "one-time"
+    : schedule === "bi-weekly"
+      ? "every 14 days"
+      : "monthly";
+  const billingSummary = schedule === "one-time"
+    ? `${formattedAmount} one-time gift`
+    : `${formattedAmount} ${scheduleLabel} · recurring until canceled`;
 
-  return { amount, formattedAmount, schedule, scheduleLabel };
+  return { amount, formattedAmount, schedule, scheduleLabel, billingSummary };
 }
 
 function resetStripeElements() {
@@ -107,7 +110,7 @@ function renderStripePaymentForm() {
     error.textContent = "";
     if (!emailInput.reportValidity()) return;
     if (!stripeConfigured || !stripePublishableKey) {
-      error.textContent = "Stripe test mode is not configured yet. Please try again later.";
+      error.textContent = "Stripe payments are not configured yet. Please try again later.";
       return;
     }
     if (typeof window.Stripe !== "function") {
@@ -162,7 +165,9 @@ function renderStripePaymentForm() {
         stripePaymentElement.mount(elementContainer);
         emailInput.readOnly = true;
         submit.textContent = `Give ${gift.formattedAmount} ${gift.scheduleLabel}`;
-        status.textContent = `Your ${gift.scheduleLabel} gift: ${gift.formattedAmount}. Payment details are securely collected by Stripe.`;
+        status.textContent = gift.schedule === "one-time"
+          ? `Your ${gift.billingSummary}. Payment details are securely collected by Stripe.`
+          : `Your ${gift.billingSummary}. Stripe will activate the subscription after the first payment is confirmed.`;
         submit.disabled = false;
         return;
       }
@@ -179,8 +184,10 @@ function renderStripePaymentForm() {
         throw new Error(confirmationError.message || "Stripe could not confirm your payment. Please try again.");
       }
       if (paymentIntent?.status === "succeeded") {
-        status.textContent = "Stripe confirmed your payment. Thank you for supporting this mission!";
-        submit.textContent = "Payment confirmed";
+        status.textContent = gift.schedule === "one-time"
+          ? "Your one-time payment succeeded. Thank you for supporting this mission!"
+          : `Your first payment succeeded. Stripe is confirming your ${gift.scheduleLabel} subscription. Thank you for partnering with this mission!`;
+        submit.textContent = gift.schedule === "one-time" ? "Payment confirmed" : "First payment confirmed";
         submit.disabled = true;
         return;
       }
@@ -213,7 +220,7 @@ function showMethodDetails(method) {
     equipnet: "Give online through your EquipNet missionary page. Your amount and schedule selected here are not automatically applied.",
     stripe: stripeConfigured
       ? "Your selected gift will be collected securely with Stripe Elements on this page."
-      : "Stripe test mode is not configured yet. Please try again later.",
+      : "Stripe payments are not configured yet. Please try again later.",
   };
 
   const message = document.createElement("p");
@@ -341,14 +348,14 @@ nextStepButton.addEventListener("click", () => {
   if (selectedAmount.value === "custom" && !customAmount.reportValidity()) return;
 
   const gift = selectedGift();
-  if (!Number.isFinite(gift.amount) || gift.amount < 5) {
-    customAmount.setCustomValidity("Enter a donation amount of at least $5.");
+  if (!Number.isFinite(gift.amount) || gift.amount < 5 || gift.amount > 999999.99) {
+    customAmount.setCustomValidity("Enter a donation amount between $5 and $999,999.99.");
     customAmount.reportValidity();
     customAmount.addEventListener("input", () => customAmount.setCustomValidity(""), { once: true });
     return;
   }
 
-  paymentSummary.textContent = `${gift.formattedAmount} · ${gift.scheduleLabel} gift`;
+  paymentSummary.textContent = gift.billingSummary;
   paymentOptions.hidden = false;
   paymentOptions.classList.remove("is-visible");
   requestAnimationFrame(() => {
@@ -382,7 +389,9 @@ async function loadStripeStatus() {
   const config = await response.json();
   stripeConfigured = Boolean(config.donationsConfigured);
   stripePublishableKey = stripeConfigured ? config.stripePublishableKey : null;
-  stripeMethodStatus.textContent = stripeConfigured ? "Test mode ready" : "Test mode only";
+  stripeMethodStatus.textContent = stripeConfigured
+    ? `${config.stripeMode === "live" ? "Live" : "Test"} mode ready`
+    : "Payment setup needed";
   const existingFormSubmit = paymentDetail.querySelector(".stripe-submit");
   if (existingFormSubmit) existingFormSubmit.disabled = !stripeConfigured;
 }

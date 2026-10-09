@@ -3,6 +3,7 @@ import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import Stripe from "stripe";
+import { createRecurringDonationSubscription } from "./stripe-donations.js";
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const publicDirectory = path.join(root, "public");
@@ -10,10 +11,17 @@ const rateLimitWindowMs = 15 * 60 * 1000;
 const rateLimitMax = 5;
 const subscribeRequests = new Map();
 const checkoutRequests = new Map();
+const processedStripeEventIds = new Set();
 let stripe = null;
 
 await loadEnvironmentFile();
-if (process.env.STRIPE_SECRET_KEY?.startsWith("sk_test_")) {
+const configuredStripeMode = process.env.STRIPE_MODE || "test";
+const liveModeApproved = process.env.STRIPE_LIVE_MODE_APPROVED === "true";
+const expectedSecretPrefix = configuredStripeMode === "live" ? "sk_live_" : "sk_test_";
+if (
+  (configuredStripeMode === "test" || configuredStripeMode === "live" && liveModeApproved) &&
+  process.env.STRIPE_SECRET_KEY?.startsWith(expectedSecretPrefix)
+) {
   stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 }
 const port = Number(process.env.PORT || 3000);
@@ -234,20 +242,25 @@ function hasSameOrigin(request) {
   }
 }
 
-function stripeTestConfiguration() {
+function stripeConfiguration() {
+  const mode = process.env.STRIPE_MODE || "test";
   const secretKey = process.env.STRIPE_SECRET_KEY || "";
   const publishableKey = process.env.STRIPE_PUBLISHABLE_KEY || "";
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || "";
+  const expectedSecretPrefix = mode === "live" ? "sk_live_" : "sk_test_";
+  const expectedPublishablePrefix = mode === "live" ? "pk_live_" : "pk_test_";
   if (
+    !["test", "live"].includes(mode) ||
+    (mode === "live" && !liveModeApproved) ||
     !stripe ||
-    !secretKey.startsWith("sk_test_") ||
-    !publishableKey.startsWith("pk_test_") ||
+    !secretKey.startsWith(expectedSecretPrefix) ||
+    !publishableKey.startsWith(expectedPublishablePrefix) ||
     !webhookSecret.startsWith("whsec_") ||
     !publicSiteOrigin()
   ) {
     return null;
   }
-  return { publishableKey };
+  return { mode, publishableKey };
 }
 
 async function createDonationIntent(request, response) {
@@ -285,9 +298,9 @@ async function createDonationIntent(request, response) {
     return sendJson(response, 400, { message: "Enter a valid email and gift amount of at least $5." });
   }
 
-  const configuration = stripeTestConfiguration();
+  const configuration = stripeConfiguration();
   if (!configuration) {
-    return sendJson(response, 503, { message: "Test-mode payment collection is not configured yet." });
+    return sendJson(response, 503, { message: "Stripe payment collection is not configured for this mode." });
   }
 
   const description = schedule === "one-time"
@@ -295,7 +308,7 @@ async function createDonationIntent(request, response) {
     : `${schedule === "monthly" ? "Monthly" : "Every-two-weeks"} mission support for Logan Doyle`;
   const metadata = {
     donation_schedule: schedule,
-    integration: "elements_test",
+    integration: `elements_${configuration.mode}`,
   };
 
   try {
@@ -317,38 +330,18 @@ async function createDonationIntent(request, response) {
       });
     }
 
-    const customer = await stripe.customers.create({
+    const subscription = await createRecurringDonationSubscription(stripe, {
+      amountInCents,
       email,
-      metadata: { integration: "elements_test" },
-    }, { idempotencyKey: `donation-customer-${requestId}` });
-    const subscription = await stripe.subscriptions.create({
-      customer: customer.id,
-      items: [{
-        price_data: {
-          currency: "usd",
-          product_data: { name: "Mission support for Logan Doyle" },
-          unit_amount: amountInCents,
-          recurring: schedule === "monthly"
-            ? { interval: "month" }
-            : { interval: "week", interval_count: 2 },
-        },
-      }],
-      collection_method: "charge_automatically",
-      payment_behavior: "default_incomplete",
-      payment_settings: { save_default_payment_method: "on_subscription" },
-      metadata,
-      expand: ["latest_invoice.confirmation_secret"],
-    }, { idempotencyKey: `donation-subscription-${requestId}` });
-    const latestInvoice = subscription.latest_invoice;
-    const clientSecret = latestInvoice &&
-      typeof latestInvoice === "object" &&
-      latestInvoice.confirmation_secret?.client_secret;
-    if (typeof clientSecret !== "string") {
-      throw new Error("Stripe did not return the subscription invoice client secret.");
-    }
+      mode: configuration.mode,
+      requestId,
+      schedule,
+    });
     return sendJson(response, 200, {
-      clientSecret,
+      clientSecret: subscription.clientSecret,
       publishableKey: configuration.publishableKey,
+      subscriptionId: subscription.subscriptionId,
+      subscriptionStatus: subscription.subscriptionStatus,
     });
   } catch (error) {
     console.error("Stripe Elements intent creation failed:", error.message);
@@ -360,29 +353,44 @@ async function createDonationIntent(request, response) {
 
 function logStripeEvent(event) {
   const object = event.data.object;
+  const mode = event.livemode ? "live" : "test";
   if (event.type === "payment_intent.succeeded") {
-    console.info("Stripe test payment confirmed", {
+    console.info(`Stripe ${mode} payment confirmed`, {
       eventId: event.id,
       paymentIntentId: object.id,
       amount: object.amount,
       currency: object.currency,
     });
+  } else if (event.type === "payment_intent.payment_failed") {
+    console.info(`Stripe ${mode} payment failed`, {
+      eventId: event.id,
+      paymentIntentId: object.id,
+      amount: object.amount,
+      currency: object.currency,
+      failureCode: object.last_payment_error?.code || null,
+    });
   } else if (event.type === "invoice.paid" || event.type === "invoice.payment_failed") {
     const subscriptionId = typeof object.subscription === "string"
       ? object.subscription
       : object.parent?.subscription_details?.subscription || null;
-    console.info(event.type === "invoice.paid" ? "Stripe test subscription payment confirmed" : "Stripe test subscription payment failed", {
+    console.info(event.type === "invoice.paid" ? `Stripe ${mode} subscription payment confirmed` : `Stripe ${mode} subscription payment failed`, {
       eventId: event.id,
       invoiceId: object.id,
       subscriptionId,
       amount: object.amount_paid ?? object.amount_due,
+    });
+  } else if (event.type === "invoice.payment_action_required") {
+    console.info(`Stripe ${mode} subscription payment requires customer action`, {
+      eventId: event.id,
+      invoiceId: object.id,
+      subscriptionId: typeof object.subscription === "string" ? object.subscription : null,
     });
   } else if (
     event.type === "customer.subscription.created" ||
     event.type === "customer.subscription.updated" ||
     event.type === "customer.subscription.deleted"
   ) {
-    console.info("Stripe test subscription changed", {
+    console.info(`Stripe ${mode} subscription changed`, {
       eventId: event.id,
       subscriptionId: object.id,
       status: object.status,
@@ -391,9 +399,23 @@ function logStripeEvent(event) {
   }
 }
 
+function isSupportedStripeEvent(type) {
+  return [
+    "payment_intent.succeeded",
+    "payment_intent.payment_failed",
+    "invoice.paid",
+    "invoice.payment_failed",
+    "invoice.payment_action_required",
+    "customer.subscription.created",
+    "customer.subscription.updated",
+    "customer.subscription.deleted",
+  ].includes(type);
+}
+
 async function receiveStripeWebhook(request, response) {
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || "";
-  if (!stripe || !webhookSecret.startsWith("whsec_")) {
+  const configuration = stripeConfiguration();
+  if (!configuration || !webhookSecret.startsWith("whsec_")) {
     return sendJson(response, 503, { message: "Stripe webhooks are not configured." });
   }
   const signature = request.headers["stripe-signature"];
@@ -409,12 +431,21 @@ async function receiveStripeWebhook(request, response) {
     console.warn("Stripe webhook verification failed:", error.message);
     return sendJson(response, error.statusCode || 400, { message: "Invalid Stripe webhook." });
   }
-  if (event.livemode) {
-    console.warn("Rejected a live-mode Stripe event from the test-only webhook.");
-    return sendJson(response, 400, { message: "Live-mode events are not accepted." });
+  if (event.livemode !== (configuration.mode === "live")) {
+    console.warn(`Rejected a Stripe webhook event that does not match configured ${configuration.mode} mode.`);
+    return sendJson(response, 400, { message: "Stripe event mode does not match the configured mode." });
   }
 
-  logStripeEvent(event);
+  if (isSupportedStripeEvent(event.type)) {
+    if (processedStripeEventIds.has(event.id)) {
+      return sendJson(response, 200, { received: true, duplicate: true });
+    }
+    processedStripeEventIds.add(event.id);
+    if (processedStripeEventIds.size > 10000) {
+      processedStripeEventIds.delete(processedStripeEventIds.values().next().value);
+    }
+    logStripeEvent(event);
+  }
   return sendJson(response, 200, { received: true });
 }
 
@@ -472,10 +503,11 @@ async function handleRequest(request, response) {
   const requestUrl = new URL(request.url || "/", "http://localhost");
 
   if (requestUrl.pathname === "/api/config" && request.method === "GET") {
-    const configuration = stripeTestConfiguration();
+    const configuration = stripeConfiguration();
     return sendJson(response, 200, {
       donationsConfigured: Boolean(configuration),
       stripePublishableKey: configuration?.publishableKey || null,
+      stripeMode: configuration?.mode || null,
     });
   }
 
