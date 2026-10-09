@@ -29,6 +29,7 @@
         <h1 id="giving-title">Thank you for partnering with me.</h1>
         <p class="giving-lead">Your generosity helps make this ministry possible. Choose the way you would like to give.</p>
       </section>
+      <p class="giving-return-message" id="checkout-return-message" role="status" aria-live="polite" hidden></p>
 
       <fieldset class="giving-methods">
         <legend>How would you like to give?</legend>
@@ -89,7 +90,7 @@
                 <span>Other</span>
                 <span class="custom-amount-wrap">
                   <span>$</span>
-                  <input id="custom-amount" name="customAmount" type="number" min="5" step="0.01" inputmode="decimal" placeholder="0.00" aria-label="Custom donation amount in US dollars" disabled>
+                  <input id="custom-amount" name="customAmount" type="number" min="5" max="999999.99" step="0.01" inputmode="decimal" placeholder="0.00" aria-label="Custom donation amount in US dollars" disabled>
                 </span>
               </label>
             </div>

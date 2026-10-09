@@ -1,6 +1,6 @@
 # Mission update website starter
 
-A lightweight Node.js website for missionary updates, a configurable link hub, Brevo double-opt-in newsletter signups, and Stripe-hosted donations. The site does not store payment details or newsletter subscriber records itself.
+A lightweight Node.js website for missionary updates, a configurable link hub, Brevo newsletter signups, and Stripe-hosted donations. The site does not store payment details or newsletter subscriber records itself.
 
 ## Run locally
 
@@ -14,7 +14,7 @@ The site runs without provider settings so you can edit and preview its content.
 ## Customize the site
 
 - Edit `public/index.html` to add your name, mission, location, and story.
-- The Give buttons open `public/giving.html`, where supporters can choose online giving or mailing a check. Update the check instructions there if your EquipNet details change. Online giving sends supporters to Stripe checkout only after `STRIPE_PAYMENT_LINK_URL` is configured.
+- The Give buttons open `public/giving.html`, where supporters can choose an amount, schedule, and giving method, or mail a check. Update the check instructions there if your EquipNet details change. Stripe checkout creates a secure session for the selected gift amount and schedule.
 - The Shop link opens `public/shop.html`, a merchandise concept preview. Product illustrations and prices are placeholders, and purchases are not enabled.
 - Edit `public/links.json` to show multiple links. Example:
 
@@ -41,7 +41,9 @@ The site runs without provider settings so you can edit and preview its content.
 
 ## Stripe donations
 
-Create a Stripe Payment Link in your Stripe dashboard, then set `STRIPE_PAYMENT_LINK_URL` in `.env`. Supporters can reach it from the online giving option on the Give page. The site redirects supporters to Stripe-hosted checkout; it never handles card or bank details. Test the link in Stripe's test mode before accepting live donations. Confirm any donation receipts, tax language, and fundraising disclosures with your organization.
+Set `STRIPE_SECRET_KEY` in `.env` or your hosting provider's server-side environment settings, and set `PUBLIC_BASE_URL` to the canonical site URL. The server creates Stripe Checkout Sessions using the selected one-time, bi-weekly, or monthly amount. Supporters enter their email and payment details on Stripe; the site never handles or stores card details. Keep the secret key server-side and never add it to browser code or commit it. Test with a Stripe test-mode secret key before switching to a live key. Confirm any donation receipts, tax language, and fundraising disclosures with your organization.
+
+`STRIPE_PAYMENT_LINK_URL` remains supported by the legacy `/donate` redirect, but the amount and schedule selector uses `STRIPE_SECRET_KEY` to create an amount-specific checkout session.
 
 ## Brevo newsletter signup
 

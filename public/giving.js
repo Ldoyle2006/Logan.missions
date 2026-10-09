@@ -10,6 +10,7 @@ const paymentDetail = document.querySelector("#payment-detail");
 const changeGiftButton = document.querySelector("#change-gift");
 const stripeMethodStatus = document.querySelector("#stripe-method-status");
 const customAmount = document.querySelector("#custom-amount");
+const checkoutReturnMessage = document.querySelector("#checkout-return-message");
 const amountOptions = document.querySelectorAll('input[name="giving-amount"]');
 const choiceInputs = document.querySelectorAll(".giving-choice input[type='radio']");
 const paymentMethodButtons = document.querySelectorAll(".payment-option");
@@ -63,7 +64,9 @@ function showMethodDetails(method) {
     venmo: "Give through your Venmo profile. Your amount and schedule selected here are not automatically applied.",
     cashapp: "Give through your Cash App profile. Your amount and schedule selected here are not automatically applied.",
     equipnet: "Give online through your EquipNet missionary page. Your amount and schedule selected here are not automatically applied.",
-    stripe: "Stripe checkout is coming soon. I’ll connect the secure payment link here when it’s ready.",
+    stripe: stripeConfigured
+      ? "Your selected amount and schedule will carry into Stripe’s secure checkout. Enter your email and payment details there; this website does not handle or store card details."
+      : "Secure Stripe checkout is not set up yet. Please try again later.",
   };
 
   const message = document.createElement("p");
@@ -102,10 +105,43 @@ function showMethodDetails(method) {
   }
 
   if (method === "stripe" && stripeConfigured) {
-    const checkout = document.createElement("a");
+    const checkout = document.createElement("button");
     checkout.className = "button button-dark giving-checkout";
-    checkout.href = "/donate";
-    checkout.append("Test Stripe checkout ", createArrowIcon());
+    checkout.type = "button";
+    checkout.append("Continue to secure checkout ", createArrowIcon());
+    checkout.addEventListener("click", async () => {
+      checkout.disabled = true;
+      checkout.textContent = "Opening secure checkout…";
+      paymentDetail.querySelector(".checkout-error")?.remove();
+
+      try {
+        const gift = selectedGift();
+        const response = await fetch("/api/create-checkout-session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ amount: gift.amount, schedule: gift.schedule }),
+        });
+        const result = await response.json();
+        if (!response.ok) {
+          throw new Error(result.message || "Secure checkout could not be started. Please try again.");
+        }
+
+        const checkoutUrl = new URL(result.url);
+        if (checkoutUrl.protocol !== "https:") {
+          throw new Error("Secure checkout returned an invalid address. Please try again.");
+        }
+        window.location.assign(checkoutUrl.toString());
+      } catch (error) {
+        const errorMessage = document.createElement("p");
+        errorMessage.className = "payment-detail-message checkout-error";
+        errorMessage.textContent = error instanceof Error
+          ? error.message
+          : "Secure checkout could not be started. Please try again.";
+        paymentDetail.append(errorMessage);
+        checkout.replaceChildren("Try checkout again ", createArrowIcon());
+        checkout.disabled = false;
+      }
+    });
     paymentDetail.append(checkout);
   }
 }
@@ -241,3 +277,12 @@ loadStripeStatus().catch((error) => {
   stripeMethodStatus.textContent = "Temporarily unavailable";
   console.error(error);
 });
+
+const donationResult = new URLSearchParams(window.location.search).get("donation");
+if (donationResult === "success") {
+  checkoutReturnMessage.textContent = "Thank you! Your gift was submitted securely through Stripe.";
+  checkoutReturnMessage.hidden = false;
+} else if (donationResult === "cancelled") {
+  checkoutReturnMessage.textContent = "Checkout was canceled. No gift was submitted.";
+  checkoutReturnMessage.hidden = false;
+}

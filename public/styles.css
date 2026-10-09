@@ -234,6 +234,8 @@ h1, h2, h3, p { margin-top: 0; }
 .privacy-page a { color: var(--green); }
 
 .giving-page { min-height: 72vh; padding-block: 70px 90px; }
+.giving-return-message { margin: 0 0 20px; padding: 14px 18px; border-left: 3px solid var(--coral); background: var(--cream); color: var(--green-deep); font-weight: 600; }
+.giving-return-message[hidden] { display: none; }
 .giving-page-body .site-header { border-color: rgba(245, 239, 224, .3); }
 .giving-page-body .site-header .wordmark, .giving-page-body .site-header .main-nav a { color: var(--cream); }
 .giving-page-body .site-header .wordmark small { color: var(--cream-muted); }
@@ -312,6 +314,7 @@ h1, h2, h3, p { margin-top: 0; }
 .payment-detail { margin-top: 16px; padding: 19px 21px; border-left: 2px solid #e9b28e; background: rgba(12, 25, 18, .23); color: var(--cream-muted); animation: payment-options-arrive .3s ease both; }
 .payment-detail[hidden] { display: none; }
 .payment-detail-message { margin: 0 0 10px; color: var(--cream-muted); font-size: 13px; }
+.checkout-error { color: #ffd1c5; }
 .payment-detail .mailing-address { margin: 12px 0; border-color: #e9b28e; color: var(--cream-muted); }
 .payment-detail .mailing-address strong { color: var(--cream); }
 .payment-detail .giving-checkout { margin-top: 6px; }
