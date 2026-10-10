@@ -48,6 +48,8 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .skip-link:focus { left: 8px; }
 
 .site-header {
+  position: relative;
+  z-index: 2;
   min-height: 92px;
   display: flex;
   align-items: center;
@@ -66,6 +68,16 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .main-nav a { text-decoration: none; }
 .main-nav a:hover, .text-link:hover, .site-footer a:hover { color: var(--coral); }
 .main-nav .nav-give { padding: 9px 17px; border: 1px solid var(--ink); border-radius: 999px; }
+.site-menu { position: relative; }
+.site-menu summary { display: flex; min-height: 42px; align-items: center; gap: 10px; padding: 0 15px; border: 1px solid rgba(245, 239, 224, .72); color: var(--cream); font-size: 12px; font-weight: 700; list-style: none; cursor: pointer; }
+.site-menu summary::-webkit-details-marker { display: none; }
+.site-menu summary::after { width: 7px; height: 7px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; content: ""; transform: translateY(-2px) rotate(45deg); transition: transform .18s ease; }
+.site-menu[open] summary::after { transform: translateY(2px) rotate(225deg); }
+.site-menu summary:hover, .site-menu summary:focus-visible { background: rgba(245, 239, 224, .1); }
+.site-menu .main-nav { position: absolute; top: calc(100% + 10px); right: 0; z-index: 3; display: grid; min-width: 210px; gap: 0; padding: 7px; border: 1px solid rgba(245, 239, 224, .2); background: var(--green-deep); box-shadow: 0 14px 32px rgba(16, 28, 21, .25); font-size: 13px; }
+.site-menu .main-nav a { display: block; padding: 10px 12px; color: var(--cream); text-decoration: none; }
+.site-menu .main-nav a:hover, .site-menu .main-nav a:focus-visible { background: rgba(245, 239, 224, .1); color: var(--cream); }
+.site-menu .main-nav .nav-give { border: 0; border-top: 1px solid rgba(245, 239, 224, .2); border-radius: 0; color: #f0bd9d; }
 
 .hero { display: grid; grid-template-columns: 1fr .92fr; align-items: center; gap: 8%; padding-block: 76px 96px; }
 .hero, .journey-section, .updates-section, .support-section { position: relative; isolation: isolate; }
@@ -130,7 +142,7 @@ h1, h2, h3, p { margin-top: 0; }
 .vision-section::before { position: absolute; z-index: -1; inset: 0 -50vw; background: #314d40; content: ""; }
 .vision-intro { grid-column: 1 / -1; max-width: 940px; }
 .vision-intro .eyebrow { color: #f0bd9d; }
-.vision-intro h2 { margin-bottom: 17px; color: var(--cream); font: 500 clamp(34px, 4.2vw, 52px)/1.16 var(--serif); letter-spacing: -.025em; }
+.vision-intro h1, .vision-intro h2 { margin-bottom: 17px; color: var(--cream); font: 500 clamp(34px, 4.2vw, 52px)/1.16 var(--serif); letter-spacing: -.025em; }
 .vision-intro > p:last-child, .vision-closing { max-width: 790px; margin-bottom: 0; color: var(--cream-muted); font-size: 14px; }
 .vision-photo { position: relative; min-height: 265px; overflow: hidden; background: var(--green-deep); }
 .vision-photo img { display: block; width: 100%; height: 100%; min-height: 265px; object-fit: cover; }
@@ -436,9 +448,7 @@ h1, h2, h3, p { margin-top: 0; }
 @media (max-width: 760px) {
   .section-wrap, .site-header { width: min(100% - 36px, 560px); }
   .site-header { min-height: 76px; }
-  .main-nav { gap: 15px; font-size: 11px; }
-  .main-nav a:nth-child(2), .main-nav a:nth-child(3) { display: none; }
-  .main-nav .nav-give { padding: 7px 12px; }
+  .site-menu .main-nav { font-size: 13px; }
   .hero { grid-template-columns: 1fr; gap: 40px; padding-block: 55px 67px; }
   .hero h1 { font-size: clamp(43px, 12vw, 60px); }
   .hero-art { min-height: clamp(310px, 90vw, 380px); }
@@ -451,7 +461,7 @@ h1, h2, h3, p { margin-top: 0; }
   .story-band { padding-block: 48px; }
   .vision-section { grid-template-columns: 1fr; gap: 20px; padding-block: 56px; }
   .vision-intro { grid-column: auto; }
-  .vision-intro h2 { font-size: clamp(31px, 8vw, 42px); }
+  .vision-intro h1, .vision-intro h2 { font-size: clamp(31px, 8vw, 42px); }
   .vision-photo { min-height: 230px; }
   .vision-photo img { min-height: 230px; }
   .vision-themes { gap: 9px; }
