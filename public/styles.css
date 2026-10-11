@@ -366,16 +366,16 @@ h1, h2, h3, p { margin-top: 0; }
 .giving-choice { position: relative; display: inline-flex; cursor: pointer; }
 .giving-choice > input[type="radio"] { position: absolute; width: 1px; height: 1px; opacity: 0; }
 .giving-choice > span { display: grid; min-width: 86px; min-height: 43px; place-items: center; padding: 8px 16px; border: 1px solid #c9c9bd; border-radius: 4px; color: #566259; font-size: 13px; transition: border-color .18s ease, background .18s ease, color .18s ease; }
-.giving-choice:hover > span, .giving-choice > input[type="radio"]:focus-visible + span { border-color: var(--green); }
-.giving-choice.is-selected > span { border-color: var(--green); background: var(--green); color: var(--cream); font-weight: 700; }
-.suggested-amount { color: #86634d; font-size: 8px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
-.giving-choice.is-selected .suggested-amount { color: #f0bd9d; }
+.giving-choice:not(.giving-choice-custom):hover > span, .giving-choice:not(.giving-choice-custom) > input[type="radio"]:focus-visible + span { border-color: var(--green); }
+.giving-choice:not(.giving-choice-custom).is-selected > span { border-color: var(--green); background: var(--green); color: var(--cream); font-weight: 700; }
 .giving-choice-custom { align-items: center; gap: 8px; padding: 0 10px 0 0; border: 1px solid #c9c9bd; border-radius: 4px; color: #566259; font-size: 13px; }
 .giving-choice-custom > span:first-of-type { min-width: 0; border: 0; }
-.giving-choice-custom.is-selected { border-color: var(--green); background: #e8eee7; color: var(--green-deep); font-weight: 700; }
-.custom-amount-wrap { display: flex; align-items: center; gap: 3px; min-height: 35px; padding: 0 8px; border: 1px solid #c9c9bd; border-radius: 999px; }
-.custom-amount-wrap input { width: 78px; border: 0; background: transparent; color: var(--ink); font: 600 13px var(--sans); }
-.custom-amount-wrap input:focus { outline: none; }
+.giving-choice-custom.is-selected, .giving-choice-custom:hover, .giving-choice-custom:focus-within { border-color: var(--green); background: #e8eee7; color: var(--green-deep); }
+.giving-choice-custom.is-selected { font-weight: 700; }
+.custom-amount-wrap { display: flex; align-items: center; gap: 3px; min-height: 35px; padding: 0 8px; border: 1px solid #c9c9bd; border-radius: 999px; background: #fff; color: var(--green-deep); }
+.giving-choice-custom:hover .custom-amount-wrap, .giving-choice-custom:focus-within .custom-amount-wrap { border-color: var(--green); }
+.custom-amount-wrap input { width: 78px; border: 0; background: transparent; color: var(--green-deep); font: 600 13px var(--sans); }
+.custom-amount-wrap input:focus { outline: 2px solid var(--green); outline-offset: 2px; }
 .custom-amount-wrap input:disabled { color: #858a82; }
 .giving-schedules .giving-choice > span { min-height: 36px; min-width: auto; border-radius: 999px; font-size: 11px; }
 .billing-terms { max-width: 800px; margin: 3px 0 0; color: #566259; font-size: 11px; line-height: 1.6; }
