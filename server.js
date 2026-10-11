@@ -3,7 +3,12 @@ import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import Stripe from "stripe";
-import { createRecurringDonationSubscription } from "./stripe-donations.js";
+import { createDonationCheckoutSession } from "./stripe-donations.js";
+import {
+  createFourthwallCheckout,
+  FourthwallError,
+  getFourthwallCatalog,
+} from "./fourthwall-storefront.js";
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const publicDirectory = path.join(root, "public");
@@ -11,8 +16,10 @@ const rateLimitWindowMs = 15 * 60 * 1000;
 const rateLimitMax = 5;
 const subscribeRequests = new Map();
 const checkoutRequests = new Map();
+const shopCheckoutRequests = new Map();
 const processedStripeEventIds = new Set();
 let stripe = null;
+let fourthwallCatalogCache = null;
 
 await loadEnvironmentFile();
 const configuredStripeMode = process.env.STRIPE_MODE || "test";
@@ -37,7 +44,7 @@ function sendJson(response, statusCode, payload) {
 function setSecurityHeaders(response) {
   response.setHeader(
     "Content-Security-Policy",
-    "default-src 'self'; script-src 'self' https://js.stripe.com https://www.googletagmanager.com https://www.clarity.ms; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://www.clarity.ms https://c.bing.com; connect-src 'self' https://api.stripe.com https://m.stripe.network https://r.stripe.com https://www.google-analytics.com https://region1.google-analytics.com https://analytics.google.com https://www.clarity.ms https://*.clarity.ms https://c.bing.com; frame-src https://js.stripe.com https://hooks.stripe.com; form-action 'self'; base-uri 'self'; frame-ancestors 'none'",
+    "default-src 'self'; script-src 'self' https://www.googletagmanager.com https://www.clarity.ms; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://imgproxy.fourthwall.dev https://www.clarity.ms https://c.bing.com; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://analytics.google.com https://www.clarity.ms https://*.clarity.ms https://c.bing.com; form-action 'self'; base-uri 'self'; frame-ancestors 'none'",
   );
   response.setHeader("X-Content-Type-Options", "nosniff");
   response.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
@@ -245,25 +252,22 @@ function hasSameOrigin(request) {
 function stripeConfiguration() {
   const mode = process.env.STRIPE_MODE || "test";
   const secretKey = process.env.STRIPE_SECRET_KEY || "";
-  const publishableKey = process.env.STRIPE_PUBLISHABLE_KEY || "";
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || "";
   const expectedSecretPrefix = mode === "live" ? "sk_live_" : "sk_test_";
-  const expectedPublishablePrefix = mode === "live" ? "pk_live_" : "pk_test_";
   if (
     !["test", "live"].includes(mode) ||
     (mode === "live" && !liveModeApproved) ||
     !stripe ||
     !secretKey.startsWith(expectedSecretPrefix) ||
-    !publishableKey.startsWith(expectedPublishablePrefix) ||
     !webhookSecret.startsWith("whsec_") ||
     !publicSiteOrigin()
   ) {
     return null;
   }
-  return { mode, publishableKey };
+  return { mode };
 }
 
-async function createDonationIntent(request, response) {
+async function createDonationCheckout(request, response) {
   if (!request.headers["content-type"]?.toLowerCase().startsWith("application/json")) {
     return sendJson(response, 415, { message: "Please try your donation again." });
   }
@@ -303,50 +307,83 @@ async function createDonationIntent(request, response) {
     return sendJson(response, 503, { message: "Stripe payment collection is not configured for this mode." });
   }
 
-  const description = schedule === "one-time"
-    ? "One-time mission support for Logan Doyle"
-    : `${schedule === "monthly" ? "Monthly" : "Every-two-weeks"} mission support for Logan Doyle`;
-  const metadata = {
-    donation_schedule: schedule,
-    integration: `elements_${configuration.mode}`,
-  };
-
   try {
-    if (schedule === "one-time") {
-      const intent = await stripe.paymentIntents.create({
-        amount: amountInCents,
-        currency: "usd",
-        receipt_email: email,
-        description,
-        metadata,
-        automatic_payment_methods: { enabled: true },
-      }, { idempotencyKey: `donation-intent-${requestId}` });
-      if (!intent.client_secret) {
-        throw new Error("Stripe did not return a payment client secret.");
-      }
-      return sendJson(response, 200, {
-        clientSecret: intent.client_secret,
-        publishableKey: configuration.publishableKey,
-      });
-    }
-
-    const subscription = await createRecurringDonationSubscription(stripe, {
+    const checkout = await createDonationCheckoutSession(stripe, {
       amountInCents,
       email,
       mode: configuration.mode,
       requestId,
       schedule,
+      siteOrigin: publicSiteOrigin(),
     });
-    return sendJson(response, 200, {
-      clientSecret: subscription.clientSecret,
-      publishableKey: configuration.publishableKey,
-      subscriptionId: subscription.subscriptionId,
-      subscriptionStatus: subscription.subscriptionStatus,
-    });
+    return sendJson(response, 200, checkout);
   } catch (error) {
-    console.error("Stripe Elements intent creation failed:", error.message);
+    console.error("Stripe Checkout session creation failed:", error.message);
     return sendJson(response, 502, {
-      message: "Secure payment could not be prepared. Please try again.",
+      message: "Secure Stripe Checkout could not be prepared. Please try again.",
+    });
+  }
+}
+
+async function getShopCatalog(response) {
+  const storefrontToken = process.env.FOURTHWALL_STOREFRONT_TOKEN || "";
+  if (!storefrontToken.trim()) {
+    return sendJson(response, 503, {
+      message: "The shop is being connected to Fourthwall. Please try again soon.",
+    });
+  }
+
+  if (!fourthwallCatalogCache || fourthwallCatalogCache.expiresAt <= Date.now()) {
+    try {
+      const products = await getFourthwallCatalog(storefrontToken);
+      fourthwallCatalogCache = { products, expiresAt: Date.now() + 60_000 };
+    } catch (error) {
+      console.error("Fourthwall catalog request failed:", error.message);
+      return sendJson(response, error.statusCode || 502, {
+        message: "The Fourthwall shop could not be loaded. Please try again.",
+      });
+    }
+  }
+  return sendJson(response, 200, { products: fourthwallCatalogCache.products });
+}
+
+async function createShopCheckout(request, response) {
+  if (!request.headers["content-type"]?.toLowerCase().startsWith("application/json")) {
+    return sendJson(response, 415, { message: "Please try checkout again." });
+  }
+  if (!hasSameOrigin(request)) {
+    return sendJson(response, 403, { message: "This checkout request could not be verified." });
+  }
+  if (isRateLimited(shopCheckoutRequests, request.socket.remoteAddress || "unknown", 10)) {
+    return sendJson(response, 429, { message: "Too many checkout attempts. Please try again later." });
+  }
+
+  let body;
+  try {
+    body = await readJsonBody(request);
+  } catch (error) {
+    return sendJson(response, error.statusCode || 400, {
+      message: error.statusCode ? error.message : "Please try checkout again.",
+    });
+  }
+  if (!body || typeof body !== "object" || Array.isArray(body)) {
+    return sendJson(response, 400, { message: "Choose valid products and try again." });
+  }
+
+  try {
+    const checkoutUrl = await createFourthwallCheckout(
+      process.env.FOURTHWALL_STOREFRONT_TOKEN || "",
+      body.items,
+    );
+    return sendJson(response, 200, { checkoutUrl });
+  } catch (error) {
+    if (!(error instanceof FourthwallError)) {
+      console.error("Fourthwall checkout request failed:", error.message);
+    }
+    return sendJson(response, error.statusCode || 502, {
+      message: error instanceof FourthwallError
+        ? error.message
+        : "Fourthwall checkout could not be prepared. Please try again.",
     });
   }
 }
@@ -354,7 +391,21 @@ async function createDonationIntent(request, response) {
 function logStripeEvent(event) {
   const object = event.data.object;
   const mode = event.livemode ? "live" : "test";
-  if (event.type === "payment_intent.succeeded") {
+  if (
+    event.type === "checkout.session.completed" ||
+    event.type === "checkout.session.async_payment_succeeded" ||
+    event.type === "checkout.session.async_payment_failed" ||
+    event.type === "checkout.session.expired"
+  ) {
+    console.info(`Stripe ${mode} Checkout ${event.type.replace("checkout.session.", "")}`, {
+      eventId: event.id,
+      sessionId: object.id,
+      paymentStatus: object.payment_status,
+      amount: object.amount_total,
+      currency: object.currency,
+      subscriptionId: object.subscription || null,
+    });
+  } else if (event.type === "payment_intent.succeeded") {
     console.info(`Stripe ${mode} payment confirmed`, {
       eventId: event.id,
       paymentIntentId: object.id,
@@ -401,6 +452,10 @@ function logStripeEvent(event) {
 
 function isSupportedStripeEvent(type) {
   return [
+    "checkout.session.completed",
+    "checkout.session.async_payment_succeeded",
+    "checkout.session.async_payment_failed",
+    "checkout.session.expired",
     "payment_intent.succeeded",
     "payment_intent.payment_failed",
     "invoice.paid",
@@ -506,13 +561,20 @@ async function handleRequest(request, response) {
     const configuration = stripeConfiguration();
     return sendJson(response, 200, {
       donationsConfigured: Boolean(configuration),
-      stripePublishableKey: configuration?.publishableKey || null,
       stripeMode: configuration?.mode || null,
     });
   }
 
-  if (requestUrl.pathname === "/api/create-donation-intent" && request.method === "POST") {
-    return createDonationIntent(request, response);
+  if (requestUrl.pathname === "/api/create-checkout-session" && request.method === "POST") {
+    return createDonationCheckout(request, response);
+  }
+
+  if (requestUrl.pathname === "/api/shop/catalog" && request.method === "GET") {
+    return getShopCatalog(response);
+  }
+
+  if (requestUrl.pathname === "/api/shop/checkout" && request.method === "POST") {
+    return createShopCheckout(request, response);
   }
 
   if (requestUrl.pathname === "/api/stripe-webhook" && request.method === "POST") {

@@ -15,10 +15,6 @@ const amountOptions = document.querySelectorAll('input[name="giving-amount"]');
 const choiceInputs = document.querySelectorAll(".giving-choice input[type='radio']");
 const paymentMethodButtons = document.querySelectorAll(".payment-option");
 let stripeConfigured = false;
-let stripePublishableKey = null;
-let stripeInstance = null;
-let stripeElements = null;
-let stripePaymentElement = null;
 
 function createArrowIcon() {
   const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -59,17 +55,11 @@ function selectedGift() {
   return { amount, formattedAmount, schedule, scheduleLabel, billingSummary };
 }
 
-function resetStripeElements() {
-  stripePaymentElement?.destroy();
-  stripePaymentElement = null;
-  stripeElements = null;
-}
-
 function renderStripePaymentForm() {
-  let intentRequestId = window.crypto.randomUUID();
+  const requestId = window.crypto.randomUUID();
   const message = document.createElement("p");
   message.className = "payment-detail-message";
-  message.textContent = "Enter your email, then securely enter your payment details below. Your card information is sent directly to Stripe and is never handled by this website.";
+  message.textContent = "Enter your email to continue to Stripe Checkout. Your payment details are entered securely on Stripe and are never handled by this website.";
 
   const form = document.createElement("form");
   form.className = "stripe-donation-form";
@@ -94,119 +84,64 @@ function renderStripePaymentForm() {
   const error = document.createElement("p");
   error.className = "stripe-payment-error";
   error.setAttribute("role", "alert");
-  const elementContainer = document.createElement("div");
-  elementContainer.className = "stripe-payment-element";
-  elementContainer.hidden = true;
   const submit = document.createElement("button");
   submit.className = "button button-coral stripe-submit";
   submit.type = "submit";
-  submit.textContent = "Continue to secure payment";
+  submit.textContent = "Continue to Stripe Checkout";
   submit.disabled = !stripeConfigured;
-  form.append(emailLabel, elementContainer, status, error, submit);
+  form.append(emailLabel, status, error, submit);
   paymentDetail.append(message, form);
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     error.textContent = "";
     if (!emailInput.reportValidity()) return;
-    if (!stripeConfigured || !stripePublishableKey) {
+    if (!stripeConfigured) {
       error.textContent = "Stripe payments are not configured yet. Please try again later.";
-      return;
-    }
-    if (typeof window.Stripe !== "function") {
-      error.textContent = "The secure payment form could not load. Refresh the page and try again.";
       return;
     }
 
     const gift = selectedGift();
     submit.disabled = true;
+    status.textContent = "Preparing secure Stripe Checkout…";
     try {
-      if (!stripeElements) {
-        status.textContent = "Preparing your secure payment form…";
-        if (!stripeInstance) stripeInstance = window.Stripe(stripePublishableKey);
-        const response = await fetch("/api/create-donation-intent", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            amount: gift.amount,
-            schedule: gift.schedule,
-            email: emailInput.value.trim(),
-            requestId: intentRequestId,
-          }),
-        });
-        const result = await response.json();
-        if (!response.ok) {
-          throw new Error(result.message || "Secure payment could not be prepared. Please try again.");
-        }
-        if (
-          result.publishableKey !== stripePublishableKey ||
-          typeof result.clientSecret !== "string" ||
-          !/^pi_[A-Za-z0-9]+_secret_[A-Za-z0-9]+$/.test(result.clientSecret)
-        ) {
-          throw new Error("The secure payment form returned an invalid response. Please try again.");
-        }
-
-        stripeElements = stripeInstance.elements({
-          clientSecret: result.clientSecret,
-          appearance: {
-            theme: "night",
-            variables: {
-              colorPrimary: "#e9b28e",
-              colorBackground: "#20372d",
-              colorText: "#f5efe0",
-              colorDanger: "#ffd1c5",
-              fontFamily: "system-ui, sans-serif",
-              borderRadius: "4px",
-            },
-          },
-        });
-        elementContainer.hidden = false;
-        stripePaymentElement = stripeElements.create("payment", { layout: "tabs" });
-        stripePaymentElement.mount(elementContainer);
-        emailInput.readOnly = true;
-        submit.textContent = `Give ${gift.formattedAmount} ${gift.scheduleLabel}`;
-        status.textContent = gift.schedule === "one-time"
-          ? `Your ${gift.billingSummary}. Payment details are securely collected by Stripe.`
-          : `Your ${gift.billingSummary}. Stripe will activate the subscription after the first payment is confirmed.`;
-        submit.disabled = false;
-        return;
-      }
-
-      status.textContent = "Confirming your payment securely with Stripe…";
-      const { error: confirmationError, paymentIntent } = await stripeInstance.confirmPayment({
-        elements: stripeElements,
-        confirmParams: {
-          return_url: `${window.location.origin}/giving.html?donation=processing`,
-        },
-        redirect: "if_required",
+      const response = await fetch("/api/create-checkout-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: gift.amount,
+          schedule: gift.schedule,
+          email: emailInput.value.trim(),
+          requestId,
+        }),
       });
-      if (confirmationError) {
-        throw new Error(confirmationError.message || "Stripe could not confirm your payment. Please try again.");
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.message || "Stripe Checkout could not be prepared. Please try again.");
       }
-      if (paymentIntent?.status === "succeeded") {
-        status.textContent = gift.schedule === "one-time"
-          ? "Your one-time payment succeeded. Thank you for supporting this mission!"
-          : `Your first payment succeeded. Stripe is confirming your ${gift.scheduleLabel} subscription. Thank you for partnering with this mission!`;
-        submit.textContent = gift.schedule === "one-time" ? "Payment confirmed" : "First payment confirmed";
-        submit.disabled = true;
-        return;
+      let checkoutUrl;
+      try {
+        checkoutUrl = new URL(result.checkoutUrl);
+      } catch {
+        throw new Error("Stripe returned an invalid Checkout link. Please try again.");
       }
-      status.textContent = "Stripe is processing your payment. Thank you; confirmation will follow when processing completes.";
-      submit.textContent = "Payment processing";
-      submit.disabled = true;
+      if (checkoutUrl.protocol !== "https:" || checkoutUrl.hostname !== "checkout.stripe.com") {
+        throw new Error("Stripe returned an invalid Checkout link. Please try again.");
+      }
+
+      status.textContent = `Redirecting to Stripe Checkout for your ${gift.billingSummary}…`;
+      window.location.assign(checkoutUrl.toString());
     } catch (requestError) {
       error.textContent = requestError instanceof Error
         ? requestError.message
-        : "Secure payment could not be completed. Please try again.";
+        : "Stripe Checkout could not be prepared. Please try again.";
       status.textContent = "";
       submit.disabled = false;
-      if (stripeElements) submit.textContent = `Try payment again`;
     }
   });
 }
 
 function showMethodDetails(method) {
-  resetStripeElements();
   paymentDetail.replaceChildren();
   paymentDetail.hidden = false;
 
@@ -219,7 +154,7 @@ function showMethodDetails(method) {
     cashapp: "Give through your Cash App profile. Your amount and schedule selected here are not automatically applied.",
     equipnet: "Give online through your EquipNet missionary page. Your amount and schedule selected here are not automatically applied.",
     stripe: stripeConfigured
-      ? "Your selected gift will be collected securely with Stripe Elements on this page."
+      ? "Your selected gift will be collected securely on Stripe's hosted Checkout page."
       : "Stripe payments are not configured yet. Please try again later.",
   };
 
@@ -368,7 +303,6 @@ nextStepButton.addEventListener("click", () => {
 });
 
 changeGiftButton.addEventListener("click", () => {
-  resetStripeElements();
   paymentDetail.replaceChildren();
   paymentOptions.hidden = true;
   paymentOptions.classList.remove("is-visible");
@@ -388,12 +322,12 @@ async function loadStripeStatus() {
 
   const config = await response.json();
   stripeConfigured = Boolean(config.donationsConfigured);
-  stripePublishableKey = stripeConfigured ? config.stripePublishableKey : null;
   stripeMethodStatus.textContent = stripeConfigured
     ? `${config.stripeMode === "live" ? "Live" : "Test"} mode ready`
     : "Payment setup needed";
-  const existingFormSubmit = paymentDetail.querySelector(".stripe-submit");
-  if (existingFormSubmit) existingFormSubmit.disabled = !stripeConfigured;
+  for (const submit of paymentDetail.querySelectorAll(".stripe-submit")) {
+    submit.disabled = !stripeConfigured;
+  }
 }
 
 loadStripeStatus().catch((error) => {
