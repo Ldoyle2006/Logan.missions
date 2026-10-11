@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <script src="/analytics-consent.js" defer></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Learn how Logan Doyle's mission updates website handles newsletter signups, donations, and basic website data.">
@@ -36,29 +37,58 @@
       <p class="eyebrow">YOUR INFORMATION</p>
       <h1>Privacy</h1>
       <p class="body-copy">This page explains what information this website handles when you sign up for updates, make a donation, or browse the site. It is intended to describe the site’s current setup in plain language.</p>
-      <p class="privacy-updated">Last updated October 9, 2026</p>
+      <p class="privacy-updated">Last updated October 10, 2026</p>
 
       <section class="privacy-section" aria-labelledby="updates-privacy-title">
         <h2 id="updates-privacy-title">Email updates</h2>
-        <p>If you subscribe, the form sends your email address and, if you choose to provide it, your first name to Brevo, the email service used to manage the update list and send occasional updates. You must agree to receive these emails before the signup is submitted.</p>
-        <p>You can unsubscribe using the link in an update email. You can also email <a href="mailto:Logan.missions@icloud.com">Logan</a> to ask for help or request removal from the list. The signup details are sent to Brevo and are not stored in a website mailing-list database.</p>
+        <p>If you subscribe, the form sends your email address and, if you choose to provide it, your first name to Brevo.</p>
+        <details class="privacy-read-more">
+          <summary>Read more</summary>
+          <p>Brevo manages the update list and sends occasional updates. You must agree to receive these emails before the signup is submitted.</p>
+        </details>
+        <p>You can unsubscribe using the link in an update email.</p>
+        <details class="privacy-read-more">
+          <summary>Read more</summary>
+          <p>You can also email <a href="mailto:Logan.missions@icloud.com">Logan</a> to ask for help or request removal from the list. The signup details are sent to Brevo and are not stored in a website mailing-list database.</p>
+        </details>
       </section>
 
       <section class="privacy-section" aria-labelledby="donations-privacy-title">
         <h2 id="donations-privacy-title">Donations</h2>
-        <p>For card or bank payments made through the giving form, the form sends Stripe your email address, selected amount, and giving schedule to prepare the payment. Payment details are collected by Stripe through its secure payment form; this website does not receive your card number or bank-account credentials.</p>
-        <p>Other giving options may take you to EquipNet, Venmo, or Cash App, or open your email app to request bank-transfer instructions. Those services and your email provider handle information you submit to them under their own privacy practices. Please review their notices before sharing information.</p>
+        <p>For card or bank payments made through the giving form, the form sends Stripe your email address, selected amount, and giving schedule to prepare the payment.</p>
+        <details class="privacy-read-more">
+          <summary>Read more</summary>
+          <p>Payment details are collected by Stripe through its secure payment form; this website does not receive your card number or bank-account credentials.</p>
+        </details>
+        <p>Other giving options may take you to EquipNet, Venmo, or Cash App, or open your email app to request bank-transfer instructions.</p>
+        <details class="privacy-read-more">
+          <summary>Read more</summary>
+          <p>Those services and your email provider handle information you submit to them under their own privacy practices. Please review their notices before sharing information.</p>
+        </details>
       </section>
 
       <section class="privacy-section" aria-labelledby="site-data-title">
         <h2 id="site-data-title">Website and service providers</h2>
-        <p>The website does not currently use its own advertising or analytics tools. The hosting provider may process basic technical information, such as IP address and request details, in routine server logs to deliver and protect the site. Stripe’s payment form and other third-party services may collect information needed to provide their services.</p>
-        <p>Information is shared with service providers only as needed to run the feature you choose, such as sending updates or processing a donation. This site does not sell your contact information.</p>
+        <p>If you allow optional analytics, this website uses Google Analytics 4 (measurement ID G-FVB86SM3MB) and Microsoft Clarity (project ID yvw7ivzevg) to understand site usage.</p>
+        <details class="privacy-read-more">
+          <summary>Read more</summary>
+          <p>Neither tool loads unless you choose “Allow analytics.” Google receives page-view events containing only the page path, page title, and a query-free referrer path; this website does not configure analytics events that send newsletter fields, donor names, email addresses, payment information, donation amounts, or Stripe events. Microsoft Clarity records interactions and session playback to help understand how the site is used. The newsletter signup and donation sections are marked for masking in Clarity, and form inputs are masked by default. Google Analytics property settings can independently enable Enhanced Measurement events, including form interactions and outbound-link clicks; those settings are controlled in Google Analytics, not on this website. To keep measurement limited to page views, form interactions and outbound-link clicks should remain disabled in the property. Google and Microsoft may process technical information such as IP address and browser/device data when their tools run. See <a href="https://policies.google.com/privacy">Google’s privacy policy</a> and <a href="https://privacy.microsoft.com/privacystatement">Microsoft’s privacy statement</a> for details.</p>
+        </details>
+        <p>Your analytics choice is stored in this browser and applies to both tools across the site.</p>
+        <details class="privacy-read-more">
+          <summary>Read more</summary>
+          <p>You can reject analytics or change your choice below. The hosting provider may also process basic technical information, such as IP address and request details, in routine server logs. Stripe and other third-party services may collect information needed to provide the services you choose.</p>
+        </details>
+        <p><button class="analytics-preferences-button" type="button" data-analytics-consent-settings>Change analytics preferences</button></p>
       </section>
 
       <section class="privacy-section" aria-labelledby="choices-title">
         <h2 id="choices-title">Your choices and questions</h2>
-        <p>You can unsubscribe from emails at any time. For questions about this notice, or to ask about information submitted through this site, contact <a href="mailto:Logan.missions@icloud.com">Logan Doyle at Logan.missions@icloud.com</a>. Information held by Stripe, Brevo, or another provider may also be subject to that provider’s privacy policy and processes.</p>
+        <p>You can change your analytics choice using the preferences button above and unsubscribe from emails at any time.</p>
+        <details class="privacy-read-more">
+          <summary>Read more</summary>
+          <p>For questions about this notice, or to ask about information submitted through this site, contact <a href="mailto:Logan.missions@icloud.com">Logan Doyle at Logan.missions@icloud.com</a>. Information held by Stripe, Brevo, Google, Microsoft, or another provider may also be subject to that provider’s privacy policy and processes.</p>
+        </details>
       </section>
 
       <p class="privacy-back-link"><a class="text-link" href="/"><svg class="arrow-icon arrow-icon-left" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m7 7-7-7 7-7"/></svg> Back to the home page</a></p>

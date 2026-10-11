@@ -37,7 +37,7 @@ function sendJson(response, statusCode, payload) {
 function setSecurityHeaders(response) {
   response.setHeader(
     "Content-Security-Policy",
-    "default-src 'self'; script-src 'self' https://js.stripe.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://api.stripe.com https://m.stripe.network https://r.stripe.com; frame-src https://js.stripe.com https://hooks.stripe.com; form-action 'self'; base-uri 'self'; frame-ancestors 'none'",
+    "default-src 'self'; script-src 'self' https://js.stripe.com https://www.googletagmanager.com https://www.clarity.ms; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://www.clarity.ms https://c.bing.com; connect-src 'self' https://api.stripe.com https://m.stripe.network https://r.stripe.com https://www.google-analytics.com https://region1.google-analytics.com https://analytics.google.com https://www.clarity.ms https://*.clarity.ms https://c.bing.com; frame-src https://js.stripe.com https://hooks.stripe.com; form-action 'self'; base-uri 'self'; frame-ancestors 'none'",
   );
   response.setHeader("X-Content-Type-Options", "nosniff");
   response.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
