@@ -3,6 +3,10 @@ import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import Stripe from "stripe";
+import { SchoolStore, initialLedger } from "./school-store.js";
+import { createSchoolCheckout, processSchoolEvent, reconcileSchoolPayment, publicSchools, privateLedger, applyAdminAction, schoolEventTypes } from "./school-funding.js";
+import { deliverNotifications } from "./school-notifications.js";
+import { createAdminAuth } from "./admin-auth.js";
 import { createDonationCheckoutSession } from "./stripe-donations.js";
 import {
   createFourthwallCheckout,
@@ -29,9 +33,40 @@ if (
   (configuredStripeMode === "test" || configuredStripeMode === "live" && liveModeApproved) &&
   process.env.STRIPE_SECRET_KEY?.startsWith(expectedSecretPrefix)
 ) {
-  stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+  stripe = new Stripe(process.env.STRIPE_SECRET_KEY, { timeout: 10000, maxNetworkRetries: 1 });
 }
 const port = Number(process.env.PORT || 3000);
+let schoolStore = null;
+if (process.env.DATABASE_URL && ["test", "live"].includes(configuredStripeMode)) {
+  schoolStore = new SchoolStore(process.env.DATABASE_URL, configuredStripeMode);
+  try { await schoolStore.initialize(); }
+  catch { console.error("School database could not initialize. School payments are disabled."); await schoolStore.close(); schoolStore = null; }
+}
+const adminAuth = createAdminAuth(process.env.SCHOOL_ADMIN_PASSWORD_HASH, publicSiteOrigin());
+const schoolEmailConfig = { apiKey: process.env.BREVO_API_KEY, from: process.env.SCHOOL_NOTIFICATION_FROM, to: process.env.SCHOOL_NOTIFICATION_TO };
+function schoolCheckoutConfigured() {
+  return Boolean(schoolStore && stripeConfiguration() &&
+    (configuredStripeMode === "test" || process.env.SCHOOL_LIVE_PAYMENTS_APPROVED === "true"));
+}
+let workerBusy = false;
+let lastReconciliation = 0;
+async function runSchoolWorker() {
+  if (!schoolStore || workerBusy) return;
+  workerBusy = true;
+  try {
+    await deliverNotifications(schoolStore, schoolEmailConfig);
+    if (stripeConfiguration() && Date.now() - lastReconciliation > 5 * 60_000) {
+      lastReconciliation = Date.now();
+      const data = await schoolStore.read();
+      const pending = Object.values(data.donations).filter(d => d.source === "stripe" && d.feeCents === null)
+        .sort((a,b) => a.reconciledAt.localeCompare(b.reconciledAt)).slice(0, 10);
+      for (const donation of pending) await reconcileSchoolPayment(schoolStore, stripe, donation.id, configuredStripeMode);
+    }
+  } catch { console.error("School background processing failed; pending records remain saved for retry."); }
+  finally { workerBusy = false; }
+}
+const schoolWorker = setInterval(runSchoolWorker, 30_000);
+schoolWorker.unref();
 
 function sendJson(response, statusCode, payload) {
   response.writeHead(statusCode, {
@@ -491,6 +526,19 @@ async function receiveStripeWebhook(request, response) {
     return sendJson(response, 400, { message: "Stripe event mode does not match the configured mode." });
   }
 
+  // School accounting must commit before acknowledging delivery. Failures return
+  // a retryable 5xx; the provider can safely deliver the same payment again.
+  if (schoolStore) {
+    await processSchoolEvent(schoolStore, stripe, event, configuration.mode);
+  } else if (schoolEventTypes.includes(event.type)) {
+    const object = event.data.object;
+    // Without a database, do not acknowledge charge/refund events that could
+    // affect previously accepted designated donations.
+    if (object.metadata?.purpose === "school" || event.type.startsWith("charge.") || event.type.startsWith("refund.")) {
+      return sendJson(response, 503, { message: "School accounting is temporarily unavailable." });
+    }
+  }
+
   if (isSupportedStripeEvent(event.type)) {
     if (processedStripeEventIds.has(event.id)) {
       return sendJson(response, 200, { received: true, duplicate: true });
@@ -556,6 +604,64 @@ async function serveStatic(request, response, pathname) {
 async function handleRequest(request, response) {
   setSecurityHeaders(response);
   const requestUrl = new URL(request.url || "/", "http://localhost");
+
+  if (requestUrl.pathname === "/api/schools" && request.method === "GET") {
+    // Public trackers always read the live partition. Test totals are visible
+    // only to the authenticated admin, even when public checkout is in test mode.
+    let data = initialLedger();
+    if (schoolStore) data = await schoolStore.read("live");
+    return sendJson(response, 200, { schools: publicSchools(data),
+      checkoutEnabled: schoolCheckoutConfigured(), checkoutMode: configuredStripeMode });
+  }
+  if (requestUrl.pathname === "/api/schools/checkout" && request.method === "POST") {
+    if (!adminAuth.sameOrigin(request)) return sendJson(response, 403, { message: "This request could not be verified." });
+    if (!request.headers["content-type"]?.startsWith("application/json")) return sendJson(response, 415, { message: "JSON required." });
+    if (isRateLimited(checkoutRequests, request.socket.remoteAddress || "unknown", 10)) return sendJson(response, 429, { message: "Too many attempts. Try later." });
+    if (!schoolCheckoutConfigured()) return sendJson(response, 503, { message: "Designated school checkout is not configured yet. Please check back soon." });
+    const checkout = await createSchoolCheckout(schoolStore, stripe, await readJsonBody(request), publicSiteOrigin(), configuredStripeMode);
+    return sendJson(response, 200, checkout);
+  }
+  if (requestUrl.pathname === "/school-admin" && request.method === "GET") {
+    response.setHeader("Cache-Control", "no-store");
+    response.setHeader("X-Robots-Tag", "noindex, nofollow");
+    response.setHeader("Content-Type", "text/html; charset=utf-8");
+    return response.end(await readFile(path.join(root, "private", adminAuth.authenticated(request) ? "school-admin.html" : "school-login.html")));
+  }
+  if (requestUrl.pathname.startsWith("/api/school-admin/")) {
+    response.setHeader("X-Robots-Tag", "noindex, nofollow");
+    if (request.method === "POST" && (!adminAuth.sameOrigin(request) || !request.headers["content-type"]?.startsWith("application/json"))) {
+      return sendJson(response, 403, { message: "A same-origin JSON request is required." });
+    }
+    if (requestUrl.pathname === "/api/school-admin/login" && request.method === "POST") {
+      const result = await adminAuth.login(request, (await readJsonBody(request))?.password);
+      if (result.cookie) response.setHeader("Set-Cookie", result.cookie);
+      return sendJson(response, result.status, { message: result.message });
+    }
+    if (!adminAuth.authenticated(request)) return sendJson(response, 401, { message: "Sign in to manage school funds." });
+    if (requestUrl.pathname === "/api/school-admin/logout" && request.method === "POST") {
+      response.setHeader("Set-Cookie", adminAuth.logout(request));
+      return sendJson(response, 200, { message: "Signed out." });
+    }
+    if (!schoolStore) return sendJson(response, 503, { message: "Configure DATABASE_URL and restart to enable the private ledger." });
+    if (requestUrl.pathname === "/api/school-admin/ledger" && request.method === "GET") {
+      return sendJson(response, 200, { ...privateLedger(await schoolStore.read()), mode: configuredStripeMode,
+        notificationsConfigured: Boolean(schoolEmailConfig.apiKey && schoolEmailConfig.from && schoolEmailConfig.to) });
+    }
+    if (requestUrl.pathname === "/api/school-admin/action" && request.method === "POST") {
+      const body = await readJsonBody(request);
+      await schoolStore.transaction(data => applyAdminAction(data, body));
+      return sendJson(response, 200, { message: "Saved to the private ledger." });
+    }
+    if (requestUrl.pathname === "/api/school-admin/reconcile" && request.method === "POST") {
+      const body = await readJsonBody(request);
+      const data = await schoolStore.read();
+      const donation = data.donations[body?.donationId];
+      if (!stripeConfiguration() || donation?.source !== "stripe") return sendJson(response, 400, { message: "Select a Stripe donation to reconcile." });
+      await reconcileSchoolPayment(schoolStore, stripe, donation.id, configuredStripeMode);
+      return sendJson(response, 200, { message: "Reconciled with Stripe." });
+    }
+    return sendJson(response, 404, { message: "Not found." });
+  }
 
   if (requestUrl.pathname === "/api/config" && request.method === "GET") {
     const configuration = stripeConfiguration();
@@ -641,7 +747,7 @@ async function loadEnvironmentFile() {
 
 const server = createServer((request, response) => {
   handleRequest(request, response).catch((error) => {
-    console.error("Request failed:", error);
+    console.error("Request failed:", error.statusCode || 500);
     if (!response.headersSent) {
       sendJson(response, error.statusCode || 500, {
         message: error.statusCode ? error.message : "The request could not be completed.",

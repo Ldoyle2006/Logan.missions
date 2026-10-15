@@ -8,9 +8,15 @@
   },
   "scripts": {
     "start": "node server.js",
-    "test": "node --test"
+    "test": "node --test",
+    "stripe:listen": "node scripts/stripe-listen.js"
   },
   "dependencies": {
+    "pg": "^8.23.1",
     "stripe": "^23.0.0"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.10",
+    "@stripe/cli": "^1.53.1"
   }
 }

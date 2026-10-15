@@ -67,6 +67,7 @@ export async function createDonationCheckoutSession(stripe, {
     ? "One-time mission support for Logan Doyle"
     : `${schedule === "monthly" ? "Monthly" : "Every-two-weeks"} mission support for Logan Doyle`;
   const metadata = {
+    purpose: "general_support",
     donation_schedule: schedule,
     integration: `checkout_${mode}`,
   };

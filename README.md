@@ -1,12 +1,14 @@
 # Mission update website starter
 
-A lightweight Node.js website for missionary updates, a configurable link hub, Brevo newsletter signups, and Stripe Checkout donations. The site does not store payment details or newsletter subscriber records itself.
+A lightweight Node.js website for missionary updates, a configurable link hub, Brevo newsletter signups, and Stripe Checkout donations. Designated school gifts use a private PostgreSQL ledger for donation, refund, fee, and savings allocation records. Card details remain with Stripe; newsletter subscriber records remain with Brevo.
+
+See [School funding setup and verification](docs/SCHOOL_FUNDING.md) for the new Giving/Vision features, private administration, environment variables, and required Stripe test-mode acceptance checks. The supplied project context is saved in [PROJECT_CONTEXT.md](docs/PROJECT_CONTEXT.md).
 
 ## Run locally
 
 1. Install Node.js 20 or newer.
 2. Copy `.env.example` to `.env`.
-3. From the project folder, run `npm start`.
+3. From the project folder, run `npm install`, then `npm start`.
 4. Open `http://localhost:3000`.
 
 The site runs without provider settings so you can edit and preview its content. Newsletter signup and Stripe Checkout donations remain unavailable until their provider configuration is complete.
@@ -54,7 +56,7 @@ Stripe Checkout is created server-side with the secret key; no publishable key i
 
 Create a Stripe webhook for the matching mode at `https://logan-missions.onrender.com/api/stripe-webhook`. Subscribe it to `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `checkout.session.async_payment_failed`, `checkout.session.expired`, `payment_intent.succeeded`, `payment_intent.payment_failed`, `invoice.paid`, `invoice.payment_failed`, `invoice.payment_action_required`, `customer.subscription.created`, `customer.subscription.updated`, and `customer.subscription.deleted`. Keep the test and live webhook signing secrets separate; set only the secret for the configured mode in `STRIPE_WEBHOOK_SECRET`. The server verifies signatures against the raw request body and rejects events from the wrong mode.
 
-Checkout uses a reusable Stripe Product and inline Prices. The two-week schedule is a weekly Price with `interval_count: 2`. Webhook events report Checkout completion, delayed-payment outcomes, paid/failed invoices, and subscription changes. Duplicate event IDs are suppressed in process memory; this starter has no persistent database, so webhook processing is intentionally limited to idempotent logging, not durable donation records. Do not treat a completed Checkout Session with an unpaid `payment_status` as paid.
+General-support checkout uses a reusable Stripe Product and inline Prices. The two-week schedule is a weekly Price with `interval_count: 2`. General-support events retain the original logging behavior. School checkout uses its own product descriptions, designation metadata, persistent records, and transaction-level duplicate protection. See the school setup guide for the additional webhook events. Neither an unpaid Checkout Session nor a success-page visit credits a school.
 
 Run `npm test` for checkout request, amount, schedule, metadata, return URL, and validation checks using a mocked Stripe client. These tests do not call Stripe and do not replace end-to-end test-mode card, 3DS, failed-payment, cancellation, webhook-delivery, and Stripe Test Clock testing. Confirm those flows in Stripe test mode before any live launch. Confirm donation receipts, tax language, and fundraising disclosures with your organization.
 

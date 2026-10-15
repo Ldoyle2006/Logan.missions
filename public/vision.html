@@ -8,6 +8,7 @@
     <meta name="description" content="Learn about Logan Doyle's vision for missions, discipleship, and sharing the love of Jesus.">
     <title>My Vision | Logan Doyle Mission Updates</title>
     <link rel="stylesheet" href="/styles.css">
+    <script src="/schools.js" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -77,6 +78,49 @@
         <p class="vision-closing">Through missions, discipleship, teaching, and genuine relationships, I want to reflect Jesus wherever God leads me. I believe preparation is part of being faithful to that calling.</p>
         <a class="text-link vision-give-link" href="/giving.html">See how to partner with this vision <svg class="arrow-icon arrow-icon-up-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
       </section>
+      <section id="future-training" class="training-section section-wrap" aria-labelledby="training-title">
+        <p class="eyebrow">PREPARING TO SERVE</p>
+        <h2 id="training-title">Future Ministry Training</h2>
+        <p class="training-intro">I want to grow in my understanding of Scripture so I can teach, disciple, and serve others through missions and leadership. These three schools are part of that preparation. Gifts here are designated to the school you choose, separately from <a href="/giving.html">regular monthly support</a>.</p>
+        <p class="training-note">Goals are planning estimates and may change. Progress includes confirmed gross gifts minus refunds, verified offline gifts, and confirmed starting funds. Processing fees and savings transfers are tracked privately.</p>
+        <p id="school-checkout-status" class="giving-return-message" role="status" hidden></p>
+        <div class="school-grid">
+          <article class="school-card" data-school="bcc">
+            <p class="eyebrow">FIRST PRIORITY</p><h3>Bible Core Course on Location</h3>
+            <p class="school-date">September 2027</p><p>Building a stronger foundation in Scripture for a lifetime of teaching and discipleship.</p>
+            <dl class="school-totals"><div><dt>Fundraising goal</dt><dd data-goal>$8,300</dd></div><div><dt>Amount raised</dt><dd data-raised>Not yet updated</dd></div><div><dt>Amount remaining</dt><dd data-remaining>Not yet updated</dd></div></dl>
+            <div class="school-progress" role="progressbar" aria-label="Bible Core Course funding not yet updated" aria-valuemin="0" aria-valuemax="100" aria-valuetext="Funding progress not yet updated"><span></span></div>
+            <p data-percentage>Funding progress not yet updated.</p><button class="button button-coral" type="button" data-school-give="bcc">Give Towards This School</button>
+          </article>
+          <article class="school-card" data-school="word_by_heart">
+            <p class="eyebrow">LEARNING TO SHARE SCRIPTURE</p><h3>Word by Heart</h3>
+            <p class="school-date">Date TBD</p><p>Learning, internalizing, and communicating Scripture so others can encounter its message.</p>
+            <dl class="school-totals"><div><dt>Fundraising goal</dt><dd data-goal>$5,000</dd></div><div><dt>Amount raised</dt><dd data-raised>Not yet updated</dd></div><div><dt>Amount remaining</dt><dd data-remaining>Not yet updated</dd></div></dl>
+            <div class="school-progress" role="progressbar" aria-label="Word by Heart funding not yet updated" aria-valuemin="0" aria-valuemax="100" aria-valuetext="Funding progress not yet updated"><span></span></div>
+            <p data-percentage>Funding progress not yet updated.</p><button class="button button-coral" type="button" data-school-give="word_by_heart">Give Towards This School</button>
+          </article>
+          <article class="school-card" data-school="sbs">
+            <p class="eyebrow">A LONGER-TERM VISION</p><h3>School of Biblical Studies</h3>
+            <p class="school-date">Date TBD</p><p>Studying the Bible in greater depth to prepare for faithful teaching and long-term ministry.</p>
+            <dl class="school-totals"><div><dt>Fundraising goal</dt><dd data-goal>$10,000</dd></div><div><dt>Amount raised</dt><dd data-raised>Not yet updated</dd></div><div><dt>Amount remaining</dt><dd data-remaining>Not yet updated</dd></div></dl>
+            <div class="school-progress" role="progressbar" aria-label="School of Biblical Studies funding not yet updated" aria-valuemin="0" aria-valuemax="100" aria-valuetext="Funding progress not yet updated"><span></span></div>
+            <p data-percentage>Funding progress not yet updated.</p><button class="button button-coral" type="button" data-school-give="sbs">Give Towards This School</button>
+          </article>
+        </div>
+        <noscript><p>Please enable JavaScript to see current funding progress and open designated checkout.</p></noscript>
+      </section>
+      <dialog id="school-checkout" aria-labelledby="school-checkout-title" data-clarity-mask>
+        <form id="school-donation-form" class="school-form">
+          <button class="dialog-close" type="button" id="close-school-checkout" aria-label="Close donation form">Close ×</button>
+          <p class="eyebrow">DESIGNATED ONE-TIME GIFT</p><h2 id="school-checkout-title">Give towards this school</h2>
+          <p>Your gift will be recorded for this school's training fund. Stripe securely collects your payment details.</p>
+          <p id="school-test-notice" hidden>Test checkout — no real money will be collected. Test gifts do not appear in public totals.</p>
+          <label>Donation amount (USD)<input name="amount" type="number" min="5" max="999999.99" step="0.01" inputmode="decimal" value="100" required></label>
+          <label>Email for your receipt<input name="email" type="email" autocomplete="email" maxlength="254" required></label>
+          <p id="school-form-message" role="status"></p>
+          <button class="button button-dark" id="school-submit" type="submit">Continue to secure checkout</button>
+        </form>
+      </dialog>
     </main>
 
     <footer class="site-footer">
