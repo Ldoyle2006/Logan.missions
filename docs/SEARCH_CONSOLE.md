@@ -26,4 +26,10 @@ The owner explicitly approved publishing and Google submission on October 15, 20
 
 Private runtime notes and submission receipts, when available, are kept in the ignored .local/ directory. Search Console's indexed status and sitemap reports may take time to update.
 
+## Identity metadata without visible changes
+
+The owner clarified that visible content and design must stay unchanged. The homepage now includes a non-executable JSON-LD data block identifying the existing site name, Logan Doyle, his YWAM affiliation, and the Instagram/Facebook profiles already linked publicly. The body markup, page title, visible wording, styles, forms and links are preserved. No social profiles are edited or contacted. This describes the site's existing identity; it does not assign search keywords or guarantee a ranking.
+
+Google accepted the five-page sitemap with Success on October 15. The subsequent manual homepage request was refused because Google's daily quota was exhausted. Do not repeat it today. Indexing and crawling remain Google's decisions, and free-host sleep limitations still apply.
+
 References: [Google sitemap guidance](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap), [Google canonical URLs](https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls), [request crawling](https://developers.google.com/search/docs/crawling-indexing/ask-google-to-recrawl), [Render free hosting limits](https://render.com/docs/free).
