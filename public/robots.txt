@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://logan-missions.onrender.com/sitemap.xml

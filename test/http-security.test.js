@@ -29,9 +29,24 @@ test("HTTP pages, admin protection, same-origin checks and raw Stripe signature 
     const vision = await (await fetch(`${origin}/vision.html`)).text();
     assert.equal((vision.match(/class="school-card"/g) || []).length, 3);
     assert.match(vision, /Funding progress not yet updated/);
+    const robots = await fetch(`${origin}/robots.txt`);
+    assert.equal(robots.status, 200); assert.match(robots.headers.get("content-type"), /^text\/plain/);
+    assert.match(await robots.text(), /Sitemap: https:\/\/logan-missions\.onrender\.com\/sitemap\.xml/);
+    const sitemap = await fetch(`${origin}/sitemap.xml`);
+    assert.equal(sitemap.status, 200); assert.match(sitemap.headers.get("content-type"), /^application\/xml/);
+    const locations = [...(await sitemap.text()).matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => new URL(match[1]));
+    assert.equal(locations.length, 5);
+    for (const location of locations) {
+      assert.equal(location.origin, "https://logan-missions.onrender.com");
+      assert.equal(location.search, ""); assert.equal(location.hash, "");
+      const page = await fetch(`${origin}${location.pathname}`);
+      assert.equal(page.status, 200);
+      assert.ok((await page.text()).includes(`<link rel="canonical" href="${location.href}">`));
+    }
     assert.equal((await fetch(`${origin}/api/school-admin/ledger`)).status, 401);
     assert.equal((await fetch(`${origin}/private/school-admin.html`)).status, 404);
     const loginPage = await fetch(`${origin}/school-admin`);
+    assert.equal(loginPage.headers.get("x-robots-tag"), "noindex, nofollow");
     assert.equal(loginPage.headers.get("cache-control"), "no-store");
     assert.match(await loginPage.text(), /id="admin-login"/);
     const post = (route, body, headers = {}) => fetch(`${origin}${route}`, { method: "POST", headers: { "Content-Type": "application/json", Origin: origin, ...headers }, body: JSON.stringify(body) });
