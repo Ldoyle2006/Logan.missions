@@ -1,3 +1,5 @@
+import { createCarouselNavigation, createImagePreloader } from "/carousel-engine.js";
+
 const signupForm = document.querySelector("#signup-form");
 const formMessage = document.querySelector("#form-message");
 const donationMessage = document.querySelector("#donation-message");
@@ -324,7 +326,7 @@ if (missionCarousel) {
     },
   ];
   const slides = missionPhotos.filter(({ image }) => image).map(({ image, title, memo }) => ({
-    image: `/images/mission/${encodeURIComponent(image.replace(/\.[^.]+$/, ".web.jpg"))}`,
+    image: `/images/mission/${encodeURIComponent(image.replace(/\.[^.]+$/, ".web.jpg"))}${["A pointless effort to avoid the rain..JPG", "Thai worship.HEIC"].includes(image) ? "?upright=1" : ""}`,
     alt: title,
     title,
     note: memo,
@@ -353,20 +355,41 @@ if (missionCarousel) {
   let activeIndex = 0;
   let touchStartX = null;
   let suppressPhotoClick = false;
-  let isAnimating = false;
-  let queuedSlideIndex = null;
-  let carouselInitialized = false;
+  const preloader = createImagePreloader(slides.map(slide => slide.image));
+  const carouselStatus = document.querySelector("#mission-carousel-status");
 
   function setCardSlide(card, slideIndex) {
     const index = (slideIndex + slides.length) % slides.length;
     const slide = slides[index];
+    if (card.dataset.slideIndex === String(index)) {
+      card.setAttribute("aria-current", String(card.dataset.cardPosition === "center"));
+      return;
+    }
     const image = card.querySelector("img");
     const button = card.querySelector(".mission-photo-button");
-    image.src = slide.image;
+    const alreadyDisplayed = image.getAttribute("src") === slide.image;
+    card.dataset.slideIndex = String(index);
+    image.loading = "eager";
+    image.decoding = "async";
+    const display = () => {
+      if (card.dataset.slideIndex !== String(index)) return;
+      if (!alreadyDisplayed) image.src = slide.image;
+      card.classList.remove("is-image-loading");
+    };
+    if (alreadyDisplayed || preloader.ready(index)) display();
+    else {
+      card.classList.add("is-image-loading");
+      void preloader.load(index).then(loaded => {
+        if (loaded) display();
+        else if (card.dataset.slideIndex === String(index)) {
+          card.classList.remove("is-image-loading");
+          image.src = slide.image;
+        }
+      });
+    }
     image.alt = slide.alt;
     button.setAttribute("aria-label", `View larger: ${slide.title}`);
     card.querySelector("figcaption").textContent = slide.title;
-    card.dataset.slideIndex = String(index);
     card.setAttribute("aria-current", String(card.dataset.cardPosition === "center"));
   }
 
@@ -379,78 +402,60 @@ if (missionCarousel) {
     for (const card of cards) setCardSlide(card, positions[card.dataset.cardPosition]);
   }
 
-  function showSlide(slideIndex) {
-    const targetIndex = (slideIndex + slides.length) % slides.length;
-    if (isAnimating) {
-      queuedSlideIndex = targetIndex;
-      return;
-    }
-    if (targetIndex === activeIndex && carouselInitialized) return;
-    const shouldFade = targetIndex !== activeIndex;
-    activeIndex = targetIndex;
-    if (shouldFade) {
-      for (const card of cards) card.classList.add("is-entering");
-    }
-    updateCarouselCards();
-    updateMemo();
-    carouselInitialized = true;
-    if (shouldFade) {
-      window.requestAnimationFrame(() => {
-        window.requestAnimationFrame(() => {
-          for (const card of cards) card.classList.remove("is-entering");
-        });
-      });
-    }
-  }
-
-  function moveSlide(direction) {
-    const destination = (activeIndex + direction + slides.length) % slides.length;
-    if (isAnimating) {
-      queuedSlideIndex = destination;
-      return;
-    }
-
+  const navigation = createCarouselNavigation({ count: slides.length,
+    prepare: index => preloader.load(index),
+    onError() {
+      carouselStatus.hidden = false;
+      carouselStatus.textContent = "That photo could not load. Please try again.";
+    },
+    render: ({ to, direction }) => {
+      carouselStatus.hidden = true;
+      activeIndex = to;
+      if (!direction) {
+        updateCarouselCards();
+        updateMemo();
+        preloader.warm(activeIndex);
+        return;
+      }
     const exitingPosition = direction > 0 ? "left" : "right";
     const exitingCard = cards.find((card) => card.dataset.cardPosition === exitingPosition);
     const movingCard = cards.find((card) => card.dataset.cardPosition === "center");
     const arrivingCard = cards.find((card) => card.dataset.cardPosition === (direction > 0 ? "right" : "left"));
 
-    isAnimating = true;
     exitingCard.classList.add("is-leaving");
     movingCard.dataset.cardPosition = direction > 0 ? "left" : "right";
     arrivingCard.dataset.cardPosition = "center";
     movingCard.setAttribute("aria-current", "false");
     arrivingCard.setAttribute("aria-current", "true");
-    activeIndex = destination;
     updateMemo();
+    preloader.warm(activeIndex);
 
+    return new Promise(resolve => {
     const finishMovement = () => {
       const latestEnteringPosition = direction > 0 ? "right" : "left";
+      exitingCard.classList.add("is-recycling");
       exitingCard.dataset.cardPosition = latestEnteringPosition;
       setCardSlide(exitingCard, activeIndex + (direction > 0 ? 1 : -1));
       exitingCard.classList.remove("is-leaving");
-      exitingCard.classList.add("is-entering");
       updateCarouselCards();
 
-      window.requestAnimationFrame(() => {
-        exitingCard.classList.remove("is-entering");
+      if (motionDuration === 0) {
+        exitingCard.classList.remove("is-recycling");
+        resolve();
+      } else window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
+          exitingCard.classList.remove("is-recycling");
+          resolve();
+        });
       });
-
-      isAnimating = false;
-      if (queuedSlideIndex !== null) {
-        const queuedIndex = queuedSlideIndex;
-        queuedSlideIndex = null;
-        if (queuedIndex !== activeIndex) {
-          const forwardDistance = (queuedIndex - activeIndex + slides.length) % slides.length;
-          moveSlide(forwardDistance <= slides.length / 2 ? 1 : -1);
-          queuedSlideIndex = queuedIndex;
-        }
-      }
     };
 
-    const motionDuration = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 420;
+    const motionDuration = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 240;
     window.setTimeout(finishMovement, motionDuration);
-  }
+    });
+  } });
+  const showSlide = index => navigation.goTo(index);
+  const moveSlide = direction => navigation.step(direction);
 
   function updateMemo() {
     const slide = slides[activeIndex];
@@ -508,5 +513,15 @@ if (missionCarousel) {
   lightbox.addEventListener("click", (event) => {
     if (event.target === lightbox) lightbox.close();
   });
-  showSlide(activeIndex);
+  updateCarouselCards();
+  updateMemo();
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(entries => {
+      if (entries.some(entry => entry.isIntersecting)) {
+        preloader.warm(activeIndex);
+        observer.disconnect();
+      }
+    }, { rootMargin: "600px" });
+    observer.observe(missionCarousel);
+  } else preloader.warm(activeIndex);
 }

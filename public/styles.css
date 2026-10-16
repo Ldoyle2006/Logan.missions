@@ -213,11 +213,12 @@ h1, h2, h3, p { margin-top: 0; }
 .journey-section .heading-aside { font: italic 15px/1.65 var(--serif); }
 .mission-carousel { position: relative; max-width: 990px; margin: 0 auto; overflow: clip; }
 .carousel-stage { position: relative; height: clamp(300px, 40vw, 470px); overflow: hidden; touch-action: pan-y; }
-.mission-card { position: absolute; top: 4%; width: 42%; height: 92%; margin: 0; overflow: hidden; border: 1px solid rgba(245, 239, 224, .48); background: #17241b; box-shadow: 0 22px 50px rgba(8, 20, 13, .3); transition: left .4s cubic-bezier(.22, .61, .36, 1), opacity .3s ease, transform .4s cubic-bezier(.22, .61, .36, 1); }
-.mission-card.is-leaving, .mission-card.is-entering { opacity: 0; }
-.mission-card[data-card-position="left"] { left: 4%; z-index: 1; opacity: .84; transform: scale(.78) rotate(-8deg); }
-.mission-card[data-card-position="center"] { left: 29%; z-index: 3; opacity: 1; }
-.mission-card[data-card-position="right"] { left: 54%; z-index: 1; opacity: .84; transform: scale(.78) rotate(8deg); }
+.mission-card { --card-x: 0%; --card-scale: 1; --card-tilt: 0deg; position: absolute; left: 29%; top: 4%; width: 42%; height: 92%; margin: 0; overflow: hidden; border: 1px solid rgba(245, 239, 224, .48); background: #17241b; box-shadow: 0 22px 50px rgba(8, 20, 13, .3); transform: translateX(var(--card-x)) scale(var(--card-scale)) rotate(var(--card-tilt)); transition: opacity .16s ease, transform .24s cubic-bezier(.22, .61, .36, 1); will-change: transform; }
+.mission-card[data-card-position="left"] { --card-x: -59.5238%; --card-scale: .78; --card-tilt: -8deg; z-index: 1; opacity: .84; }
+.mission-card[data-card-position="center"] { z-index: 3; opacity: 1; }
+.mission-card[data-card-position="right"] { --card-x: 59.5238%; --card-scale: .78; --card-tilt: 8deg; z-index: 1; opacity: .84; }
+.mission-card.is-leaving, .mission-card.is-image-loading { opacity: 0; }
+.mission-card.is-recycling { visibility: hidden; transition: none; }
 .mission-photo-button { position: relative; display: block; width: 100%; height: 100%; padding: 0; overflow: hidden; border: 0; background: transparent; cursor: zoom-in; }
 .mission-photo-button img { display: block; width: 100%; height: 100%; object-fit: cover; transition: opacity .22s ease; }
 .mission-photo-button img.is-changing { opacity: .4; }
@@ -578,10 +579,9 @@ h1, h2, h3, p { margin-top: 0; }
   .vision-partner-quote, .vision-closing, .vision-give-link { grid-column: auto; }
   .journey-section { padding-block: 60px; }
   .carousel-stage { height: clamp(285px, 72vw, 390px); }
-  .mission-card { width: 64%; }
-  .mission-card[data-card-position="left"] { left: -25%; transform: scale(.72) rotate(-9deg); }
-  .mission-card[data-card-position="center"] { left: 18%; }
-  .mission-card[data-card-position="right"] { left: 61%; transform: scale(.72) rotate(9deg); }
+  .mission-card { left: 18%; width: 64%; }
+  .mission-card[data-card-position="left"] { --card-x: -67.1875%; --card-scale: .72; --card-tilt: -9deg; }
+  .mission-card[data-card-position="right"] { --card-x: 67.1875%; --card-scale: .72; --card-tilt: 9deg; }
   .carousel-arrow { width: 46px; height: 46px; }
   .carousel-arrow-prev { left: 4px; }
   .carousel-arrow-next { right: 4px; }
@@ -635,10 +635,9 @@ h1, h2, h3, p { margin-top: 0; }
   .carousel-arrow-prev { left: 9px; }
   .carousel-arrow-next { right: 9px; }
   .carousel-stage { height: 285px; }
-  .mission-card { width: 68%; }
-  .mission-card[data-card-position="left"] { left: -23%; }
-  .mission-card[data-card-position="center"] { left: 16%; }
-  .mission-card[data-card-position="right"] { left: 60%; }
+  .mission-card { left: 16%; width: 68%; }
+  .mission-card[data-card-position="left"] { --card-x: -57.35294%; }
+  .mission-card[data-card-position="right"] { --card-x: 64.70588%; }
   .mission-card figcaption { right: 9px; bottom: 10px; left: 9px; font-size: 15px; }
   .mission-card[data-card-position="left"] figcaption, .mission-card[data-card-position="right"] figcaption { font-size: 12px; }
   .photo-memo { grid-template-columns: 1fr; gap: 6px; }
