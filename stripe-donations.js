@@ -3,7 +3,7 @@ const recurringProductMetadata = {
   purpose: "recurring_donations",
 };
 
-async function getRecurringDonationProduct(stripe) {
+export async function getRecurringDonationProduct(stripe) {
   const products = await stripe.products.list({ active: true, limit: 100 });
   let product = products.data.find((item) =>
     item.metadata?.integration === recurringProductMetadata.integration &&

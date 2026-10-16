@@ -9,7 +9,9 @@
   "scripts": {
     "start": "node server.js",
     "test": "node --test",
-    "stripe:listen": "node scripts/stripe-listen.js"
+    "stripe:listen": "node scripts/stripe-listen.js",
+    "stripe:catalog": "node scripts/prepare-stripe-catalog.js",
+    "ledger:backup": "node scripts/backup-school-ledger.js"
   },
   "dependencies": {
     "pg": "^8.23.1",

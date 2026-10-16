@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { SCHOOL_DEFAULTS } from "./school-store.js";
+import { getSchoolDonationProduct } from "./stripe-school-products.js";
 
 export const isSchool = id => SCHOOL_DEFAULTS.some(s => s.id === id);
 export const isUuid = id => typeof id === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id);
@@ -66,11 +67,11 @@ export async function createSchoolCheckout(store, stripe, body, siteOrigin, mode
   });
   if (record.checkoutUrl) return { checkoutUrl: record.checkoutUrl };
   const school = SCHOOL_DEFAULTS.find(s => s.id === body.schoolId);
+  const productId = await getSchoolDonationProduct(stripe, school.id);
   const metadata = { purpose: "school", school_id: school.id, donation_id: record.id, integration: `school_${mode}` };
   const session = await stripe.checkout.sessions.create({
     mode: "payment", customer_email: record.email, metadata,
-    line_items: [{ price_data: { currency: "usd", unit_amount: amountCents,
-      product_data: { name: `Designated donation — ${school.name}`, description: "One-time gift for this school's training fund." } }, quantity: 1 }],
+    line_items: [{ price_data: { currency: "usd", unit_amount: amountCents, product: productId }, quantity: 1 }],
     payment_intent_data: { metadata, receipt_email: record.email, description: `Designated school donation: ${school.name}` },
     success_url: `${siteOrigin}/vision.html?school=${school.id}&donation=success#future-training`,
     cancel_url: `${siteOrigin}/vision.html?school=${school.id}&donation=cancelled#future-training`,

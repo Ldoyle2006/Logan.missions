@@ -13,7 +13,7 @@
 - `public/privacy.html`: explains private school records and administration cookies.
 - `.env.example`, `scripts/admin-password.js`, dependencies and tests: setup and verification support.
 
-No push, deployment, live charge, bank transfer, or external service configuration was performed. Git remote was verified as `git@github.com:Ldoyle2006/Logan.missions.git`; the historical Render URL was supplied in the project context, but active hosting settings were not inspected.
+See [PAYMENT_SETUP_STATUS.md](PAYMENT_SETUP_STATUS.md) for the latest actual account setup and provider test results. The owner approved production publication and real donation collection after sandbox verification. Deployment checks are recorded privately in `.local/live-launch-checks.json` when completed. No live charge or real bank transfer is used for testing. The existing Render service and its URL were verified in the dashboard.
 
 ## Required configuration
 
@@ -33,15 +33,17 @@ Set secrets in local `.env` or the host's secret settings. Never place them in `
 | `SCHOOL_NOTIFICATION_FROM` | Sender email verified with Brevo. |
 | `SCHOOL_NOTIFICATION_TO` | Your private notification email. No recipient is assumed or hardcoded. |
 
-The local configuration inspected during implementation did **not** contain a Stripe secret key, webhook signing secret, database URL, admin password hash, or notification sender/recipient. Brevo newsletter settings existed, but transactional email delivery was not exercised. Missing configuration fails closed: school checkout and private records are unavailable, while the public pages still render and existing general features keep their own configuration rules.
+Local sandbox credentials remain available for development. Live Stripe credentials, the production webhook signing secret, the existing free database’s internal URL, admin hash and verified Brevo configuration have been saved in Render using **Save only**. The owner has since approved launch: both live approval flags are true in Render and the live webhook is enabled. Local development remains in test mode. Brevo reports all eight sandbox notices delivered. Missing configuration continues to fail closed.
 
 ## Database and hosting
 
 Provision persistent PostgreSQL before enabling designated payments. The application automatically creates `school_fundraising_ledger` and initializes the selected mode on startup. The database role needs create-table permission on first startup and SELECT/INSERT/UPDATE thereafter. Use a dedicated application database/role and enable backups and point-in-time recovery where supported. Record retention and backup access should reflect the private financial data it contains.
 
+The owner chose to keep the free database until close to its **November 13, 2026** expiration. Upgrade or migrate before then. Free Postgres has no managed backups. Run `npm run ledger:backup` locally with the verified external `DATABASE_URL` to export both test and live records into ignored `.local/ledger-backups/`. Save private snapshots regularly and before upgrades/migrations; these exports are manual, not scheduled or a managed backup service. They contain donor information and must stay private.
+
 The application stores no production donation files on the web host's disk. A single small JSONB ledger per mode is intentional for this personal site: row-level locking serializes financial changes and removes cross-record partial commits. It is not designed for high transaction volume; a future migration to normalized tables can preserve the existing records. Full audit history is retained in PostgreSQL; the screen shows the latest 200 actions.
 
-Deploy **one always-on Node web instance** initially. Sessions and login rate limits are in process memory (restarts sign the admin out); multiple instances need a shared session/rate-limit store before use. PostgreSQL financial locking already protects concurrent writes. The 30-second notification worker and five-minute pending-fee reconciliation worker run in this process. A sleeping/free host delays these jobs; use an always-on service or add an authenticated scheduled worker before relying on prompt email delivery. Monitor webhook failures and outbox entries needing review.
+Use **one Node web instance**. An always-on instance is recommended for prompt notices; the owner explicitly chose to retain the free plan until close to November 13, 2026. Sessions and login rate limits are in process memory (restarts sign the admin out); multiple instances need a shared session/rate-limit store before use. PostgreSQL financial locking already protects concurrent writes. The 30-second notification worker and five-minute pending-fee reconciliation worker run in this process. A sleeping/free host delays these jobs; use an always-on service or add an authenticated scheduled worker before relying on prompt email delivery. Monitor webhook failures and outbox entries needing review.
 
 Public `/api/schools` returns **only the live partition's aggregate amounts and school settings**, even during test checkout. With no live partition/starting balances, public progress is unknown. The admin shows the currently configured test or live partition, with an explicit mode label. Test settings and funds are never promoted to live. Goals/dates and starting amounts must be entered separately for live use; the live checkout gate can stay disabled while those are prepared.
 
@@ -106,11 +108,17 @@ Use `.env` with `PUBLIC_BASE_URL=http://localhost:3000` (or match your configure
 
 ## Verification completed
 
-`npm test`: **45 tests passing**, including existing general Stripe and Fourthwall tests. New tests cover all school designations, checkout validation, private/public data separation, unknown starting balances, concurrent duplicate events, failed/cancelled/delayed payments, provider amount/mode mismatches, general-support exclusion, partial/full refunds, pending/foreign fees, starting funds, offline gifts, corrections, audit entries, transfer completion/reversal, outbox retries and login protection.
+`npm test`: **50 tests passing**, including existing general Stripe and Fourthwall tests. New tests cover all school designations, reusable school products and catalog pagination, checkout validation, private/public data separation, unknown starting balances, concurrent duplicate events, failed/cancelled/delayed payments, provider amount/mode mismatches, general-support exclusion, partial/full refunds, pending/foreign fees, starting funds, offline gifts, corrections, audit entries, transfer completion/reversal, outbox retries and login protection. An explicitly rejected first email attempt (such as an invalid key) stays queued for configuration repair; ambiguous delivery attempts retain their bounded retry/review behavior.
 
 HTTP integration tests exercise actual routes, real Stripe test-signature verification, invalid signatures, wrong mode, missing database, admin login/logout, protected HTML/API access, cross-origin rejection, and Giving/Vision content. Embedded PostgreSQL (PGlite, development dependency only) verifies SQL transactions, rollback, persistent disk records across reopen, mode separation and duplicate processing after reopen. Restricted local runtime initially blocked loopback access and the embedded database; the full suite passed when run with the needed local execution permission.
 
-These are automated tests with a mocked Stripe API and email API. **No actual Stripe sandbox checkout or Brevo email has been completed.** Hosted PostgreSQL connectivity is also unverified until provisioned. Browser automation was blocked by the browser tool's URL security policy, so visual/mobile and interactive browser checks remain unverified. Responsive CSS and semantic form/card markup are implemented; inspect them manually before deployment.
+The automated tests mock Stripe and email APIs. Subsequent actual provider testing confirmed sandbox gifts for BCC ($5), Word by Heart ($7), and SBS ($9), a declined payment followed by successful retry, partial and full BCC refunds, and duplicate-event protection. Hosted PostgreSQL connectivity and private administration were verified. Native browser checks confirmed designated checkout and the Vision cards at desktop and narrow window widths. Brevo subsequently confirmed delivery of all eight sandbox notices. Live credentials were verified, the four live products were created, and the production webhook was staged disabled. A full mobile-device pass and production deployment remain pending; see the current status document.
+
+## Reusable fund catalog
+
+`npm run stripe:catalog` prepares one reusable general-support Product and one Product for each school in the configured Stripe account/mode. It creates no payments or subscriptions. The website chooses the donor's amount and billing schedule dynamically at checkout, so separate manual Payment Links are not needed for each preset. Product and payment metadata retain the school identifiers; these labels do not create bank accounts or route payouts to separate savings accounts. Test and live catalogs remain separate. Saved local catalog IDs are in the ignored `.local/` folder.
+
+For local test webhooks, run `npm run stripe:listen` in a separate terminal. It reads the test key from `.env`, forwards only the relevant sandbox events to the local webhook, and saves the listener's signing secret without printing it. Restart the site after a newly saved secret. A production webhook uses its own signing secret and a publicly reachable HTTPS URL.
 
 ## Required acceptance test before live money
 
@@ -125,4 +133,4 @@ These are automated tests with a mocked Stripe API and email API. **No actual St
 9. Test offline gifts, duplicate form submission, a documented correction, goals/dates, starting balance updates, transfer completion and reversal. Verify the audit history.
 10. Check actual Brevo delivery and accounting updates, and sign out to verify private APIs and records are inaccessible.
 11. Inspect Giving/Vision at phone and desktop widths, expand budget categories, open/close each school dialog with keyboard controls, and exercise existing general giving options.
-12. Only after these checks and Logan's approval: switch to production database/mode/key/webhook settings, enter verified live starting funds, confirm backups and always-on hosting, and explicitly enable `SCHOOL_LIVE_PAYMENTS_APPROVED=true` alongside the existing live flag. Deploy only with approval.
+12. Only after these checks and Logan's approval: switch to production database/mode/key/webhook settings, enter verified live starting funds, review the owner’s decision to retain free hosting until close to the database’s November 13, 2026 expiration, arrange private ledger exports while managed backups are unavailable, and explicitly enable `SCHOOL_LIVE_PAYMENTS_APPROVED=true` alongside the existing live flag. Deploy only with approval.

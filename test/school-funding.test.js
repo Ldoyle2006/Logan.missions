@@ -18,6 +18,10 @@ function memoryStore() {
 function provider() {
   const calls = []; let state;
   const stripe = {
+    products: {
+      async list() { return { data: [], has_more: false }; },
+      async create(params) { return { id: `prod_school_${params.metadata.school_id}`, ...params }; },
+    },
     checkout: { sessions: { async create(params, options) { calls.push({ params, options }); return { id: "cs_test_school", url: "https://checkout.stripe.com/c/pay/cs_test_school" }; } } },
     paymentIntents: { async retrieve() { return structuredClone(state.intent); } },
     refunds: { list() { return (async function* () { for (const refund of state.refunds) yield structuredClone(refund); })(); } },
@@ -46,7 +50,7 @@ test("all three school checkouts persist designation before Stripe; general subs
     assert.equal(params.mode, "payment"); assert.equal(params.metadata.school_id, schoolId);
     assert.equal(params.payment_intent_data.metadata.school_id, schoolId);
     assert.equal(params.line_items[0].price_data.unit_amount, 10000);
-    assert.match(params.line_items[0].price_data.product_data.name, /Designated donation/);
+    assert.equal(params.line_items[0].price_data.product, `prod_school_${schoolId}`);
     assert.match(params.success_url, new RegExp(`school=${schoolId}`));
     assert.match(options.idempotencyKey, /^school-test-/);
     assert.equal(Object.keys((await p.store.read()).donations).length, 0);
@@ -170,6 +174,19 @@ test("uncertain email retries reuse the key and stop before its deduplication wi
   await deliverNotifications(p.store, config, timeout, 800000);
   assert.equal(keys.length, 2); assert.equal(keys[0], keys[1]);
   assert.equal(Object.values((await p.store.read()).notifications)[0].status, "needs_review");
+});
+
+test("an invalid email key leaves rejected notifications queued until configuration is repaired", async () => {
+  const p = await prepared(); await processSchoolEvent(p.store, p.stripe, event(), "test");
+  const config = { apiKey: "invalid", from: "from@example.com", to: "to@example.com" };
+  const rejected = async () => ({ ok: false, status: 401, json: async () => ({ code: "unauthorized", message: "Key not found" }) });
+  await deliverNotifications(p.store, config, rejected, 100000);
+  let notification = Object.values((await p.store.read()).notifications)[0];
+  assert.equal(notification.status, "pending"); assert.equal(notification.firstAttempt, undefined);
+  assert.equal(notification.lastProviderStatus, 401);
+  await deliverNotifications(p.store, { ...config, apiKey: "repaired" }, async () => ({ ok: true, status: 201, json: async () => ({ messageId: "accepted-after-repair" }) }), 1000000);
+  notification = Object.values((await p.store.read()).notifications)[0];
+  assert.equal(notification.status, "sent"); assert.equal(notification.providerMessageId, "accepted-after-repair");
 });
 test("private login uses expiring HttpOnly secure cookies, strict origin, logout and rate limiting", async () => {
   const salt = "12".repeat(16), password = "a sufficiently long test password";

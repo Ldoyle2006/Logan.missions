@@ -67,7 +67,7 @@ function renderLedger() {
   if (!donations.length) list.append(node("p", "No donations recorded for this school yet."));
   const notifications = document.querySelector("#admin-notifications"); notifications.replaceChildren();
   for (const n of ledger.notifications.filter(n => donations.some(d => d.id === n.donationId))) {
-    const entry = node("p", `${n.subject} — ${n.status}`);
+    const entry = node("p", `${n.subject} — ${n.status}${n.status !== "sent" && n.lastProviderStatus ? ` (Brevo HTTP ${n.lastProviderStatus})` : ""}`);
     if (n.status === "needs_review") {
       const button = node("button", "Record provider-log review"); button.type = "button";
       button.addEventListener("click", () => { const note = prompt("After checking Brevo delivery logs, record the outcome and any action taken:"); if (note) action(async () => { await api("action", { requestId: crypto.randomUUID(), action: "notification-reviewed", schoolId, notificationId: n.id, note }); await reloadLedger(); }); }); entry.append(button);
