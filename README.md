@@ -17,7 +17,7 @@ The site runs without provider settings so you can edit and preview its content.
 
 - Edit `public/index.html` to add your name, mission, location, and story.
 - The Give buttons open `public/giving.html`, where supporters can choose an amount, schedule, and giving method, or mail a check. Update the check instructions there if your EquipNet details change. Stripe Checkout securely collects payment details on Stripe-hosted pages for the selected gift amount and schedule.
-- The Shop link opens `public/shop.html`, with four Scripture-based collections, live product options, an on-site cart, and a Fourthwall-hosted checkout handoff. Fourthwall supplies current product, price, image, variant, and availability data and handles payment, printing, fulfillment, and shipping. Shirts and hoodies appear as Coming Soon placeholders until they are actually listed in the shop.
+- The Shop link opens `public/shop.html`, with four Scripture-based collections and direct links to each hat on Fourthwall. Shoppers choose colors, add products to their cart, and check out on Fourthwall, which handles current options, payment, printing, fulfillment, and shipping. Shirts and hoodies appear as Coming Soon placeholders until they are actually listed in the shop.
 - Edit `public/links.json` to show multiple links. Example:
 
   ```json
@@ -73,9 +73,9 @@ The server adds subscribers directly to the configured Brevo contact list using 
 
 ## Fourthwall merchandise shop
 
-The Shop page uses Fourthwall's official [Storefront API](https://docs.fourthwall.com/storefront/overview) for the four public hat listings. Product options and availability are fetched server-side; the Storefront API token is never sent to the browser. Customers select available variants and build a cart on the site. The server rechecks selected variants with Fourthwall, creates a Fourthwall cart, and redirects customers to `logans-mission-shop.fourthwall.com` for hosted checkout. Donation checkout remains a separate Stripe flow.
+The Shop page links directly to the four public hat listings at `logans-mission-shop.fourthwall.com`. Color selection, the cart, and checkout happen on Fourthwall. The page has no local cart, does not fetch the Storefront API, and works without a `FOURTHWALL_STOREFRONT_TOKEN`. Product links open in a new tab. Donation checkout remains a separate Stripe flow.
 
-Set `FOURTHWALL_STOREFRONT_TOKEN` in local `.env` or hosting-provider secret settings. Create the token in the Fourthwall dashboard under **Settings → For Developers**. Never put this token in public JavaScript, commit `.env`, or send the token in chat. Without the token, on-site variant selection and cart checkout are unavailable; product-page links remain available as a fallback.
+The existing server-side catalog and checkout API routes are retained for possible future use. They require `FOURTHWALL_STOREFRONT_TOKEN` in private environment settings; the public shop page does not use them. Never put the token in public JavaScript or commit `.env`.
 
 ## Merchandise
 
