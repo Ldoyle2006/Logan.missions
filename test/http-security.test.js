@@ -44,6 +44,7 @@ test("HTTP pages, admin protection, same-origin checks and raw Stripe signature 
       assert.ok((await page.text()).includes(`<link rel="canonical" href="${location.href}">`));
     }
     assert.equal((await fetch(`${origin}/api/school-admin/ledger`)).status, 401);
+    assert.equal((await fetch(`${origin}/api/school-admin/runtime`)).status, 401);
     assert.equal((await fetch(`${origin}/private/school-admin.html`)).status, 404);
     const loginPage = await fetch(`${origin}/school-admin`);
     assert.equal(loginPage.headers.get("x-robots-tag"), "noindex, nofollow");
@@ -53,6 +54,11 @@ test("HTTP pages, admin protection, same-origin checks and raw Stripe signature 
     assert.equal((await post("/api/school-admin/login", { password }, { Origin: "https://attacker.example" })).status, 403);
     const signedIn = await post("/api/school-admin/login", { password }); assert.equal(signedIn.status, 200);
     const cookie = signedIn.headers.get("set-cookie").split(";")[0];
+    const runtimeResponse = await fetch(`${origin}/api/school-admin/runtime`, { headers: { Cookie: cookie } });
+    assert.equal(runtimeResponse.status, 200);
+    assert.equal(runtimeResponse.headers.get("cache-control"), "no-store");
+    assert.equal(runtimeResponse.headers.get("x-robots-tag"), "noindex, nofollow");
+    assert.equal((await runtimeResponse.json()).nodeVersion, process.version);
     const privatePage = await (await fetch(`${origin}/school-admin`, { headers: { Cookie: cookie } })).text();
     assert.match(privatePage, /Donations and savings allocations/); assert.doesNotMatch(privatePage, /analytics-consent/);
     assert.equal((await fetch(`${origin}/api/school-admin/ledger`, { headers: { Cookie: cookie } })).status, 503);

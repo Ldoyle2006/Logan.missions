@@ -644,6 +644,10 @@ async function handleRequest(request, response) {
       response.setHeader("Set-Cookie", adminAuth.logout(request));
       return sendJson(response, 200, { message: "Signed out." });
     }
+    if (requestUrl.pathname === "/api/school-admin/runtime" && request.method === "GET") {
+      return sendJson(response, 200, { nodeVersion: process.version,
+        deployCommit: process.env.RENDER_GIT_COMMIT || null });
+    }
     if (!schoolStore) return sendJson(response, 503, { message: "Configure DATABASE_URL and restart to enable the private ledger." });
     if (requestUrl.pathname === "/api/school-admin/ledger" && request.method === "GET") {
       return sendJson(response, 200, { ...privateLedger(await schoolStore.read()), mode: configuredStripeMode,
