@@ -6,7 +6,7 @@ See [School funding setup and verification](docs/SCHOOL_FUNDING.md) for the new 
 
 ## Run locally
 
-1. Install Node.js 20 or newer.
+1. Install patched Node.js 24.22.1 or a newer 24.x release.
 2. Copy `.env.example` to `.env`.
 3. From the project folder, run `npm install`, then `npm start`.
 4. Open `http://localhost:3000`.
@@ -83,4 +83,4 @@ The four collections are Worthy of Hearing (Romans 10:14–15), Known by Name (I
 
 ## Production
 
-Deploy the Node server behind a hosting provider that supports Node.js 20+ and HTTPS. Configure the environment variables in the host's secret/environment settings rather than uploading `.env`. Set `PUBLIC_BASE_URL` to the canonical HTTPS origin to enable HSTS; it is not required for newsletter signup. The included in-memory signup rate limit is suitable only for a small starter deployment; use a shared rate limiter if running multiple server instances.
+Deploy the Node server behind a hosting provider that supports Node.js 24.22.1+ within the 24.x release line and HTTPS. The `.node-version` file selects 24.22.1 on Render; a configured `NODE_VERSION` environment variable takes precedence and must also select a patched release. Configure the environment variables in the host's secret/environment settings rather than uploading `.env`. Set `PUBLIC_BASE_URL` to the canonical HTTPS origin to enable HSTS; it is not required for newsletter signup. The included in-memory signup rate limit is suitable only for a small starter deployment; use a shared rate limiter if running multiple server instances.
