@@ -9,6 +9,7 @@
   "scripts": {
     "start": "node server.js",
     "test": "node --test",
+    "build:pages": "node scripts/build-cloudflare-pages.js",
     "stripe:listen": "node scripts/stripe-listen.js",
     "stripe:catalog": "node scripts/prepare-stripe-catalog.js",
     "ledger:backup": "node scripts/backup-school-ledger.js"

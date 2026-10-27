@@ -12,7 +12,7 @@ test("HTTP pages, admin protection, same-origin checks and raw Stripe signature 
   const password = "integration-test-password-only", salt = "34".repeat(16);
   const webhookSecret = "whsec_integration_test_only";
   const child = spawn(process.execPath, ["server.js"], { cwd: new URL("..", import.meta.url), windowsHide: true,
-    env: { ...process.env, PORT: String(port), PUBLIC_BASE_URL: origin, DATABASE_URL: "", STRIPE_MODE: "test", STRIPE_LIVE_MODE_APPROVED: "false",
+    env: { ...process.env, PORT: String(port), PUBLIC_BASE_URL: origin, PUBLIC_FRONTEND_URL: "https://frontend.example", PUBLIC_FRONTEND_REDIRECT: "false", DATABASE_URL: "", STRIPE_MODE: "test", STRIPE_LIVE_MODE_APPROVED: "false",
       STRIPE_SECRET_KEY: "sk_test_integration_only", STRIPE_WEBHOOK_SECRET: webhookSecret,
       SCHOOL_ADMIN_PASSWORD_HASH: `${salt}:${scryptSync(password, salt, 64).toString("hex")}`, SCHOOL_NOTIFICATION_FROM: "", SCHOOL_NOTIFICATION_TO: "" },
     stdio: ["ignore", "pipe", "pipe"] });
@@ -52,6 +52,9 @@ test("HTTP pages, admin protection, same-origin checks and raw Stripe signature 
     assert.match(await loginPage.text(), /id="admin-login"/);
     const post = (route, body, headers = {}) => fetch(`${origin}${route}`, { method: "POST", headers: { "Content-Type": "application/json", Origin: origin, ...headers }, body: JSON.stringify(body) });
     assert.equal((await post("/api/school-admin/login", { password }, { Origin: "https://attacker.example" })).status, 403);
+    assert.equal((await post("/api/school-admin/login", { password }, { Origin: "https://frontend.example" })).status, 403);
+    assert.equal((await post("/api/create-checkout-session", {}, { Origin: "https://frontend.example" })).status, 400);
+    assert.equal((await post("/api/schools/checkout", {}, { Origin: "https://frontend.example" })).status, 503);
     const signedIn = await post("/api/school-admin/login", { password }); assert.equal(signedIn.status, 200);
     const cookie = signedIn.headers.get("set-cookie").split(";")[0];
     const runtimeResponse = await fetch(`${origin}/api/school-admin/runtime`, { headers: { Cookie: cookie } });

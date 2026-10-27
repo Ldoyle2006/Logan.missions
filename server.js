@@ -158,12 +158,12 @@ async function subscribe(request, response) {
     }
     const requestHost = request.headers.host;
     const forwardedProtocol = request.headers["x-forwarded-proto"]?.split(",")[0].trim().toLowerCase();
-    if (
+    if (origin !== frontendOrigin() && (
       !requestHost ||
       !["http:", "https:"].includes(originUrl.protocol) ||
       originUrl.host.toLowerCase() !== requestHost.toLowerCase() ||
       (forwardedProtocol && `${forwardedProtocol}:` !== originUrl.protocol)
-    ) {
+    )) {
       return sendJson(response, 403, { message: "This signup request could not be verified." });
     }
   }
@@ -272,6 +272,7 @@ function publicSiteOrigin() {
 function hasSameOrigin(request) {
   const origin = request.headers.origin;
   if (!origin) return false;
+  if (frontendOrigin() && origin === frontendOrigin()) return true;
 
   try {
     const originUrl = new URL(origin);
@@ -282,6 +283,20 @@ function hasSameOrigin(request) {
   } catch {
     return false;
   }
+}
+
+// Only an explicitly configured frontend may use the public form endpoints.
+// Private administration keeps its existing origin and cookie protections.
+function frontendOrigin() {
+  try {
+    const url = new URL(process.env.PUBLIC_FRONTEND_URL);
+    if (url.protocol !== "https:" || url.username || url.password || url.pathname !== "/" || url.search || url.hash) return null;
+    return url.origin;
+  } catch { return null; }
+}
+
+function checkoutReturnOrigin(request) {
+  return frontendOrigin() && request.headers.origin === frontendOrigin() ? frontendOrigin() : publicSiteOrigin();
 }
 
 function stripeConfiguration() {
@@ -349,7 +364,7 @@ async function createDonationCheckout(request, response) {
       mode: configuration.mode,
       requestId,
       schedule,
-      siteOrigin: publicSiteOrigin(),
+      siteOrigin: checkoutReturnOrigin(request),
     });
     return sendJson(response, 200, checkout);
   } catch (error) {
@@ -606,6 +621,11 @@ async function serveStatic(request, response, pathname) {
 async function handleRequest(request, response) {
   setSecurityHeaders(response);
   const requestUrl = new URL(request.url || "/", "http://localhost");
+  if (process.env.PUBLIC_FRONTEND_REDIRECT === "true" && frontendOrigin() &&
+    ["GET", "HEAD"].includes(request.method) && ["/", "/index.html", "/vision.html", "/giving.html", "/shop.html", "/privacy.html"].includes(requestUrl.pathname)) {
+    const pagePath = requestUrl.pathname === "/index.html" ? "/" : requestUrl.pathname.replace(/\.html$/, "");
+    return response.writeHead(301, { Location: `${frontendOrigin()}${pagePath}${requestUrl.search}` }).end();
+  }
 
   if (requestUrl.pathname === "/api/schools" && request.method === "GET") {
     // Public trackers always read the live partition. Test totals are visible
@@ -616,11 +636,11 @@ async function handleRequest(request, response) {
       checkoutEnabled: schoolCheckoutConfigured(), checkoutMode: configuredStripeMode });
   }
   if (requestUrl.pathname === "/api/schools/checkout" && request.method === "POST") {
-    if (!adminAuth.sameOrigin(request)) return sendJson(response, 403, { message: "This request could not be verified." });
+    if (!hasSameOrigin(request)) return sendJson(response, 403, { message: "This request could not be verified." });
     if (!request.headers["content-type"]?.startsWith("application/json")) return sendJson(response, 415, { message: "JSON required." });
     if (isRateLimited(checkoutRequests, request.socket.remoteAddress || "unknown", 10)) return sendJson(response, 429, { message: "Too many attempts. Try later." });
     if (!schoolCheckoutConfigured()) return sendJson(response, 503, { message: "Designated school checkout is not configured yet. Please check back soon." });
-    const checkout = await createSchoolCheckout(schoolStore, stripe, await readJsonBody(request), publicSiteOrigin(), configuredStripeMode);
+    const checkout = await createSchoolCheckout(schoolStore, stripe, await readJsonBody(request), checkoutReturnOrigin(request), configuredStripeMode);
     return sendJson(response, 200, checkout);
   }
   if (requestUrl.pathname === "/school-admin" && request.method === "GET") {
