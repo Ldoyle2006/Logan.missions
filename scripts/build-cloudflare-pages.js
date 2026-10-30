@@ -2,6 +2,7 @@ import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { functionRoutes } from "../cloudflare/worker.js";
+import { buildNewsletters } from "../newsletter-build.js";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const output = path.join(root, ".cloudflare-dist");
@@ -10,7 +11,7 @@ let site;
 try { site = new URL(process.env.PUBLIC_SITE_URL); } catch { throw new Error("Set PUBLIC_SITE_URL to the final HTTPS public site origin before building."); }
 if (site.protocol !== "https:" || site.username || site.password || site.pathname !== "/" || site.search || site.hash) throw new Error("PUBLIC_SITE_URL must be an HTTPS origin without a path or credentials.");
 const origin = site.origin;
-const cleanPaths = text => text.replace(/\/(giving|vision|shop|privacy)\.html(?=[?"'#<\s])/g, "/$1");
+const cleanPaths = text => text.replace(/\/(giving|vision|shop|privacy|newsletters)\.html(?=[?"'#<\s])/g, "/$1");
 const files = [];
 async function collect(directory, relative = "") {
   for (const entry of await readdir(directory, { withFileTypes: true })) {
@@ -26,11 +27,12 @@ async function collect(directory, relative = "") {
     files.push({ name, data });
   }
 }
-await collect(path.join(root, "public"));
 // Refuse an output tree with stale files rather than silently publishing them.
 await mkdir(output, { recursive: true });
 const existing = await readdir(output);
 if (existing.length) throw new Error("The .cloudflare-dist directory must be empty before building. Use a fresh build checkout or move the previous output aside.");
+await buildNewsletters(root, { origin });
+await collect(path.join(root, "public"));
 for (const { name, data } of files) {
   const destination = path.join(output, name);
   await mkdir(path.dirname(destination), { recursive: true });

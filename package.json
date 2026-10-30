@@ -9,6 +9,7 @@
   "scripts": {
     "start": "node server.js",
     "test": "node --test",
+    "newsletter": "node scripts/newsletter.js",
     "build:pages": "node scripts/build-cloudflare-pages.js",
     "stripe:listen": "node scripts/stripe-listen.js",
     "stripe:catalog": "node scripts/prepare-stripe-catalog.js",
@@ -20,6 +21,7 @@
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.10",
-    "@stripe/cli": "^1.53.1"
+    "@stripe/cli": "^1.53.1",
+    "sharp": "^0.35.5"
   }
 }

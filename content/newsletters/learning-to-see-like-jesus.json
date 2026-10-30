@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "slug": "learning-to-see-like-jesus",
+  "title": "Learning to See Like Jesus",
+  "date": "2026-10",
+  "subtitle": "Life in Kona, growing in faith, and learning to love people better.",
+  "description": "Life in Kona, growing in faith, and learning to love people better.",
+  "status": "draft",
+  "featured": true,
+  "subject": "Learning to See Like Jesus | October 2026",
+  "previewText": "Life in Kona, growing in faith, and learning to love people better.",
+  "cover": { "placeholder": "Cover photo — add your personal photo from Kona." },
+  "introduction": [ { "type": "placeholder", "text": "Introduction — paste your opening note to supporters here." } ],
+  "sections": [
+    { "heading": "Life in Kona", "blocks": [ { "type": "placeholder", "text": "Add your written update about life in Kona." }, { "type": "image", "placeholder": "Add a personal photo of life in Kona, with alt text and an optional caption." } ] },
+    { "heading": "Growing in My Faith", "blocks": [ { "type": "placeholder", "text": "Add your reflection about growing in your faith." } ] },
+    { "heading": "Learning to See Like Jesus", "blocks": [ { "type": "placeholder", "text": "Add your own reflection and any Bible passage you want to include." } ] },
+    { "heading": "Ministry Through Coffee", "blocks": [ { "type": "placeholder", "text": "Add your ministry-through-coffee update." }, { "type": "gallery", "images": [ { "placeholder": "Coffee ministry photo 1 — add your own photo." }, { "placeholder": "Coffee ministry photo 2 — add your own photo." } ] } ] },
+    { "heading": "What's Next", "blocks": [ { "type": "placeholder", "text": "Add your confirmed next steps and upcoming plans." } ] },
+    { "heading": "Prayer Requests", "blocks": [ { "type": "prayers" } ] },
+    { "heading": "A Thank You to My Supporters", "blocks": [ { "type": "placeholder", "text": "Add your personal thank-you note to supporters." } ] }
+  ],
+  "prayerRequests": [],
+  "supportLink": true,
+  "signature": "Logan Doyle"
+}

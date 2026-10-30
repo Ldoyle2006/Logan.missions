@@ -11,10 +11,11 @@ test("HTTP pages, admin protection, same-origin checks and raw Stripe signature 
   const origin = `http://127.0.0.1:${port}`;
   const password = "integration-test-password-only", salt = "34".repeat(16);
   const webhookSecret = "whsec_integration_test_only";
-  const child = spawn(process.execPath, ["server.js"], { cwd: new URL("..", import.meta.url), windowsHide: true,
+  const child = spawn(process.execPath, ["--import", "./fixtures/brevo-contact-mock.js", "server.js"], { cwd: new URL("..", import.meta.url), windowsHide: true,
     env: { ...process.env, PORT: String(port), PUBLIC_BASE_URL: origin, PUBLIC_FRONTEND_URL: "https://frontend.example", PUBLIC_FRONTEND_REDIRECT: "false", DATABASE_URL: "", STRIPE_MODE: "test", STRIPE_LIVE_MODE_APPROVED: "false",
       STRIPE_SECRET_KEY: "sk_test_integration_only", STRIPE_WEBHOOK_SECRET: webhookSecret,
-      SCHOOL_ADMIN_PASSWORD_HASH: `${salt}:${scryptSync(password, salt, 64).toString("hex")}`, SCHOOL_NOTIFICATION_FROM: "", SCHOOL_NOTIFICATION_TO: "" },
+      SCHOOL_ADMIN_PASSWORD_HASH: `${salt}:${scryptSync(password, salt, 64).toString("hex")}`, SCHOOL_NOTIFICATION_FROM: "", SCHOOL_NOTIFICATION_TO: "",
+      BREVO_API_KEY: "test-key-only", BREVO_LIST_ID: "4" },
     stdio: ["ignore", "pipe", "pipe"] });
   try {
     await new Promise((resolve, reject) => {
@@ -35,7 +36,8 @@ test("HTTP pages, admin protection, same-origin checks and raw Stripe signature 
     const sitemap = await fetch(`${origin}/sitemap.xml`);
     assert.equal(sitemap.status, 200); assert.match(sitemap.headers.get("content-type"), /^application\/xml/);
     const locations = [...(await sitemap.text()).matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => new URL(match[1]));
-    assert.equal(locations.length, 5);
+    assert.ok(locations.length >= 6);
+    assert.ok(locations.some(location => location.pathname === "/newsletters"));
     for (const location of locations) {
       assert.equal(location.origin, "https://logan-missions.onrender.com");
       assert.equal(location.search, ""); assert.equal(location.hash, "");
@@ -51,6 +53,16 @@ test("HTTP pages, admin protection, same-origin checks and raw Stripe signature 
     assert.equal(loginPage.headers.get("cache-control"), "no-store");
     assert.match(await loginPage.text(), /id="admin-login"/);
     const post = (route, body, headers = {}) => fetch(`${origin}${route}`, { method: "POST", headers: { "Content-Type": "application/json", Origin: origin, ...headers }, body: JSON.stringify(body) });
+    const newsletters = await fetch(`${origin}/newsletters`);
+    assert.equal(newsletters.status, 200); assert.match(await newsletters.text(), /id="signup-form"/);
+    assert.equal((await fetch(`${origin}/newsletters/nonexistent-private-integration-test-draft`)).status, 404);
+    assert.equal((await fetch(`${origin}/content/newsletters/learning-to-see-like-jesus.json`)).status, 404);
+    assert.equal((await fetch(`${origin}/.local/newsletters/learning-to-see-like-jesus/web.html`)).status, 404);
+    const subscriber = { email: "newsletter-test@example.test", firstName: "Newsletter test", consent: true, website: "" };
+    assert.equal((await post("/api/newsletter", { ...subscriber, consent: false })).status, 400);
+    assert.equal((await post("/api/newsletter", subscriber, { Origin: "https://attacker.example" })).status, 403);
+    const signup = await post("/api/newsletter", subscriber, { Origin: "https://frontend.example" });
+    assert.equal(signup.status, 200); assert.match((await signup.json()).message, /update list/);
     assert.equal((await post("/api/school-admin/login", { password }, { Origin: "https://attacker.example" })).status, 403);
     assert.equal((await post("/api/school-admin/login", { password }, { Origin: "https://frontend.example" })).status, 403);
     assert.equal((await post("/api/create-checkout-session", {}, { Origin: "https://frontend.example" })).status, 400);
