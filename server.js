@@ -7,6 +7,7 @@ import { SchoolStore, initialLedger } from "./school-store.js";
 import { createSchoolCheckout, processSchoolEvent, reconcileSchoolPayment, publicSchools, privateLedger, applyAdminAction, schoolEventTypes } from "./school-funding.js";
 import { deliverNotifications } from "./school-notifications.js";
 import { createAdminAuth } from "./admin-auth.js";
+import { buildNewsletters } from "./newsletter-build.js";
 import { createDonationCheckoutSession } from "./stripe-donations.js";
 import {
   createFourthwallCheckout,
@@ -26,6 +27,7 @@ let stripe = null;
 let fourthwallCatalogCache = null;
 
 await loadEnvironmentFile();
+await buildNewsletters(root);
 const configuredStripeMode = process.env.STRIPE_MODE || "test";
 const liveModeApproved = process.env.STRIPE_LIVE_MODE_APPROVED === "true";
 const expectedSecretPrefix = configuredStripeMode === "live" ? "sk_live_" : "sk_test_";
@@ -591,7 +593,9 @@ async function serveStatic(request, response, pathname) {
     return;
   }
 
-  const requestedPath = decodedPath === "/" ? "/index.html" : decodedPath;
+  // Generated newsletter pages have clean URLs on both Render and Pages.
+  const newsletterRoute = decodedPath === "/newsletters" || /^\/newsletters\/[a-z0-9]+(?:-[a-z0-9]+)*$/.test(decodedPath);
+  const requestedPath = decodedPath === "/" ? "/index.html" : newsletterRoute ? `${decodedPath}.html` : decodedPath;
   const filePath = path.resolve(publicDirectory, `.${requestedPath}`);
   if (!filePath.startsWith(`${publicDirectory}${path.sep}`)) {
     response.writeHead(404).end("Not found.");
