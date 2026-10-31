@@ -290,7 +290,7 @@ h1, h2, h3, p { margin-top: 0; }
 .empty-links { color: var(--muted); font-size: 12px; }
 .empty-links code { color: var(--green); }
 
-.support-section { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 10%; padding-block: 90px; overflow: hidden; }
+.support-section { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 10%; padding-block: 90px; }
 .support-section > div, .support-flower { position: relative; z-index: 1; }
 .support-section .eyebrow { margin-bottom: 13px; }
 .support-section h2 { margin: 0; font-size: clamp(38px, 4.5vw, 56px); }
@@ -805,3 +805,8 @@ h1, h2, h3, p { margin-top: 0; }
 .shop-collection > summary { border-radius: 8px; }
 .shop-collection[open] > summary { border-radius: 8px 8px 0 0; }
 .shop-collection-body { margin-top: 0; border-top: 1px solid rgba(245,239,224,.18); border-radius: 0 0 8px 8px; }
+
+/* Keep the final support section full-width and give the shop an equal, clear action. */
+.support-section .button-shop { border: 1px solid rgba(245,239,224,.55); background: var(--green); color: var(--cream); font: 600 12px var(--sans); }
+.support-section .button-shop:hover { background: #3b5c49; color: var(--cream); border-color: var(--cream); }
+.menu-link-grid > .menu-destination:last-child:nth-child(odd) { grid-column: 1 / -1; }
