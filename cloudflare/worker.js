@@ -41,6 +41,12 @@ export function createPagesWorker(upstreamFetch = fetch) {
           body: request.method === "POST" ? await request.arrayBuffer() : undefined,
           redirect: "manual", cache: "no-store",
         });
+        // The host can return an HTML wake-up page before the application starts.
+        // These are JSON-only API routes: keep that host page out of the donor UI.
+        if (!upstream.headers.get("Content-Type")?.toLowerCase().includes("application/json")) {
+          const status = upstream.status >= 400 && upstream.status <= 599 ? upstream.status : 503;
+          return failure(status, "Logan Missions is connecting. Please try again shortly.");
+        }
         const resultHeaders = new Headers(upstream.headers);
         resultHeaders.set("Cache-Control", "no-store");
         resultHeaders.delete("Set-Cookie");

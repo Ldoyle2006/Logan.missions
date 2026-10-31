@@ -103,7 +103,8 @@ function renderStripePaymentForm() {
 
     const gift = selectedGift();
     submit.disabled = true;
-    status.textContent = "Preparing secure Stripe Checkout…";
+    status.classList.add("is-service-wait");
+    status.textContent = "Getting your secure checkout ready…";
     try {
       const response = await fetch("/api/create-checkout-session", {
         method: "POST",
@@ -136,6 +137,7 @@ function renderStripePaymentForm() {
         ? requestError.message
         : "Stripe Checkout could not be prepared. Please try again.";
       status.textContent = "";
+      status.classList.remove("is-service-wait");
       submit.disabled = false;
     }
   });

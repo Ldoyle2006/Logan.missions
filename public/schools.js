@@ -53,7 +53,8 @@ schoolForm.addEventListener("submit", async event => {
   const fields = new FormData(schoolForm);
   schoolSubmitting = true;
   for (const element of schoolForm.elements) element.disabled = true;
-  schoolMessage.textContent = "Preparing your designated checkout…";
+  schoolMessage.classList.add("is-service-wait");
+  schoolMessage.textContent = "Getting your school donation checkout ready…";
   try {
     const response = await fetch("/api/schools/checkout", { method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ schoolId: selectedSchool, requestId: schoolRequestId, amount: Number(fields.get("amount")), email: fields.get("email").trim() }) });
@@ -62,7 +63,7 @@ schoolForm.addEventListener("submit", async event => {
     const url = new URL(result.checkoutUrl);
     if (url.protocol !== "https:" || url.hostname !== "checkout.stripe.com") throw new Error("Invalid checkout address.");
     location.assign(url.toString());
-  } catch (error) { schoolMessage.textContent = error.message; }
+  } catch (error) { schoolMessage.classList.remove("is-service-wait"); schoolMessage.textContent = error.message; }
   finally { schoolSubmitting = false; for (const element of schoolForm.elements) element.disabled = false; }
 });
 loadSchoolProgress();

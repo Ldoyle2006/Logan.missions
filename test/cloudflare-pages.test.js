@@ -40,7 +40,7 @@ test("public donation proxy preserves body and origin, strips credentials and ne
     assert.equal(options.headers.get("Authorization"), null);
     assert.deepEqual(JSON.parse(new TextDecoder().decode(options.body)), { schoolId: "bcc", amount: 100 });
     assert.equal(options.redirect, "manual");
-    return new Response('{"url":"https://checkout.stripe.com/example"}', { status: 200, headers: { "Set-Cookie": "private=secret", "Cache-Control": "public, max-age=3600" } });
+    return new Response('{"url":"https://checkout.stripe.com/example"}', { status: 200, headers: { "Content-Type": "application/json", "Set-Cookie": "private=secret", "Cache-Control": "public, max-age=3600" } });
   });
   const response = await worker.fetch(new Request(site + "/api/schools/checkout", { method: "POST",
     headers: { Origin: site, Cookie: "session=private", Authorization: "Bearer private", "Content-Type": "application/json" },
@@ -56,4 +56,23 @@ test("backend cold-start failures produce a retryable error without leaking secr
   assert.equal(response.status, 503);
   assert.equal(response.headers.get("Cache-Control"), "no-store");
   assert.doesNotMatch(await response.text(), /sensitive/);
+});
+
+test("host HTML wake-up pages become a friendly JSON retry response", async () => {
+  const worker = createPagesWorker(async () => new Response("<html>Render wake-up page</html>", {
+    status: 200, headers: { "Content-Type": "text/html; charset=utf-8" },
+  }));
+  const response = await worker.fetch(new Request(site + "/api/config"), env);
+  assert.equal(response.status, 503);
+  assert.match(response.headers.get("Content-Type"), /application\/json/);
+  assert.deepEqual(await response.json(), { message: "Logan Missions is connecting. Please try again shortly." });
+});
+
+test("non-JSON API errors preserve their truthful HTTP status", async () => {
+  const worker = createPagesWorker(async () => new Response("<html>Not found</html>", {
+    status: 404, headers: { "Content-Type": "text/html" },
+  }));
+  const response = await worker.fetch(new Request(site + "/api/config"), env);
+  assert.equal(response.status, 404);
+  assert.equal((await response.json()).message, "Logan Missions is connecting. Please try again shortly.");
 });
