@@ -24,6 +24,8 @@ Latest photo treatment preference (replaces the earlier feathered-edge request):
 
 ## Website and email
 
+Archive layout: keep the newest published newsletter visible at the top as a horizontal monthly card, such as “October Newsletter.” Below it, show a thin, collapsed “All newsletters” dropdown with the published-letter count. Opening it reveals the full collection, including the current edition. Cards include the date, photo thumbnail, title, description, full-letter link and a native expandable “Quick preview” with opening paragraphs. Keep month labels dynamic for future editions and previews readable on narrow phones.
+
 Use the same approved writing, image choices and story order from the shared content file. The website may have more visual breathing room; the email remains a simple mobile-friendly letter with compatible inline styles. Include a clear website/share link, subscribe option and Brevo-managed unsubscribe. Keep prayer and thanks more prominent than giving.
 
 ## Review

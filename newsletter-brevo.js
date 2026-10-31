@@ -75,7 +75,7 @@ export async function saveCampaignDraft(client, item, env, { receipt, saveReceip
   return { ...result, plainText: renderPlainText(item, { origin }) };
 }
 export async function sendOwnerTest(client, campaignId, env, confirmed = false) {
-  const email = env.NEWSLETTER_TEST_TO;
+  const email = env.NEWSLETTER_TEST_TO?.trim().toLowerCase();
   if (!confirmed || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email || "")) throw new Error("Set NEWSLETTER_TEST_TO to your own address and pass --confirm-test. Empty recipient lists are never allowed.");
   if (!Number.isSafeInteger(campaignId) || campaignId < 1) throw new Error("Create a campaign draft first.");
   const campaign = await client(`emailCampaigns/${campaignId}`);
