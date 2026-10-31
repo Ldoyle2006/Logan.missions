@@ -88,7 +88,10 @@ async function main() {
         const previews = { "/": "web.html", "/email": "email.html", "/text": "email.txt", "/archive": "archive.html", "/newsletters": "archive.html", [`/newsletters/${slug}`]: "web.html" };
         const filename = previews[pathname] ? path.join(directory, previews[pathname]) : path.resolve(root, "public", `.${pathname}`);
         if (!previews[pathname] && (!filename.startsWith(path.join(root, "public") + path.sep) || !/^\/(styles\.css|newsletters\.css|images\/newsletters\/)/.test(pathname))) { response.writeHead(404).end(); return; }
-        const data = await readFile(filename);
+        let data = await readFile(filename);
+        // A private browser preview can load unpublished local photos. The exported
+        // campaign HTML retains absolute public URLs for real email clients.
+        if (previews[pathname] === "email.html") data = Buffer.from(data.toString("utf8").replaceAll(`src="${origin}/images/newsletters/`, 'src="/images/newsletters/'));
         const type = filename.endsWith(".css") ? "text/css" : filename.endsWith(".txt") ? "text/plain" : filename.endsWith(".html") ? "text/html" : "image/jpeg";
         response.writeHead(200, { "Content-Type": `${type}; charset=utf-8` }); response.end(request.method === "HEAD" ? undefined : data);
       } catch { response.writeHead(404).end("Not found"); }

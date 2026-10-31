@@ -1,14 +1,18 @@
 # Newsletter workflow
 
+Follow [Logan's newsletter design and voice](NEWSLETTER_STYLE.md) for personal writing, photography, website/email consistency and the natural letter structure.
+
 The public website and Brevo campaign use the same content in `content/newsletters/<slug>.json`. No new hosting service, paid plan, database, admin login or public email credential is needed.
 
 ## Current first letter
 
-**Learning to See Like Jesus**, October 2026, is a **draft**, with the requested seven sections and labeled text/photo placeholders. No ministry story or photo has been invented. The available `newsletter 1029/iCloud Photos` files were videos, so they have not been used as newsletter photographs.
+**Learning to See Like Jesus** has a publication date of **October 30, 2026**. The owner approved the completed letter and requested website publication. It uses a cream paper layout, compact masthead, split desktop opening, and five personal photos with pale green backing frames: the original ocean sunset, Diakonos class discussing the Trinity, DTS community, and two coffee photographs. The owner requested removal of the “still from my video” caption wording. Original photos and videos are unchanged. Website and email previews were checked at 1200px and 390px, and the release package's newsletter/archive links and anchors were verified.
 
-The public `/newsletters` archive shows an honest empty state until a complete letter is published. Draft titles, pages and JSON are excluded from the public archive, sitemap and Cloudflare package. Drafts can be reviewed on localhost only; they are not private URLs on the public website.
+The public `/newsletters` archive features published letters and links to their individual pages. The first letter's URL is `/newsletters/learning-to-see-like-jesus`. Future drafts remain excluded from the public archive, sitemap and Cloudflare package. Drafts can be reviewed on localhost only; they are not private URLs on the public website.
 
 The first Brevo campaign was created and read back successfully: **campaign ID 3**, name **Logan Missions | learning-to-see-like-jesus**, status **draft**, audience **list 4**, verified sender **ID 1 — Logan Missions, Ldoyle2006@icloud.com**. It has no schedule. No test or subscriber email has been sent by this implementation. The free account does not permit campaign tags; the tool uses the exact campaign name and private receipt for identification instead.
+
+This approved release publishes the website edition. Campaign 3 has not been refreshed with the final content or scheduled; sending a newsletter still requires the owner's separate explicit approval.
 
 ## One-time configuration
 
@@ -61,7 +65,7 @@ npm run newsletter -- photo learning-to-see-like-jesus --file ".local/newsletter
 
 This makes 480/960/1600px JPEG variants under `public/images/newsletters/<slug>/`, rotates according to camera orientation, removes embedded metadata, and prints an image block. Paste that block into the desired section. For `cover`, use the same object without the `type` property. For a two-column gallery use `{"type":"gallery","images":[<image object>,<image object>]}`. Portrait images retain their proportions; full-width photos fit the editorial column. Small originals are not enlarged. The website uses responsive `srcset`; email uses an absolute image URL. Never include private originals or video files in the public package.
 
-Deploy the optimized photos before testing an email with actual images: an inbox cannot load your localhost images. Newsletter builds reject missing images, paths outside the newsletter image directory, and image files larger than 2 MB. HEIC support depends on the installed decoder; if needed, export photos from iCloud as JPEG first. MOV files must be exported as actual still photographs by the owner; the tool does not choose or invent stills from videos.
+Deploy the optimized photos before testing an email with actual images: an inbox cannot load your localhost images. Newsletter builds reject missing images, paths outside the newsletter image directory, and image files larger than 2 MB. HEIC support depends on the installed decoder; if needed, export photos from iCloud as JPEG first. With owner authorization, extract authentic stills from MOV files for review, convert HDR footage to standard web color, and label the source as a video still. Keep the original clips unchanged; never invent a photographic moment.
 
 ## 3. Preview website and full email
 

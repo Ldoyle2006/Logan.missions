@@ -2,25 +2,227 @@
   "schemaVersion": 1,
   "slug": "learning-to-see-like-jesus",
   "title": "Learning to See Like Jesus",
-  "date": "2026-10",
+  "date": "2026-10-30",
   "subtitle": "Life in Kona, growing in faith, and learning to love people better.",
   "description": "Life in Kona, growing in faith, and learning to love people better.",
-  "status": "draft",
+  "status": "published",
   "featured": true,
   "subject": "Learning to See Like Jesus | October 2026",
   "previewText": "Life in Kona, growing in faith, and learning to love people better.",
-  "cover": { "placeholder": "Cover photo — add your personal photo from Kona." },
-  "introduction": [ { "type": "placeholder", "text": "Introduction — paste your opening note to supporters here." } ],
-  "sections": [
-    { "heading": "Life in Kona", "blocks": [ { "type": "placeholder", "text": "Add your written update about life in Kona." }, { "type": "image", "placeholder": "Add a personal photo of life in Kona, with alt text and an optional caption." } ] },
-    { "heading": "Growing in My Faith", "blocks": [ { "type": "placeholder", "text": "Add your reflection about growing in your faith." } ] },
-    { "heading": "Learning to See Like Jesus", "blocks": [ { "type": "placeholder", "text": "Add your own reflection and any Bible passage you want to include." } ] },
-    { "heading": "Ministry Through Coffee", "blocks": [ { "type": "placeholder", "text": "Add your ministry-through-coffee update." }, { "type": "gallery", "images": [ { "placeholder": "Coffee ministry photo 1 — add your own photo." }, { "placeholder": "Coffee ministry photo 2 — add your own photo." } ] } ] },
-    { "heading": "What's Next", "blocks": [ { "type": "placeholder", "text": "Add your confirmed next steps and upcoming plans." } ] },
-    { "heading": "Prayer Requests", "blocks": [ { "type": "prayers" } ] },
-    { "heading": "A Thank You to My Supporters", "blocks": [ { "type": "placeholder", "text": "Add your personal thank-you note to supporters." } ] }
+  "cover": {
+    "type": "image",
+    "src": "/images/newsletters/learning-to-see-like-jesus/ocean-sunset-1600.jpg",
+    "alt": "The sun setting over the ocean between rocky shores.",
+    "caption": "A moment by the ocean.",
+    "width": 1600,
+    "height": 900,
+    "sources": [
+      {
+        "src": "/images/newsletters/learning-to-see-like-jesus/ocean-sunset-480.jpg",
+        "width": 480
+      },
+      {
+        "src": "/images/newsletters/learning-to-see-like-jesus/ocean-sunset-960.jpg",
+        "width": 960
+      },
+      {
+        "src": "/images/newsletters/learning-to-see-like-jesus/ocean-sunset-1600.jpg",
+        "width": 1600
+      }
+    ]
+  },
+  "introduction": [
+    {
+      "type": "paragraph",
+      "text": "Hi everyone,"
+    },
+    {
+      "type": "paragraph",
+      "text": "I wanted to take a little time to share where I'm at and some of the heart behind what I'm doing. I'm in Kona, serving with YWAM and continuing to learn what it means to follow Jesus and love the people around me. Thank you for being part of that."
+    }
   ],
-  "prayerRequests": [],
+  "sections": [
+    {
+      "heading": "A Little of Life in Kona",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "I wanted this first letter to give you a glimpse of life here. I've included a few of my own photos and moments from my videos, from time around a table to the ocean and the process of making coffee. I hope they help you picture a little of the setting around me."
+        },
+        {
+          "type": "paragraph",
+          "text": "As I serve with different teams and take opportunities to learn, I want to keep growing in my relationship with Jesus. That's the heart behind this season, and behind the title of this letter: learning to see like Jesus."
+        },
+        {
+          "type": "gallery",
+          "images": [
+            {
+              "type": "image",
+              "src": "/images/newsletters/learning-to-see-like-jesus/diakonos-class-whole-1600.jpg",
+              "alt": "Diakonos class discussing the Trinity around a table overlooking the ocean.",
+              "caption": "Diakonos class, discussing the Trinity.",
+              "width": 1600,
+              "height": 2133,
+              "sources": [
+                {
+                  "src": "/images/newsletters/learning-to-see-like-jesus/diakonos-class-whole-480.jpg",
+                  "width": 480
+                },
+                {
+                  "src": "/images/newsletters/learning-to-see-like-jesus/diakonos-class-whole-960.jpg",
+                  "width": 960
+                },
+                {
+                  "src": "/images/newsletters/learning-to-see-like-jesus/diakonos-class-whole-1600.jpg",
+                  "width": 1600
+                }
+              ]
+            },
+            {
+              "type": "image",
+              "src": "/images/newsletters/learning-to-see-like-jesus/dts-community-whole-1600.jpg",
+              "alt": "DTS students sharing a meal at an outdoor table beside the ocean.",
+              "caption": "Getting to watch another DTS learn and grow. This is just a glimpse of the community here and how everyone is growing in relationship with one another.",
+              "width": 1536,
+              "height": 2048,
+              "sources": [
+                {
+                  "src": "/images/newsletters/learning-to-see-like-jesus/dts-community-whole-480.jpg",
+                  "width": 480
+                },
+                {
+                  "src": "/images/newsletters/learning-to-see-like-jesus/dts-community-whole-960.jpg",
+                  "width": 960
+                },
+                {
+                  "src": "/images/newsletters/learning-to-see-like-jesus/dts-community-whole-1600.jpg",
+                  "width": 1536
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "Coffee and Connection",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Coffee is one part of life and ministry that I wanted to include. Here's a little look at the coffee space, with the ocean just beyond the counter."
+        },
+        {
+          "type": "paragraph",
+          "text": "The heart I want to bring to ministry through coffee is pretty simple: make room for people. I want to be someone who is willing to listen, take time for a conversation, and share God's love in everyday moments."
+        },
+        {
+          "type": "gallery",
+          "images": [
+            {
+              "type": "image",
+              "src": "/images/newsletters/learning-to-see-like-jesus/coffee-space-selfie-1600.jpg",
+              "alt": "A selfie beside the espresso machine and coffee menu.",
+              "caption": "A little look at the coffee space.",
+              "width": 1536,
+              "height": 2048,
+              "sources": [
+                {
+                  "src": "/images/newsletters/learning-to-see-like-jesus/coffee-space-selfie-480.jpg",
+                  "width": 480
+                },
+                {
+                  "src": "/images/newsletters/learning-to-see-like-jesus/coffee-space-selfie-960.jpg",
+                  "width": 960
+                },
+                {
+                  "src": "/images/newsletters/learning-to-see-like-jesus/coffee-space-selfie-1600.jpg",
+                  "width": 1536
+                }
+              ]
+            },
+            {
+              "type": "image",
+              "src": "/images/newsletters/learning-to-see-like-jesus/coffee-ocean-view-1600.jpg",
+              "alt": "A cold drink on the espresso machine, with the ocean and palm trees beyond.",
+              "caption": "Coffee with an ocean view.",
+              "width": 1600,
+              "height": 1200,
+              "sources": [
+                {
+                  "src": "/images/newsletters/learning-to-see-like-jesus/coffee-ocean-view-480.jpg",
+                  "width": 480
+                },
+                {
+                  "src": "/images/newsletters/learning-to-see-like-jesus/coffee-ocean-view-960.jpg",
+                  "width": 960
+                },
+                {
+                  "src": "/images/newsletters/learning-to-see-like-jesus/coffee-ocean-view-1600.jpg",
+                  "width": 1600
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "Learning to See Like Jesus",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "One experience that connects with that happened during my evangelism week in Spokane. I felt led to talk to every person I came across. A photograph from that week shows me sitting outside the library, talking with another person."
+        },
+        {
+          "type": "paragraph",
+          "text": "That picture is part of the inspiration behind something I've been working on: the idea of one person meeting another, with the message ‘worthy of hearing.’ I want people to hear about Jesus, and I want to be willing to stop and talk with the person in front of me."
+        },
+        {
+          "type": "paragraph",
+          "text": "That's what I mean by learning to see like Jesus. I want to love God and let that shape how I treat people. I still have a lot to learn, and I want to keep growing in that as I serve."
+        }
+      ]
+    },
+    {
+      "heading": "Looking Ahead",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Looking further ahead, I want to build a stronger foundation in the Bible so I can teach, disciple, and serve others. The Bible Core Course on Location is the first training goal on my Vision page, with September 2027 as the planned date."
+        },
+        {
+          "type": "paragraph",
+          "text": "For now, I want to keep serving, learning, and preparing for those next steps. I'd appreciate your prayers for wisdom as I work toward future training."
+        }
+      ]
+    },
+    {
+      "heading": "Would You Pray With Me?",
+      "blocks": [
+        {
+          "type": "prayers"
+        }
+      ]
+    },
+    {
+      "heading": "Thank You for Being Part of This",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Thank you for praying for me, supporting me, and taking the time to read this. I want these letters to help you feel connected to my life and the work you're helping make possible."
+        },
+        {
+          "type": "paragraph",
+          "text": "I'm grateful I get to share this journey with you. Thank you for being part of it."
+        }
+      ]
+    }
+  ],
+  "prayerRequests": [
+    "That I would keep growing in my relationship with Jesus and my understanding of the Bible.",
+    "That I would notice the people around me, listen well, and be willing to share the love of Jesus.",
+    "For wisdom and provision as I prepare for future Bible training and the next steps in missions."
+  ],
   "supportLink": true,
   "signature": "Logan Doyle"
 }
