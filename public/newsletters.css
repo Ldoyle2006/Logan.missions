@@ -134,3 +134,18 @@
   .letter-card-preview { margin-inline: 14px; }
   .letter-archive-dropdown > .letter-card-grid { padding: 10px; }
 }
+
+/* The archive uses the same single-surface collection box as the shop. */
+.letter-archive-dropdown { border: 1px solid rgba(245,239,224,.25); border-radius: 9px; background: transparent; }
+.letter-archive-dropdown > summary { min-height: 86px; gap: 20px; padding: 20px 25px; border-radius: 8px; background: var(--green-deep); color: var(--cream); font: 500 clamp(24px,3vw,33px)/1.2 var(--serif); letter-spacing: -.02em; }
+.letter-archive-dropdown > summary::after { display: none; }
+.letter-archive-dropdown > summary:hover { background: #345343; }
+.letter-archive-dropdown[open] > summary { border-radius: 8px 8px 0 0; }
+.letter-archive-dropdown[open] > summary .collection-toggle { rotate: 180deg; }
+.letter-archive-dropdown .letter-archive-count { font: 400 12px/1.5 var(--sans); letter-spacing: 0; }
+.letter-archive-dropdown > .letter-card-grid { padding: 26px; border-top: 1px solid rgba(245,239,224,.18); border-radius: 0 0 8px 8px; background: var(--green-deep); }
+@media (max-width:600px) {
+ .letter-archive-dropdown > summary { min-height: 76px; padding: 18px; gap: 12px; }
+ .letter-archive-dropdown > .letter-card-grid { padding: 14px; }
+ .letter-archive-dropdown .letter-archive-count { font-size: 10px; }
+}

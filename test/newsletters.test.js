@@ -4,7 +4,7 @@ import { mkdtemp, mkdir, readFile, writeFile, cp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { validateNewsletter, renderEmail, renderPlainText, renderNewsletterPage, SITE_ORIGIN, imagePath } from "../newsletter.js";
+import { validateNewsletter, renderEmail, renderPlainText, renderNewsletterPage, renderArchive, dateLabel, SITE_ORIGIN, imagePath } from "../newsletter.js";
 import { buildNewsletters } from "../newsletter-build.js";
 import { createBrevoClient, saveCampaignDraft, sendOwnerTest } from "../newsletter-brevo.js";
 
@@ -40,6 +40,22 @@ test("website and full email render the same content safely, with managed unsubs
   assert.match(plain, /Test paragraph/); assert.match(plain, /Unsubscribe: \{\{ unsubscribe \}\}/);
   assert.match(web, /data-clarity-mask/); assert.match(web, /id="signup-form"/);
   assert.match(renderEmail(draft), /DRAFT CONTENT/); assert.match(renderEmail(draft), /PHOTO PLACEHOLDER/);
+});
+
+test("historical letters preserve a known month without inventing a day or displacing the current letter", async () => {
+  const old = { ...published(), slug: "may-2025-letter", title: "Historical letter", date: "2025-05", archived: true };
+  assert.equal(validateNewsletter(old).date, "2025-05");
+  assert.equal(dateLabel(old), "May 2025");
+  assert.throws(() => validateNewsletter({ ...old, archived: false }), /publication day/);
+  assert.throws(() => validateNewsletter({ ...old, date: "2025-13" }), /calendar/);
+  const page = await renderNewsletterPage(root, old, [published(), old]);
+  assert.match(page, /From the archive · May 2025/);
+  assert.match(page, /datetime="2025-05">May 2025<\/time>/);
+  const archive = await renderArchive(root, [published(), old]);
+  const current = archive.match(/<section class="letter-current"[\s\S]*?<\/section>/)[0];
+  assert.match(current, /Layout test letter/);
+  assert.doesNotMatch(current, /Historical letter/);
+  assert.match(archive, /May Newsletter/);
 });
 test("previous and next links follow published chronology, excluding unrelated drafts", async () => {
   const older = { ...published(), slug: "older-letter", date: "2026-09-01" };

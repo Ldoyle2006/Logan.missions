@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "archived": true,
+  "status": "published",
+  "featured": false,
+  "signature": "Logan Doyle",
+  "supportLink": false,
+  "prayerRequests": [],
+  "slug": "send-me",
+  "title": "Send Me",
+  "date": "2026-04",
+  "subtitle": "Isaiah 6:8 · April 26–May 25",
+  "description": "Australia, Indonesia, and Thailand. A short update from April 2026.",
+  "subject": "Send Me | April 2026",
+  "previewText": "Send me. Isaiah 6:8. Australia, Indonesia, and Thailand.",
+  "cover": {
+    "type": "image",
+    "src": "/images/newsletters/send-me/drawing-together-306.jpg",
+    "alt": "Logan with children holding up their drawings.",
+    "width": 306,
+    "height": 181,
+    "sources": [
+      {
+        "src": "/images/newsletters/send-me/drawing-together-240.jpg",
+        "width": 240
+      },
+      {
+        "src": "/images/newsletters/send-me/drawing-together-306.jpg",
+        "width": 306
+      }
+    ]
+  },
+  "introduction": [
+    {
+      "type": "paragraph",
+      "text": "April 26–May 25."
+    },
+    {
+      "type": "paragraph",
+      "text": "Australia · Indonesia · Thailand."
+    }
+  ],
+  "sections": [
+    {
+      "heading": "Isaiah 6:8",
+      "blocks": [
+        {
+          "type": "quote",
+          "text": "Here am I. Send me!",
+          "reference": "Isaiah 6:8"
+        }
+      ]
+    },
+    {
+      "heading": "A Few Moments",
+      "blocks": [
+        {
+          "type": "gallery",
+          "images": [
+            {
+              "type": "image",
+              "src": "/images/newsletters/send-me/a-moment-together-196.jpg",
+              "alt": "Logan seated while another person applies color to his face.",
+              "width": 196,
+              "height": 296,
+              "sources": [
+                {
+                  "src": "/images/newsletters/send-me/a-moment-together-196.jpg",
+                  "width": 196
+                }
+              ]
+            },
+            {
+              "type": "image",
+              "src": "/images/newsletters/send-me/coconut-196.jpg",
+              "alt": "Logan holding a coconut outdoors.",
+              "width": 196,
+              "height": 296,
+              "sources": [
+                {
+                  "src": "/images/newsletters/send-me/coconut-196.jpg",
+                  "width": 196
+                }
+              ]
+            },
+            {
+              "type": "image",
+              "src": "/images/newsletters/send-me/time-together-278.jpg",
+              "alt": "Logan sitting with a group of young people.",
+              "width": 278,
+              "height": 147,
+              "sources": [
+                {
+                  "src": "/images/newsletters/send-me/time-together-240.jpg",
+                  "width": 240
+                },
+                {
+                  "src": "/images/newsletters/send-me/time-together-278.jpg",
+                  "width": 278
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

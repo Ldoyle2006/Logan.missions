@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "archived": true,
+  "status": "published",
+  "featured": false,
+  "signature": "Logan Doyle",
+  "supportLink": false,
+  "prayerRequests": [],
+  "slug": "home-away-from-home",
+  "title": "Home Away from Home",
+  "date": "2026-05",
+  "description": "These kids just absolutely fill my heart. A short May 2026 update with Matthew 19:14.",
+  "subject": "Home Away from Home | May 2026",
+  "previewText": "Home away from home—these kids just absolutely fill my heart.",
+  "cover": {
+    "type": "image",
+    "src": "/images/newsletters/home-away-from-home/home-away-from-home-229.jpg",
+    "alt": "Logan sitting with a boy.",
+    "width": 229,
+    "height": 219,
+    "sources": [
+      {
+        "src": "/images/newsletters/home-away-from-home/home-away-from-home-229.jpg",
+        "width": 229
+      }
+    ]
+  },
+  "introduction": [
+    {
+      "type": "paragraph",
+      "text": "Home away from home—these kids just absolutely fill my heart."
+    }
+  ],
+  "sections": [
+    {
+      "heading": "Matthew 19:14",
+      "blocks": [
+        {
+          "type": "quote",
+          "text": "Jesus said, ‘Let the little children come to me and do not hinder them, for the kingdom of heaven belongs to such as these.’",
+          "reference": "Matthew 19:14"
+        }
+      ]
+    },
+    {
+      "heading": "A Few Faces from This Season",
+      "blocks": [
+        {
+          "type": "gallery",
+          "images": [
+            {
+              "type": "image",
+              "src": "/images/newsletters/home-away-from-home/a-smile-227.jpg",
+              "alt": "A smiling boy in a blue shirt sitting with others.",
+              "width": 227,
+              "height": 218,
+              "sources": [
+                {
+                  "src": "/images/newsletters/home-away-from-home/a-smile-227.jpg",
+                  "width": 227
+                }
+              ]
+            },
+            {
+              "type": "image",
+              "src": "/images/newsletters/home-away-from-home/joy-together-229.jpg",
+              "alt": "A smiling girl in a striped shirt sitting outdoors.",
+              "width": 229,
+              "height": 219,
+              "sources": [
+                {
+                  "src": "/images/newsletters/home-away-from-home/joy-together-229.jpg",
+                  "width": 229
+                }
+              ]
+            },
+            {
+              "type": "image",
+              "src": "/images/newsletters/home-away-from-home/a-little-joy-227.jpg",
+              "alt": "A smiling girl in a blue shirt sitting with others.",
+              "width": 227,
+              "height": 218,
+              "sources": [
+                {
+                  "src": "/images/newsletters/home-away-from-home/a-little-joy-227.jpg",
+                  "width": 227
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

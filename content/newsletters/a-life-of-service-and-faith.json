@@ -1,0 +1,235 @@
+{
+  "schemaVersion": 1,
+  "slug": "a-life-of-service-and-faith",
+  "title": "A Life of Service and Faith",
+  "date": "2025-05",
+  "archived": true,
+  "subtitle": "My first fundraising newsletter: the story behind my calling to YWAM.",
+  "description": "My first fundraising newsletter, sharing my story, faith, photography, and the original May 2025 plans for YWAM.",
+  "status": "published",
+  "featured": false,
+  "subject": "A Life of Service and Faith | May 2025",
+  "previewText": "My story, the heart behind my calling, and the beginning of my YWAM fundraising journey.",
+  "cover": {
+    "type": "image",
+    "src": "/images/newsletters/a-life-of-service-and-faith/logan-294.jpg",
+    "alt": "Logan Doyle wearing a cowboy hat and holding a book outdoors.",
+    "caption": "This is me — Logan Doyle.",
+    "width": 294,
+    "height": 442,
+    "sources": [
+      {
+        "src": "/images/newsletters/a-life-of-service-and-faith/logan-240.jpg",
+        "width": 240
+      },
+      {
+        "src": "/images/newsletters/a-life-of-service-and-faith/logan-294.jpg",
+        "width": 294
+      }
+    ]
+  },
+  "introduction": [
+    {
+      "type": "paragraph",
+      "text": "Hey! I’m Logan. I’m 18, the youngest of five, and I’ve always been the outdoorsy, creative type."
+    },
+    {
+      "type": "paragraph",
+      "text": "I love snowboarding, hiking, and pretty much anything that gets me outside. Photography started as a hobby but quickly became a passion. Now, I’m taking that passion into the mission field with YWAM, where I’ll get to grow in my faith and tell real stories through the lens of my camera."
+    }
+  ],
+  "sections": [
+    {
+      "heading": "My Story",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "My name is Logan Doyle, and from the time I was young, faith has been the foundation of my life. I was raised in a Christian home where Sunday mornings at church weren’t just tradition—they were a way of life. Over time, going to church became more than something we just did as a family; it became something that shaped who I am. From an early age, I felt this deep pull to serve. I didn’t fully understand it at the time, but I knew that when there was an opportunity to help, I had to take it."
+        },
+        {
+          "type": "paragraph",
+          "text": "When I was about seven, I started greeting at church—just shaking hands and smiling at people as they walked in. It may have seemed small, but even then, I felt like I was part of something bigger. Later, I moved into the kids’ ministry tech booth, helping run slides and sound. That transition wasn’t about a promotion or more responsibility—it was just the next way I could show up and serve. Looking back now, I can see that these were the early steps of something God was building in me: a heart for people and a life shaped by service."
+        }
+      ]
+    },
+    {
+      "heading": "Following God’s Lead",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "As I got older, my perspective started to grow. I began noticing that the need for help wasn’t just in my church or even my town—it was everywhere. People all over the world were struggling, and even though I knew I couldn’t reach every single person, I couldn’t ignore the feeling that I had to do something. I started asking questions, talking to mentors, and doing research, hoping to discover where God was leading me."
+        },
+        {
+          "type": "paragraph",
+          "text": "For a long time, I didn’t have a clear answer. There were moments of confusion and doubt, but also a quiet sense that something was coming. Then one night during a small group Bible study, everything began to fall into place. I was sitting with two of my closest friends—guys I consider brothers—and three strangers I had never met before. We were praying, talking, and reading scripture when it hit me: it wasn’t about what I wanted to do. It was about what God was calling me to do. That realization changed everything."
+        },
+        {
+          "type": "quote",
+          "text": "Trust in the Lord with all your heart and lean not on your own understanding; in all your ways submit to him, and he will make your paths straight.",
+          "reference": "Proverbs 3:5–6"
+        }
+      ]
+    },
+    {
+      "heading": "A Heart for People and Their Stories",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Since that night, that sense of calling hasn’t left me. I think about it constantly. I think about the meal I bought for a woman who couldn’t afford one, the time I spent with individuals with special needs, the laughter, the conversations, the moments of connection. And I think about my senior project—a project that, in many ways, marked the end of one season in my life and the start of something new. For that project, I chose to focus on humanitarian aid, both from a faith-based perspective and a broader, non-religious one. I’m still not sure exactly where the idea came from, but I know it wasn’t random."
+        },
+        {
+          "type": "paragraph",
+          "text": "Photography has also become a major part of my journey. It started as a hobby, but I soon realized it was more than that. It became a way for me to tell stories—not just mine, but the stories of others who needed their voices heard. Whether it was capturing joy, struggle, or everyday life, photography gave me a way to communicate truth and beauty. It gave me a tool to serve."
+        }
+      ]
+    },
+    {
+      "heading": "Creation Speaks",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/images/newsletters/a-life-of-service-and-faith/creation-speaks-294.jpg",
+          "alt": "A sunlit meadow surrounded by evergreen trees and forested hills.",
+          "caption": "Creation speaks.",
+          "width": 294,
+          "height": 442,
+          "sources": [
+            {
+              "src": "/images/newsletters/a-life-of-service-and-faith/creation-speaks-240.jpg",
+              "width": 240
+            },
+            {
+              "src": "/images/newsletters/a-life-of-service-and-faith/creation-speaks-294.jpg",
+              "width": 294
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "This photo is more than just a landscape — it’s a glimpse of God’s voice through His creation."
+        },
+        {
+          "type": "paragraph",
+          "text": "The light breaking over the meadow, the trees standing tall like worshippers, and the stillness that settles in your soul all point back to Him. It’s a reminder that even in the quiet, God is speaking — through beauty, through nature, and through every detail He designed."
+        }
+      ]
+    },
+    {
+      "heading": "A Glimpse of the Everyday",
+      "blocks": [
+        {
+          "type": "image",
+          "src": "/images/newsletters/a-life-of-service-and-faith/everyday-service-294.jpg",
+          "alt": "A worker in a safety vest and hard hat on a street in Seattle.",
+          "caption": "A glimpse of the everyday.",
+          "width": 294,
+          "height": 442,
+          "sources": [
+            {
+              "src": "/images/newsletters/a-life-of-service-and-faith/everyday-service-240.jpg",
+              "width": 240
+            },
+            {
+              "src": "/images/newsletters/a-life-of-service-and-faith/everyday-service-294.jpg",
+              "width": 294
+            }
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "While exploring the streets of Seattle, I came across this man hard at work amidst a backdrop of gritty graffiti."
+        },
+        {
+          "type": "paragraph",
+          "text": "Something about the moment struck me — beauty in the ordinary, dignity in labor. It reminded me that every person carries a story worth capturing, and that through my lens, I want to honor those stories, big or small."
+        }
+      ]
+    },
+    {
+      "heading": "Grace in the Hard Parts",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "But my story isn’t all clean lines and perfect endings. I’ve faced struggles. There have been seasons of doubt, fear, and feeling completely unworthy. When my parents divorced, it felt like my world was splitting in two. When my grandpa passed away, it left a hole in my heart that I didn’t know how to fill. And in some of the hardest moments, it felt like the devil was whispering in one ear while God was speaking into the other—it was like a war in my head. I’ve made mistakes. I’ve felt lost. But even in those moments, I knew God wasn’t done with me. If anything, those struggles have made me more aware of how much I need Him and how much the world needs His love."
+        },
+        {
+          "type": "quote",
+          "text": "My grace is sufficient for you, for my power is made perfect in weakness.",
+          "reference": "2 Corinthians 12:9"
+        }
+      ]
+    },
+    {
+      "heading": "Taking the Next Step with YWAM",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "That brings me to where I am today. I feel led to pursue YWAM (Youth With A Mission), a ministry that trains and sends young people across the world to serve in whatever ways are needed—through outreach, aid, evangelism, and love. I believe this is the next step for me, a step of obedience, faith, and service. But I can’t do it alone."
+        },
+        {
+          "type": "paragraph",
+          "text": "To take this next step, I need support—both prayer and financial. At first, I wasn’t sure how I would make it happen, but then something incredible started to unfold. People began donating—even those who didn’t know me personally. That blew me away. Their generosity reminded me that this journey isn’t just mine; it’s something others can be a part of too. That’s why I’m sharing my story—because I want those who have supported me, and those considering it, to know that this is for a good cause. I’ve been encouraged by so many people to take this leap of faith, and I want to follow through with integrity, openness, and a grateful heart."
+        }
+      ]
+    },
+    {
+      "heading": "Growing in Photography",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "One of the opportunities I’m especially excited about is a photography class offered at YWAM’s base in Hawaii. This course would allow me to sharpen my skills, learn how to better tell stories through visuals, and use photography as a tool to share God’s love with the world. But in order to attend, I’ll need financial help to cover the costs. I believe this opportunity could be a powerful way for me to serve—and I hope others will see the value in that and partner with me."
+        }
+      ]
+    },
+    {
+      "heading": "My Original Fundraising Plans — May 2025",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "These were the plans and estimated costs shared in my first fundraising newsletter in May 2025. They are preserved here as part of that original letter, rather than as a statement of my current funding needs."
+        },
+        {
+          "type": "paragraph",
+          "text": "YWAM DTS Program — $14,000\nJune 28–November 13: tuition, housing, meals, and outreach."
+        },
+        {
+          "type": "paragraph",
+          "text": "School of Photography — $14,000\nSecond term after DTS: tuition, living, and outreach."
+        },
+        {
+          "type": "paragraph",
+          "text": "Travel + Ministry Costs — $11,300\nFlights, local missions, and outreach support."
+        },
+        {
+          "type": "paragraph",
+          "text": "Camera Gear — $2,500–$3,000\nCanon R7, lenses (70–200mm, 24–70mm, 24–105mm, 11–16mm), Canon M6 Mark II, and accessories."
+        }
+      ]
+    },
+    {
+      "heading": "This Is Just the Beginning",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Whether you can give financially, offer encouragement, or simply keep me in your prayers, I would be so grateful. Every bit of support helps carry this mission forward."
+        },
+        {
+          "type": "paragraph",
+          "text": "I’m excited (and a little nervous), but more than anything, I’m thankful for anyone who’s willing to support the journey!"
+        },
+        {
+          "type": "paragraph",
+          "text": "I’m not perfect. I don’t have all the answers. But I know I’m willing. I know I’m listening. And I know that whatever happens, I want to spend my life making God’s love known to the people who need it most. This is just the beginning."
+        },
+        {
+          "type": "quote",
+          "text": "Then I heard the voice of the Lord saying, ‘Whom shall I send? And who will go for us?’ And I said, ‘Here am I. Send me!’",
+          "reference": "Isaiah 6:8"
+        }
+      ]
+    }
+  ],
+  "prayerRequests": [],
+  "signature": "Logan Doyle",
+  "supportLink": true
+}

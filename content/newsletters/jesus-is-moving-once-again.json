@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "slug": "jesus-is-moving-once-again",
+  "title": "Jesus Is Moving Once Again",
+  "date": "2026-06",
+  "archived": true,
+  "subtitle": "A new mission with the Kona Ships program.",
+  "description": "A June 2026 update about joining the Kona Ships program, continuing in missions, and the original fundraising plans.",
+  "status": "published",
+  "featured": false,
+  "subject": "Jesus Is Moving Once Again | June 2026",
+  "previewText": "Guys! Jesus is moving once again. I’m heading out on a new mission with Kona Ships.",
+  "cover": {
+    "type": "image",
+    "src": "/images/newsletters/jesus-is-moving-once-again/surfing-and-missions-1050.jpg",
+    "alt": "A group standing together with surfboards on a beach.",
+    "caption": "Surfing and missions.",
+    "width": 1050,
+    "height": 1400,
+    "sources": [
+      {
+        "src": "/images/newsletters/jesus-is-moving-once-again/surfing-and-missions-360.jpg",
+        "width": 360
+      },
+      {
+        "src": "/images/newsletters/jesus-is-moving-once-again/surfing-and-missions-720.jpg",
+        "width": 720
+      },
+      {
+        "src": "/images/newsletters/jesus-is-moving-once-again/surfing-and-missions-1050.jpg",
+        "width": 1050
+      }
+    ]
+  },
+  "introduction": [
+    {
+      "type": "paragraph",
+      "text": "Guys! Jesus is moving once again. I am heading out on a new mission!"
+    },
+    {
+      "type": "paragraph",
+      "text": "I’ve gotten the opportunity to join in with the Kona Ships program."
+    }
+  ],
+  "sections": [
+    {
+      "heading": "The Heart Behind This Step",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Taking this step allows me to continue pursuing the mission God has placed on my heart: bringing joy and light into the darkest corners of the world and being a father and a friend to millions of children across the nations."
+        },
+        {
+          "type": "image",
+          "src": "/images/newsletters/jesus-is-moving-once-again/time-with-people-1050.jpg",
+          "alt": "Logan sitting outside with a group of young people under a tree.",
+          "caption": "Time with people—part of the heart behind this journey.",
+          "width": 1050,
+          "height": 1400,
+          "sources": [
+            {
+              "src": "/images/newsletters/jesus-is-moving-once-again/time-with-people-360.jpg",
+              "width": 360
+            },
+            {
+              "src": "/images/newsletters/jesus-is-moving-once-again/time-with-people-720.jpg",
+              "width": 720
+            },
+            {
+              "src": "/images/newsletters/jesus-is-moving-once-again/time-with-people-1050.jpg",
+              "width": 1050
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "The Original Fundraising Goal",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "Archive note: The $14,500 goal and the estimates below were shared in this June 2026 update for the following six to eight months."
+        },
+        {
+          "type": "paragraph",
+          "text": "I need your help to raise $14,500. Here’s the breakdown:"
+        },
+        {
+          "type": "paragraph",
+          "text": "On-Location Bible Course in Kona — $8,200\nNeeded by September 23."
+        },
+        {
+          "type": "paragraph",
+          "text": "Living costs for the Diakonos training course in Kona — $3,100."
+        },
+        {
+          "type": "paragraph",
+          "text": "Travel, housing, and food — $3,200."
+        }
+      ]
+    },
+    {
+      "heading": "Thank You",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "text": "I’m so grateful for all your support. I can’t do this without you guys!"
+        },
+        {
+          "type": "paragraph",
+          "text": "I know God will provide, and I’m excited for this journey. Love you guys!"
+        }
+      ]
+    },
+    {
+      "heading": "Ways to Support",
+      "blocks": [
+        {
+          "type": "link",
+          "text": "Explore giving options",
+          "href": "https://logan-missions.pages.dev/giving"
+        }
+      ]
+    }
+  ],
+  "prayerRequests": [],
+  "signature": "Logan Doyle",
+  "supportLink": false
+}

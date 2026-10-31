@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <script src="/analytics-consent.js" defer></script>
+    <script src="/motion.js" defer></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Learn how Logan Doyle's mission updates website handles newsletter signups, donations, and basic website data.">
@@ -21,17 +22,18 @@
         <span>Logan Doyle<small>MISSION UPDATES</small></span>
       </a>
       <details class="site-menu">
-        <summary>Menu</summary>
+        <summary><span>Menu</span><span class="menu-toggle-icon" aria-hidden="true"></span></summary>
         <nav class="main-nav" aria-label="Site navigation">
-          <a href="/">Home</a>
-          <a href="/#story">My Story</a>
-          <a href="/vision.html">My Vision</a>
-          <a href="/#updates">Updates</a>
-          <a href="/newsletters">Newsletters</a>
-          <a href="/#links">Links</a>
-          <a href="/shop.html">Shop</a>
-          <a class="nav-give" href="/giving.html">Give</a>
-          <a href="/privacy.html" aria-current="page">Privacy</a>
+          <div class="menu-link-grid">
+              <a class="menu-destination" href="/"><span>Home</span><span class="menu-give-arrow" aria-hidden="true">↗</span></a>
+              <a class="menu-destination" href="/#story"><span>My Story</span><span class="menu-give-arrow" aria-hidden="true">↗</span></a>
+              <a class="menu-destination" href="/vision.html"><span>My Vision</span><span class="menu-give-arrow" aria-hidden="true">↗</span></a>
+              <a class="menu-destination" href="/#updates"><span>Updates</span><span class="menu-give-arrow" aria-hidden="true">↗</span></a>
+              <a class="menu-destination" href="/newsletters"><span>Newsletters</span><span class="menu-give-arrow" aria-hidden="true">↗</span></a>
+              <a class="menu-destination" href="/shop.html"><span>Shop</span><span class="menu-give-arrow" aria-hidden="true">↗</span></a>
+          </div>
+          <a class="nav-give" href="/giving.html"><span>Be part of the journey</span><span class="menu-give-arrow" aria-hidden="true">↗</span></a>
+          <div class="menu-utility-links"><a class="menu-destination" href="/#links"><span>Links</span><span class="menu-give-arrow" aria-hidden="true">↗</span></a><a class="menu-destination" href="/privacy.html" aria-current="page"><span>Privacy</span><span class="menu-give-arrow" aria-hidden="true">↗</span></a></div>
         </nav>
       </details>
     </header>

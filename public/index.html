@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <script src="/analytics-consent.js" defer></script>
+    <script src="/motion.js" defer></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#f7f4ed">
@@ -54,17 +55,18 @@
         <span>Logan Doyle<small>MISSION UPDATES</small></span>
       </a>
       <details class="site-menu">
-        <summary>Menu</summary>
+        <summary><span>Menu</span><span class="menu-toggle-icon" aria-hidden="true"></span></summary>
         <nav class="main-nav" aria-label="Site navigation">
-          <a href="/">Home</a>
-          <a href="/#story">My Story</a>
-          <a href="/vision.html">My Vision</a>
-          <a href="/#updates">Updates</a>
-          <a href="/newsletters">Newsletters</a>
-          <a href="/#links">Links</a>
-          <a href="/shop.html">Shop</a>
-          <a class="nav-give" href="/giving.html">Give</a>
-          <a href="/privacy.html">Privacy</a>
+          <div class="menu-link-grid">
+              <a class="menu-destination" href="/" aria-current="page"><span>Home</span><span class="menu-give-arrow" aria-hidden="true">↗</span></a>
+              <a class="menu-destination" href="/#story"><span>My Story</span><span class="menu-give-arrow" aria-hidden="true">↗</span></a>
+              <a class="menu-destination" href="/vision.html"><span>My Vision</span><span class="menu-give-arrow" aria-hidden="true">↗</span></a>
+              <a class="menu-destination" href="/#updates"><span>Updates</span><span class="menu-give-arrow" aria-hidden="true">↗</span></a>
+              <a class="menu-destination" href="/newsletters"><span>Newsletters</span><span class="menu-give-arrow" aria-hidden="true">↗</span></a>
+              <a class="menu-destination" href="/shop.html"><span>Shop</span><span class="menu-give-arrow" aria-hidden="true">↗</span></a>
+          </div>
+          <a class="nav-give" href="/giving.html"><span>Be part of the journey</span><span class="menu-give-arrow" aria-hidden="true">↗</span></a>
+          <div class="menu-utility-links"><a class="menu-destination" href="/#links"><span>Links</span><span class="menu-give-arrow" aria-hidden="true">↗</span></a><a class="menu-destination" href="/privacy.html"><span>Privacy</span><span class="menu-give-arrow" aria-hidden="true">↗</span></a></div>
         </nav>
       </details>
     </header>
@@ -105,10 +107,6 @@
             <p class="body-copy">I’m continually inspired by the way Jesus loved each person with intention and compassion. He was also a man of persistent prayer, and I believe there is power when we pray. Carrying that kind of prayerful, intentional love is the image I strive to bear every day.</p>
             <p class="body-copy">This calling has taken me from Montana and Hawaii to New Zealand, Indonesia, and Thailand. Along the way, I’ve served through youth and community programs, walked alongside young people, and helped create safe, Christ-centered spaces where people can gather, ask big questions, and grow together.</p>
             <p class="body-copy">Every nation starts with an individual, and every life can be changed through the intentional love of Christ.</p>
-          </div>
-          <div class="story-stamp" aria-hidden="true">
-            <span>WITH<br>HOPE</span>
-            <svg class="decorative-spark story-stamp-spark" viewBox="0 0 100 100"><path d="M50 2 60 34 84 12 70 42 98 50 70 58 88 86 60 68 50 98 40 68 12 88 30 58 2 50 30 42 14 14 40 34Z"/></svg>
           </div>
         </div>
       </section>
@@ -158,7 +156,7 @@
             <button class="photo-memo-toggle" id="photo-memo-toggle" type="button" aria-expanded="false" aria-controls="photo-memo-text">Keep reading</button>
           </div>
         </div>
-        <p class="photo-note">Browse moments from the journey through photos and short field notes.</p>
+        <p class="photo-note">Browse moments from the journey through photos and the stories behind them.</p>
         <dialog class="mission-lightbox" id="mission-lightbox" aria-label="Enlarged mission photo">
           <button class="mission-lightbox-close" type="button" aria-label="Close enlarged photo">×</button>
           <img id="mission-lightbox-image" alt="">
@@ -174,10 +172,6 @@
           <p class="heading-aside">A thoughtful note with prayer requests, stories, and glimpses of everyday life. No noise, just the occasional update.</p>
         </div>
         <div class="signup-card" data-clarity-mask>
-          <div class="signup-decoration" aria-hidden="true">
-            <svg class="decorative-spark signup-spark" viewBox="0 0 100 100"><path d="M50 2 60 34 84 12 70 42 98 50 70 58 88 86 60 68 50 98 40 68 12 88 30 58 2 50 30 42 14 14 40 34Z"/></svg>
-            <span>FIELD<br>NOTES</span>
-          </div>
           <div class="signup-content">
             <h3>Get the next update.</h3>
             <p>Sign up to receive letters from myself and ways to pray alongside me.</p>
@@ -232,7 +226,6 @@
           </div>
           <p class="form-message" id="donation-message" role="status"></p>
         </div>
-        <svg class="support-flower decorative-spark" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 2 60 34 84 12 70 42 98 50 70 58 88 86 60 68 50 98 40 68 12 88 30 58 2 50 30 42 14 14 40 34Z"/></svg>
       </section>
     </main>
 

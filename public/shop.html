@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <script src="/analytics-consent.js" defer></script>
+    <script src="/motion.js" defer></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#20372d">
@@ -22,17 +23,18 @@
         <span>Logan Doyle<small>MISSION UPDATES</small></span>
       </a>
       <details class="site-menu">
-        <summary>Menu</summary>
+        <summary><span>Menu</span><span class="menu-toggle-icon" aria-hidden="true"></span></summary>
         <nav class="main-nav" aria-label="Site navigation">
-          <a href="/">Home</a>
-          <a href="/#story">My Story</a>
-          <a href="/vision.html">My Vision</a>
-          <a href="/#updates">Updates</a>
-          <a href="/newsletters">Newsletters</a>
-          <a href="/#links">Links</a>
-          <a href="/shop.html" aria-current="page">Shop</a>
-          <a class="nav-give" href="/giving.html">Give</a>
-          <a href="/privacy.html">Privacy</a>
+          <div class="menu-link-grid">
+              <a class="menu-destination" href="/"><span>Home</span><span class="menu-give-arrow" aria-hidden="true">↗</span></a>
+              <a class="menu-destination" href="/#story"><span>My Story</span><span class="menu-give-arrow" aria-hidden="true">↗</span></a>
+              <a class="menu-destination" href="/vision.html"><span>My Vision</span><span class="menu-give-arrow" aria-hidden="true">↗</span></a>
+              <a class="menu-destination" href="/#updates"><span>Updates</span><span class="menu-give-arrow" aria-hidden="true">↗</span></a>
+              <a class="menu-destination" href="/newsletters"><span>Newsletters</span><span class="menu-give-arrow" aria-hidden="true">↗</span></a>
+              <a class="menu-destination" href="/shop.html" aria-current="page"><span>Shop</span><span class="menu-give-arrow" aria-hidden="true">↗</span></a>
+          </div>
+          <a class="nav-give" href="/giving.html"><span>Be part of the journey</span><span class="menu-give-arrow" aria-hidden="true">↗</span></a>
+          <div class="menu-utility-links"><a class="menu-destination" href="/#links"><span>Links</span><span class="menu-give-arrow" aria-hidden="true">↗</span></a><a class="menu-destination" href="/privacy.html"><span>Privacy</span><span class="menu-give-arrow" aria-hidden="true">↗</span></a></div>
         </nav>
       </details>
     </header>
@@ -44,43 +46,65 @@
         <p>Each collection begins with Scripture and points to the good news of Jesus. Choose your color, add items to your cart, and check out in Logan's Fourthwall shop. Product links open in a new tab.</p>
       </section>
 
-      <section class="shop-collection" id="worthy-of-hearing" aria-labelledby="worthy-title">
-        <header class="shop-collection-heading">
-          <p class="collection-reference">ROMANS 10:14–15</p>
-          <h2 id="worthy-title">Worthy of Hearing</h2>
-          <p>Paul asks how people can hear the good news without someone sharing it. This collection points to Jesus' call to carry the gospel so others can hear and believe.</p>
-        </header>
+      <details class="shop-collection" id="worthy-of-hearing" aria-labelledby="worthy-title">
+        <summary><h2 id="worthy-title">Worthy of Hearing</h2><span class="collection-toggle" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"/></svg></span></summary>
+        <div class="shop-collection-body">
+          <header class="shop-collection-heading">
+            <p class="collection-reference">ROMANS 10:14–15</p>
+            <p>Paul asks how people can hear the good news without someone sharing it. This collection points to Jesus' call to carry the gospel so others can hear and believe.</p>
+          </header>
         <div class="shop-product-grid">
           <article class="shop-product-card" data-product-slot="worthy-of-hearing-hat">
             <a class="collection-image-link" href="https://logans-mission-shop.fourthwall.com/products/worthy-of-hearing-hat" target="_blank" rel="noopener noreferrer" aria-label="View Worthy of Hearing hat on Fourthwall">
-              <img class="collection-image" src="https://imgproxy.fourthwall.dev/Ds8qjzKs12nfG4yDAmtQerdrhRBCj6oIV6PXTd9mZ6I/w:1920/sm:1/enc/b1PnpJLTwBII8ioQ/8YXOo0_NJK8webIP/vOK52hqQoXJkx2iw/n9Cv8QJxM7R5NLMu/KSALLofb2sylpY__/m29NtkdSKUrV5j_3/RRN_JdBlMksUndhB/TJtmXJKPGLhGYWHp/TsRlhLOHkVfcT4de/12afatsY1bEkPYZ4/F6ff1DacnacYw_5V/fBOZfyAf0-VYa4o4/Ao1vd8VNzyQefVhm/HyL1drS9iC881yzH/YojBkQBnors.jpg" alt="Worthy of Hearing hat from Logan's Fourthwall shop" loading="lazy">
+              <img class="collection-image" src="https://imgproxy.fourthwall.dev/jDWB97s9UZmWM9oLcEsDUsbfU_lsSZ2HSMJArbuvN5M/w:1920/sm:1/enc/b1PnpJLTwBII8ioQ/8YXOo0_NJK8webIP/vOK52hqQoXJkx2iw/n9Cv8QJxM7R5NLMu/KSALLofb2sylpY__/m29NtkdSKUrV5j_3/RRN_JdBlMksUndhB/TJtmXJKPGLhGYWHp/TsRlhLOHkVfcT4de/12afatsY1bEkPYZ4/F6ff1DacnacYw_5V/fBOZfyAf0-VYa4o4/Ao1vd8VNzyQefVhm/HyL1drS9iC881yzH/YojBkQBnors.webp" alt="Worthy of Hearing hat from Logan's Fourthwall shop" loading="lazy" decoding="async">
             </a>
             <div class="shop-product-info">
               <div class="collection-product-row"><span>Worthy of Hearing hat</span><span class="product-price">$29.99</span></div>
-              <p class="collection-meta"><strong>Size:</strong> One size fits most<br><strong>Colors shown:</strong> Black, Navy, Dark Grey, Cranberry, Spruce</p>
+              <p class="collection-meta"><strong>Size:</strong> One size<br><strong>Colors shown:</strong> Black, Navy, Dark Grey, Cranberry, Spruce</p>
               <a class="collection-button" href="https://logans-mission-shop.fourthwall.com/products/worthy-of-hearing-hat" target="_blank" rel="noopener noreferrer">Shop on Fourthwall <span aria-hidden="true">↗</span></a>
             </div>
           </article>
+          <article class="shop-product-card shop-product-apparel" data-product-slot="worthy-of-hearing-tee">
+            <a class="collection-image-link" href="https://logans-mission-shop.fourthwall.com/products/worthy-of-hearing-tee" target="_blank" rel="noopener noreferrer" aria-label="View Worthy of Hearing Tee on Fourthwall">
+              <img class="collection-image" src="https://imgproxy.fourthwall.dev/ZiT_ntNesqwxTa5IskOhHMFgmnBFTs6dLox1eHwVSK0/w:1920/sm:1/enc/WLUdZGUnmCwI4ahW/F8Ig2sAsfB6YZXW7/8xvrRlDoeYLWrLMv/sU4hM1gQwNQ0WBXJ/B_0HuwlMY-fECL7S/MyiGVFMdaxfMykCr/slemJtY3rFPaVkBo/gAhOc47KmU6SOY3U/7rQPvch66cYKgq2t/T43BZTNdJ-1nzS0s/Xz5gCATQVdZegviE/TBdZuJtmASR6__nU/qhUCgHFmTU9QXZyV/Z08lkmh1tVVyav0V/Ll82y7PIvLE.webp" alt="Worthy of Hearing Tee from Logan's Fourthwall shop" loading="lazy" decoding="async">
+            </a>
+            <div class="shop-product-info">
+              <div class="collection-product-row"><span>Worthy of Hearing Tee</span><span class="product-price">From $50.00</span></div>
+              <p class="collection-meta"><strong>Sizes:</strong> S, M, L, XL, 2XL, 3XL<br><strong>Colors shown:</strong> Walnut, Cypress, Eucalyptus, Pistachio, Orchid, Butter</p>
+              <a class="collection-button" href="https://logans-mission-shop.fourthwall.com/products/worthy-of-hearing-tee" target="_blank" rel="noopener noreferrer">Shop on Fourthwall <span aria-hidden="true">↗</span></a>
+            </div>
+          </article>
+          <article class="shop-product-card shop-product-apparel" data-product-slot="worthy-of-hearing-hoodie">
+            <a class="collection-image-link" href="https://logans-mission-shop.fourthwall.com/products/worthy-of-hearing-hoodie" target="_blank" rel="noopener noreferrer" aria-label="View Worthy of Hearing Hoodie on Fourthwall">
+              <img class="collection-image" src="https://imgproxy.fourthwall.dev/WvkUJKFQJQFrKD3mpGVegHVJeg7GiZH7fYnLaEejLaE/w:1920/sm:1/enc/V9GndxqjzAuiWqP5/AQDzk_-EKBjERjba/8BSKJZDtu1rWbwam/ed7vZFOXQv-XuzJH/3hd1HyfuuHAsEP0n/GB-SMtdChOrQrMYp/bMfbbMqUtdR1itUu/XYtEeMzJtAZ5zMUC/ZKP06E5bxYP7Onmu/Oh9HXff0cMFh9RzI/Nyc7ehV9HVfFH49W/-5l8s1-m40i_HBhw/vuU9aOAU3lUDcx-q/fS3DqsXzclryhIA3/W9-b0lta1C4.webp" alt="Worthy of Hearing Hoodie from Logan's Fourthwall shop" loading="lazy" decoding="async">
+            </a>
+            <div class="shop-product-info">
+              <div class="collection-product-row"><span>Worthy of Hearing Hoodie</span><span class="product-price">From $90.00</span></div>
+              <p class="collection-meta"><strong>Sizes:</strong> S, M, L, XL, 2XL, 3XL<br><strong>Colors shown:</strong> Latte, Dusty Rose, Carbon Grey, Light Pink, Lavender, Bone, Oatmeal Heather, Sky Blue, White</p>
+              <a class="collection-button" href="https://logans-mission-shop.fourthwall.com/products/worthy-of-hearing-hoodie" target="_blank" rel="noopener noreferrer">Shop on Fourthwall <span aria-hidden="true">↗</span></a>
+            </div>
+          </article>
           <article class="shop-coming-soon"><span class="coming-soon-mark" aria-hidden="true">✳</span><p class="collection-reference">COMING SOON</p><h3>Worthy of Hearing Sticker</h3><p>A sticker design for this collection is not available yet.</p></article>
-          <article class="shop-coming-soon"><span class="coming-soon-mark" aria-hidden="true">✳</span><p class="collection-reference">COMING SOON</p><h3>Worthy of Hearing T-Shirt</h3><p>This collection's T-shirt is not available yet.</p></article>
-          <article class="shop-coming-soon"><span class="coming-soon-mark" aria-hidden="true">✳</span><p class="collection-reference">COMING SOON</p><h3>Worthy of Hearing Hoodie</h3><p>This collection's hoodie is not available yet.</p></article>
         </div>
-      </section>
 
-      <section class="shop-collection" id="known-by-name" aria-labelledby="known-title">
-        <header class="shop-collection-heading">
-          <p class="collection-reference">ISAIAH 43:1</p>
-          <h2 id="known-title">Known by Name</h2>
-          <p>God calls His people by name and says they belong to Him. The gospel announces that through Jesus, we are known, loved, and invited into life with God.</p>
-        </header>
+        </div>
+      </details>
+
+      <details class="shop-collection" id="known-by-name" aria-labelledby="known-title">
+        <summary><h2 id="known-title">Known by Name</h2><span class="collection-toggle" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"/></svg></span></summary>
+        <div class="shop-collection-body">
+          <header class="shop-collection-heading">
+            <p class="collection-reference">ISAIAH 43:1</p>
+            <p>God calls His people by name and says they belong to Him. The gospel announces that through Jesus, we are known, loved, and invited into life with God.</p>
+          </header>
         <div class="shop-product-grid">
           <article class="shop-product-card" data-product-slot="known-by-name-hat">
-            <a class="collection-image-link" href="https://logans-mission-shop.fourthwall.com/products/known-by-name-hat" target="_blank" rel="noopener noreferrer" aria-label="View Known By Name hat on Fourthwall">
-              <img class="collection-image" src="https://imgproxy.fourthwall.dev/uoxT-3u3q9LLOdY2GRp6Naitzwikf87QgbLESlXXAEA/w:1920/sm:1/enc/uqQWlJ54sZUkY2WE/bXZuHbNqdSmK5OYy/SrreBywlQaBIZXHR/k4IMEKWueNWp6Ebb/bmObPUN0yy3SR0HQ/8jz7xRtNfSB6_hcN/5Dk32WnFkHb3-5Sa/i6BMbIY_wJwHw2vz/FcX8iDfveQB5JJtv/OXUQ4R3cwANs1Cgu/ngheZX2ygNMchnue/FX5O6BEYqzck2DBJ/tp-JWLmDl9kMPzNy/oqH7PEA9bXw3B4i4/uZdfKRVeknA.jpg" alt="Known By Name hat from Logan's Fourthwall shop" loading="lazy">
+            <a class="collection-image-link" href="https://logans-mission-shop.fourthwall.com/products/known-by-name-hat" target="_blank" rel="noopener noreferrer" aria-label="View Known By Name Hat on Fourthwall">
+              <img class="collection-image" src="https://imgproxy.fourthwall.dev/vfJjbR6KhX3nY88E9SwrhEvnOxj7KMGLwEJkAKgnFwk/w:1920/sm:1/enc/uqQWlJ54sZUkY2WE/bXZuHbNqdSmK5OYy/SrreBywlQaBIZXHR/k4IMEKWueNWp6Ebb/bmObPUN0yy3SR0HQ/8jz7xRtNfSB6_hcN/5Dk32WnFkHb3-5Sa/i6BMbIY_wJwHw2vz/FcX8iDfveQB5JJtv/OXUQ4R3cwANs1Cgu/ngheZX2ygNMchnue/FX5O6BEYqzck2DBJ/tp-JWLmDl9kMPzNy/oqH7PEA9bXw3B4i4/uZdfKRVeknA.webp" alt="Known By Name Hat from Logan's Fourthwall shop" loading="lazy" decoding="async">
             </a>
             <div class="shop-product-info">
               <div class="collection-product-row"><span>Known By Name Hat</span><span class="product-price">$29.99</span></div>
-              <p class="collection-meta"><strong>Size:</strong> One size fits most<br><strong>Colors shown:</strong> Khaki, Stone, Pink, Light Blue, White</p>
+              <p class="collection-meta"><strong>Size:</strong> One size<br><strong>Colors shown:</strong> Khaki, Stone, Pink, Light Blue, White</p>
               <a class="collection-button" href="https://logans-mission-shop.fourthwall.com/products/known-by-name-hat" target="_blank" rel="noopener noreferrer">Shop on Fourthwall <span aria-hidden="true">↗</span></a>
             </div>
           </article>
@@ -88,22 +112,25 @@
           <article class="shop-coming-soon"><span class="coming-soon-mark" aria-hidden="true">✳</span><p class="collection-reference">COMING SOON</p><h3>Known by Name T-Shirt</h3><p>This collection's T-shirt is not available yet.</p></article>
           <article class="shop-coming-soon"><span class="coming-soon-mark" aria-hidden="true">✳</span><p class="collection-reference">COMING SOON</p><h3>Known by Name Hoodie</h3><p>This collection's hoodie is not available yet.</p></article>
         </div>
-      </section>
 
-      <section class="shop-collection" id="beyond-language" aria-labelledby="beyond-title">
-        <header class="shop-collection-heading">
-          <p class="collection-reference">1 JOHN 3:18</p>
-          <h2 id="beyond-title">Beyond Language</h2>
-          <p>John calls believers to love not only with words, but with actions and truth. Jesus' love crosses language and culture as we serve people in practical, genuine ways.</p>
-        </header>
+        </div>
+      </details>
+
+      <details class="shop-collection" id="beyond-language" aria-labelledby="beyond-title">
+        <summary><h2 id="beyond-title">Beyond Language</h2><span class="collection-toggle" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"/></svg></span></summary>
+        <div class="shop-collection-body">
+          <header class="shop-collection-heading">
+            <p class="collection-reference">1 JOHN 3:18</p>
+            <p>John calls believers to love not only with words, but with actions and truth. Jesus' love crosses language and culture as we serve people in practical, genuine ways.</p>
+          </header>
         <div class="shop-product-grid">
           <article class="shop-product-card" data-product-slot="beyond-language-hat">
             <a class="collection-image-link" href="https://logans-mission-shop.fourthwall.com/products/beyond-language-hat" target="_blank" rel="noopener noreferrer" aria-label="View Beyond Language hat on Fourthwall">
-              <img class="collection-image" src="https://imgproxy.fourthwall.dev/2OEaFtHycMIkhGpykfBuO_kU79dpcKTydnzZkSofwlc/w:1920/sm:1/enc/QmWcc26WvHnTylCp/6FuTVnO9IL2EgBy3/WyVDNWZumIN3p9nJ/wfj7dQlUxaZ1iG1V/dNGOxwQnh4nhq6jQ/E66RqNdAfTA8Y1gQ/SMDEJL81h5tqbetY/6sG0eAh-iGDgkaWD/jvEIgiLR5_SNHvYe/HRsBa1PL24OT2Gm1/fneh2qpB95ZqqjpP/4VNiAS1E0ES-OBO4/gC0Nvc_h3X1j2ZH7/uaSqaMZbHXn4zhSI/OJCbwLV0NF4.jpg" alt="Beyond Language hat from Logan's Fourthwall shop" loading="lazy">
+              <img class="collection-image" src="https://imgproxy.fourthwall.dev/A5w5-HyGNmI_NurfdF5-5GQqkOJbHsZyJIgR16R9ZMk/w:1920/sm:1/enc/QmWcc26WvHnTylCp/6FuTVnO9IL2EgBy3/WyVDNWZumIN3p9nJ/wfj7dQlUxaZ1iG1V/dNGOxwQnh4nhq6jQ/E66RqNdAfTA8Y1gQ/SMDEJL81h5tqbetY/6sG0eAh-iGDgkaWD/jvEIgiLR5_SNHvYe/HRsBa1PL24OT2Gm1/fneh2qpB95ZqqjpP/4VNiAS1E0ES-OBO4/gC0Nvc_h3X1j2ZH7/uaSqaMZbHXn4zhSI/OJCbwLV0NF4.webp" alt="Beyond Language hat from Logan's Fourthwall shop" loading="lazy" decoding="async">
             </a>
             <div class="shop-product-info">
               <div class="collection-product-row"><span>Beyond Language hat</span><span class="product-price">$29.99</span></div>
-              <p class="collection-meta"><strong>Size:</strong> One size fits most<br><strong>Colors shown:</strong> Stone, Pink, Light Blue, White, Black, Khaki</p>
+              <p class="collection-meta"><strong>Size:</strong> One size<br><strong>Colors shown:</strong> Stone, Pink, Light Blue, White, Black, Khaki</p>
               <a class="collection-button" href="https://logans-mission-shop.fourthwall.com/products/beyond-language-hat" target="_blank" rel="noopener noreferrer">Shop on Fourthwall <span aria-hidden="true">↗</span></a>
             </div>
           </article>
@@ -111,22 +138,25 @@
           <article class="shop-coming-soon"><span class="coming-soon-mark" aria-hidden="true">✳</span><p class="collection-reference">COMING SOON</p><h3>Beyond Language T-Shirt</h3><p>This collection's T-shirt is not available yet.</p></article>
           <article class="shop-coming-soon"><span class="coming-soon-mark" aria-hidden="true">✳</span><p class="collection-reference">COMING SOON</p><h3>Beyond Language Hoodie</h3><p>This collection's hoodie is not available yet.</p></article>
         </div>
-      </section>
 
-      <section class="shop-collection" id="the-way-is-open" aria-labelledby="way-title">
-        <header class="shop-collection-heading">
-          <p class="collection-reference">HEBREWS 10:19–22</p>
-          <h2 id="way-title">The Way Is Open</h2>
-          <p>Because of Jesus' sacrifice, the way into God's presence is open. The gospel invites us to draw near to God with sincere hearts and confidence in Christ.</p>
-        </header>
+        </div>
+      </details>
+
+      <details class="shop-collection" id="the-way-is-open" aria-labelledby="way-title">
+        <summary><h2 id="way-title">The Way Is Open</h2><span class="collection-toggle" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"/></svg></span></summary>
+        <div class="shop-collection-body">
+          <header class="shop-collection-heading">
+            <p class="collection-reference">HEBREWS 10:19–22</p>
+            <p>Because of Jesus' sacrifice, the way into God's presence is open. The gospel invites us to draw near to God with sincere hearts and confidence in Christ.</p>
+          </header>
         <div class="shop-product-grid">
           <article class="shop-product-card" data-product-slot="the-way-is-open-hat">
-            <a class="collection-image-link" href="https://logans-mission-shop.fourthwall.com/products/the-way-is-open-hat" target="_blank" rel="noopener noreferrer" aria-label="View The Way is Open hat on Fourthwall">
-              <img class="collection-image" src="https://imgproxy.fourthwall.dev/LRUPCW1HmbCNHXdTzj6w750mJGy300jOoXETS9eV8bU/w:1920/sm:1/enc/LjXH_nYPFZOWr6qP/eD7NeCtehUpLXv2d/9_L_HB74MgsPc5i3/5RMq1fVz0tcLQZ6F/XvsxeTgQODcOrkNz/zf8jq4FjXjHJdtIG/9C67LxeGyyFK3EDK/XIXsYCvtJFfNAdlZ/_i1_CrAiSXjFlrOF/89SjTs4O-JpIzJf2/nM6cd_tnLnAxcYZL/L8itFXHowbHaf2_9/gOak4m40gc3y0AzD/y5_wT29kw106pikp/wRC7KzKzrt4.jpg" alt="The Way is Open hat from Logan's Fourthwall shop" loading="lazy">
+            <a class="collection-image-link" href="https://logans-mission-shop.fourthwall.com/products/the-way-is-open-hat" target="_blank" rel="noopener noreferrer" aria-label="View The Way is Open Hat on Fourthwall">
+              <img class="collection-image" src="https://imgproxy.fourthwall.dev/LLmebWS1Y4oY-wEOBVGQvTmQr6Fph-K6Jf1Yb3s5sB0/w:1920/sm:1/enc/LjXH_nYPFZOWr6qP/eD7NeCtehUpLXv2d/9_L_HB74MgsPc5i3/5RMq1fVz0tcLQZ6F/XvsxeTgQODcOrkNz/zf8jq4FjXjHJdtIG/9C67LxeGyyFK3EDK/XIXsYCvtJFfNAdlZ/_i1_CrAiSXjFlrOF/89SjTs4O-JpIzJf2/nM6cd_tnLnAxcYZL/L8itFXHowbHaf2_9/gOak4m40gc3y0AzD/y5_wT29kw106pikp/wRC7KzKzrt4.webp" alt="The Way is Open Hat from Logan's Fourthwall shop" loading="lazy" decoding="async">
             </a>
             <div class="shop-product-info">
               <div class="collection-product-row"><span>The Way is Open Hat</span><span class="product-price">$29.99</span></div>
-              <p class="collection-meta"><strong>Size:</strong> One size fits most<br><strong>Colors shown:</strong> Black, Navy, Dark Grey, Spruce, Khaki, Stone, Pink, Light Blue</p>
+              <p class="collection-meta"><strong>Size:</strong> One size<br><strong>Colors shown:</strong> Black, Navy, Dark Grey, Spruce, Khaki, Stone, Pink, Light Blue</p>
               <a class="collection-button" href="https://logans-mission-shop.fourthwall.com/products/the-way-is-open-hat" target="_blank" rel="noopener noreferrer">Shop on Fourthwall <span aria-hidden="true">↗</span></a>
             </div>
           </article>
@@ -134,7 +164,9 @@
           <article class="shop-coming-soon"><span class="coming-soon-mark" aria-hidden="true">✳</span><p class="collection-reference">COMING SOON</p><h3>The Way Is Open T-Shirt</h3><p>This collection's T-shirt is not available yet.</p></article>
           <article class="shop-coming-soon"><span class="coming-soon-mark" aria-hidden="true">✳</span><p class="collection-reference">COMING SOON</p><h3>The Way Is Open Hoodie</h3><p>This collection's hoodie is not available yet.</p></article>
         </div>
-      </section>
+
+        </div>
+      </details>
 
       <section class="shop-coming-collections" aria-labelledby="coming-collections-title">
         <p class="eyebrow">MORE MISSION MERCH</p>
